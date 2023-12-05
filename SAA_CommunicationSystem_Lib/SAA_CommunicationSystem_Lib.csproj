@@ -37,6 +37,10 @@
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.5.2.3\lib\net46\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="SAA_MsSql, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\SAA_MsSql.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -88,10 +92,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SAA_Lift_Equipment\SAA_MsSql\SAA_MsSql.csproj">
-      <Project>{a2a20676-4929-4fec-af6a-ee29d4b50631}</Project>
-      <Name>SAA_MsSql</Name>
-    </ProjectReference>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

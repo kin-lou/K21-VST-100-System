@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="SAA_CommunicationSystem.UI.ucSaaCommunicationElectric"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <materialDesign:Card Grid.Column="0" Grid.Row="0" Margin="3">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <materialDesign:Card Grid.Column="0" Grid.Row="0" Margin="3">
+                <StackPanel Margin="10" Name="SplButton">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="選單" x:Name="BtnMenu" Margin="0,0,0,5" Click="BtnHome_Click" >
+                        <materialDesign:PackIcon Kind="ViewModule" Height="30" Width="30" Foreground="Orange"/>
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="Log資訊" x:Name="BtnLog" Margin="0,0,0,5" Click="BtnHome_Click">
+                        <materialDesign:PackIcon Kind="MathLog"  Height="30" Width="30" Foreground="#FFFF6992"/>
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="手動傳送" x:Name="BtnSend" Margin="0,0,0,5" Click="BtnHome_Click">
+                        <materialDesign:PackIcon Kind="Send"  Height="30" Width="30" Foreground="RoyalBlue" />
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="資料匯入" x:Name="BtnImport" Margin="0,0,0,5" Click="BtnHome_Click">
+                        <materialDesign:PackIcon Kind="FileExcel"  Height="30" Width="30" Foreground="#0f704b" />
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="指令歷史紀錄" x:Name="BtnHistor" Margin="0,0,0,5" Click="BtnHome_Click">
+                        <materialDesign:PackIcon Kind="BookAlertOutline"  Height="30" Width="30" Foreground="#FFC347E8" />
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="機台名稱修改" x:Name="BtnStorageInfo" Margin="0,0,0,5" Click="BtnHome_Click">
+                        <materialDesign:PackIcon Kind="EqualizerVertical"  Height="30" Width="30" Foreground="#FFB9A2AA" />
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="退盒明細" x:Name="BtnRejectList" Margin="0,0,0,5" Click="BtnHome_Click">
+                        <materialDesign:PackIcon Kind="PlaylistStar"  Height="30" Width="30" Foreground="#FFFF003A" />
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="退盒明細查詢" x:Name="BtnRejectHistory" Margin="0,0,0,5" Click="BtnHome_Click">
+                        <materialDesign:PackIcon Kind="ClipboardListOutline"  Height="30" Width="30" Foreground="#FF01A697" />
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="操作紀錄" x:Name="BtnOperationRecord" Margin="0,0,0,5" Click="BtnHome_Click">
+                        <materialDesign:PackIcon Kind="Judaism" Height="30" Width="30" Foreground="#FFFFDF51"/>
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="使用者編譯" x:Name="BtnUserPermissions" Margin="0,0,0,5" Click="BtnHome_Click" >
+                        <materialDesign:PackIcon Kind="AccountSearch" Height="30" Width="30" Foreground="#FF204042"/>
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="設定資訊" x:Name="BtnSetUp" Margin="0,0,0,5" Click="BtnHome_Click">
+                        <materialDesign:PackIcon Kind="CogOutline"  Height="30" Width="30" Foreground="#FF828282" />
+                    </Button>
+                </StackPanel>   
+            </materialDesign:Card>
+            <Grid Grid.Column="1" Grid.Row="0" x:Name="GdContent">
+            </Grid>
+        </Grid>
+    </materialDesign:Card>
+</UserControl>

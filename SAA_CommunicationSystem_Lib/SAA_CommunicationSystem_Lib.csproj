@@ -61,6 +61,8 @@
   <ItemGroup>
     <Compile Include="Attributes\ConfigAttributes.cs" />
     <Compile Include="Controllers\WebApiController.cs" />
+    <Compile Include="GuiAttributes\GuiOpetationHistoryAttributes.cs" />
+    <Compile Include="GuiAttributes\GuiUserAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReceivAttributes\SaaReceiv.cs" />
     <Compile Include="ReceivAttributes\SaaReceivAlarm.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="ReceivAttributes\StorageMessage.cs" />
     <Compile Include="SAA_Config.cs" />
     <Compile Include="SAA_Database.cs" />
+    <Compile Include="SAA_DatabaseEnum.cs" />
     <Compile Include="SqlData\MsSqlData.cs" />
     <Compile Include="WebApiSendCommand\SAA_WebApiSendCommand.cs" />
     <Compile Include="WebApiServer\SAA_WebApiServer.cs" />

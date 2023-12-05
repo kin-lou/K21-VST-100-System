@@ -17,7 +17,7 @@ namespace SAA_CommunicationSystem_Lib
         /// Log訊息
         /// </summary>
         /// <param name="message">訊息</param>
-        public delegate void DelLogMessage(string message, LogType logtype);
+        public delegate void DelLogMessage(string message, LogType logtype, LogSystmes logsystmes);
         public static event DelLogMessage OnLogMessage;
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace SAA_CommunicationSystem_Lib
         /// </summary>
         /// <param name="message">訊息</param>
         /// <param name="logtype">log分類</param>
-        public static void LogMessage(string message, LogType logtype = LogType.Normal)
+        public static void LogMessage(string message, LogType logtype = LogType.Normal, LogSystmes logsystmes = LogSystmes.LCS)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace SAA_CommunicationSystem_Lib
                         SaaLog.Error(Message);
                         break;
                 }
-                OnLogMessage?.Invoke(Message, logtype);
+                OnLogMessage?.Invoke(Message, logtype, logsystmes);
             }
             catch (Exception ex)
             {
@@ -81,6 +81,15 @@ namespace SAA_CommunicationSystem_Lib
             }
         }
         #endregion
+
+        /// <summary>
+        /// 讀取時間
+        /// </summary>
+        /// <returns></returns>
+        public static string ReadTime()
+        {
+            return $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}";
+        }
 
         #region [===LCS命令名稱列舉===]
         /// <summary>
@@ -231,6 +240,13 @@ namespace SAA_CommunicationSystem_Lib
             /// 失敗
             /// </summary>
             Error = 2
+        }
+
+        public enum LogSystmes
+        {
+            iLIs,
+
+            LCS
         }
     }
 }

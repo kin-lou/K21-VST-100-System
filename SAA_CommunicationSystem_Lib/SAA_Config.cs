@@ -33,8 +33,10 @@ namespace SAA_CommunicationSystem_Lib
                         SaaDataBaseName = ConfigFile.AppSettings.Settings[ConfigName.SaaDataBaseName.ToString()].Value.ToString(),
                         SaaDataBasePassword = ConfigFile.AppSettings.Settings[ConfigName.SaaDataBasePassword.ToString()].Value.ToString(),
                         SaaLogName = ConfigFile.AppSettings.Settings[ConfigName.SaaLogName.ToString()].Value.ToString(),
+                        SaaSystemsName = ConfigFile.AppSettings.Settings[ConfigName.SaaSystemsName.ToString()].Value.ToString(),
                         WebApiResultOK = ConfigFile.AppSettings.Settings[ConfigName.WebApiResultOK.ToString()].Value.ToString(),
                         WebApiResultFAIL = ConfigFile.AppSettings.Settings[ConfigName.WebApiResultFAIL.ToString()].Value.ToString(),
+
                     };
                 }
             }
@@ -75,6 +77,11 @@ namespace SAA_CommunicationSystem_Lib
             /// NLog Config檔案名稱
             /// </summary>
             SaaLogName,
+
+            /// <summary>
+            /// 系統名稱
+            /// </summary>
+            SaaSystemsName,
 
             /// <summary>
             /// 回覆LCS接受結果完成

@@ -33,6 +33,8 @@ namespace SAA_CommunicationSystem
         public MainWindow()
         {
             InitializeComponent();
+
+            ucSaaCommunicationLogin.OnSaaCommunicationLogin += UcSaaCommunicationLogin_OnSaaCommunicationLogin;
         }
 
         private void SAA_CommunicationSystem_Loaded(object sender, RoutedEventArgs e)
@@ -47,6 +49,11 @@ namespace SAA_CommunicationSystem
                 if (SAA_Database.SaaSql == null)
                     SAA_Database.SaaSql = new SAA_CommunicationSystem_Lib.SqlData.MsSqlData();
 
+                if (SAA_Database.webapiserver == null)
+                    SAA_Database.webapiserver = new SAA_CommunicationSystem_Lib.WebApiServer.SAA_WebApiServer();
+
+                SAA_Database.webapiserver.WebAPIServerSatrt();
+                SAA_Database.LogMessage($"設備Web Api Server已啟動，Server IP位置:{SAA_Database.configattributes.WebApiServerIP}");
                 SAA_Database.LogMessage("設備資料傳送系統準備開始");
             }
             catch (Exception ex)
@@ -63,6 +70,8 @@ namespace SAA_CommunicationSystem
             {
                 if (MessageBox.Show("是否要關閉程式", "關閉程式", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
+                    SAA_Database.SaaSql.DelGuiLoginStatus();
+                    SAA_Database.LogMessage("程式關閉，刪除登入資料");
                     SAA_Database.LogMessage("設備資料傳送系統關閉");
                     e.Cancel = false;
                     Environment.Exit(0);
@@ -95,9 +104,62 @@ namespace SAA_CommunicationSystem
         }
         #endregion
 
+        #region [===登入狀態顯示===]
+        private void UcSaaCommunicationLogin_OnSaaCommunicationLogin(SAA_CommunicationSystem_Lib.GuiAttributes.GuiUserAttributes guiuser)
+        {
+            try
+            {
+                App.UpdateUi(() =>
+                {
+                    TexAccount.Text = guiuser.USERNAME;
+                });
+            }
+            catch (Exception ex)
+            {
+                SAA_Database.LogMessage($"{ex.Message}-{ex.StackTrace}", SAA_Database.LogType.Error);
+                MessageBox.Show($"{ex.Message}-{ex.StackTrace}", App.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        } 
+        #endregion
+
         private void BtnLogIn_OnClick(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                if (LogInStatus())
+                {
+                    SAA_Database.SaaSql.DelGuiLoginStatus();
+                    BtnLogIn.Content = "系統登入";
+                    TexAccount.Text = "----";
+                }
+                else 
+                {
+                    App.UpdateUi(async () =>
+                    {
+                        var sampleMessageDialog = new ucSaaCommunicationLogin();
+                        object x = await DialogHost.Show(sampleMessageDialog, "RootDialog", ClosingEventHandler);
+                        if (LogInStatus())
+                        {
+                            BtnLogIn.Content = "系統登出";
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                SAA_Database.LogMessage($"{ex.Message}-{ex.StackTrace}", SAA_Database.LogType.Error);
+                MessageBox.Show($"{ex.Message}-{ex.StackTrace}", App.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
+        private bool LogInStatus()
+        {
+            return SAA_Database.SaaSql.GetLoginStatus().Rows.Count > 0;
+        }
+
+        private void ClosingEventHandler(object sender, DialogClosingEventArgs eventargs)
+        {
+            Console.WriteLine(eventargs);
         }
     }
 }

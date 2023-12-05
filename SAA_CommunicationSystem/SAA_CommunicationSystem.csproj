@@ -71,8 +71,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Attributes\GuiOpetationHistoryAttributes.cs" />
-    <Compile Include="Attributes\GuiUserAttributes.cs" />
     <Compile Include="UI\ucSaaCommunicationElectric.xaml.cs">
       <DependentUpon>ucSaaCommunicationElectric.xaml</DependentUpon>
     </Compile>

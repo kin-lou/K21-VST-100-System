@@ -39,6 +39,11 @@ namespace SAA_CommunicationSystem_Lib.Attributes
         public string SaaLogName { get; set; }
 
         /// <summary>
+        /// 系統名稱
+        /// </summary>
+        public string SaaSystemsName { get; set; }
+
+        /// <summary>
         /// 回覆LCS接受結果完成
         /// </summary>
         public string WebApiResultOK { get; set; }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SAA_CommunicationSystem.Attributes
+namespace SAA_CommunicationSystem_Lib.GuiAttributes
 {
     public class GuiOpetationHistoryAttributes
     {

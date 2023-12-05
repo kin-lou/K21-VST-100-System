@@ -23,19 +23,19 @@
                     <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="手動傳送" x:Name="BtnSend" Margin="0,0,0,5" Click="BtnHome_Click">
                         <materialDesign:PackIcon Kind="Send"  Height="30" Width="30" Foreground="RoyalBlue" />
                     </Button>
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="資料匯入" x:Name="BtnImport" Margin="0,0,0,5" Click="BtnHome_Click">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="機台參數匯入" x:Name="BtnImport" Margin="0,0,0,5" Click="BtnHome_Click">
                         <materialDesign:PackIcon Kind="FileExcel"  Height="30" Width="30" Foreground="#0f704b" />
                     </Button>
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="指令歷史紀錄" x:Name="BtnHistor" Margin="0,0,0,5" Click="BtnHome_Click">
-                        <materialDesign:PackIcon Kind="BookAlertOutline"  Height="30" Width="30" Foreground="#FFC347E8" />
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="指令歷史紀錄" x:Name="BtnHistory" Margin="0,0,0,5" Click="BtnHome_Click">
+                        <materialDesign:PackIcon Kind="History"  Height="30" Width="30" Foreground="#FFC347E8" />
                     </Button>
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="機台名稱修改" x:Name="BtnStorageInfo" Margin="0,0,0,5" Click="BtnHome_Click">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="上報名稱修改" x:Name="BtnStorageInfo" Margin="0,0,0,5" Click="BtnHome_Click">
                         <materialDesign:PackIcon Kind="EqualizerVertical"  Height="30" Width="30" Foreground="#FFB9A2AA" />
                     </Button>
                     <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="退盒明細" x:Name="BtnRejectList" Margin="0,0,0,5" Click="BtnHome_Click">
-                        <materialDesign:PackIcon Kind="PlaylistStar"  Height="30" Width="30" Foreground="#FFFF003A" />
+                        <materialDesign:PackIcon Kind="PlaylistStar"  Height="30" Width="30" Foreground="#FFFF003A" RenderTransformOrigin="0.5,0.5" />
                     </Button>
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="退盒明細查詢" x:Name="BtnRejectHistory" Margin="0,0,0,5" Click="BtnHome_Click">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="退盒歷史查詢" x:Name="BtnRejectHistory" Margin="0,0,0,5" Click="BtnHome_Click">
                         <materialDesign:PackIcon Kind="ClipboardListOutline"  Height="30" Width="30" Foreground="#FF01A697" />
                     </Button>
                     <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="操作紀錄" x:Name="BtnOperationRecord" Margin="0,0,0,5" Click="BtnHome_Click">

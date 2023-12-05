@@ -81,8 +81,8 @@ namespace SAA_CommunicationSystem.UI
                     case App.BtnName.BtnImport:
                         BtnImport.IsEnabled = false;
                         break;
-                    case App.BtnName.BtnHistor:
-                        BtnHistor.IsEnabled = false;
+                    case App.BtnName.BtnHistory:
+                        BtnHistory.IsEnabled = false;
                         break;
                     case App.BtnName.BtnStorageInfo:
                         BtnStorageInfo.IsEnabled = false;

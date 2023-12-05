@@ -67,16 +67,16 @@
                         </Grid.RowDefinitions>
                         <Grid Grid.Column="0" Grid.Row="0">
                             <DockPanel>
-                                <materialDesign:PackIcon Kind="Send" Height="60" Width="60" Foreground="RoyalBlue"/>
-                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="手動傳送"/>
+                                <materialDesign:PackIcon Kind="FileExcel" Height="60" Width="60" Foreground="#0f704b"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="機台參數匯入"/>
                             </DockPanel>
                         </Grid>
                         <Grid Grid.Column="0" Grid.Row="1">
-                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="手動傳送通訊相關指令測試用"/>
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="機台設定參數檔匯入"/>
                         </Grid>
                     </Grid>
                 </materialDesign:Card>
-                <materialDesign:Card Grid.Column="3" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaHistor_MouseDown">
+                <materialDesign:Card Grid.Column="3" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaHistory_MouseDown">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -84,12 +84,12 @@
                         </Grid.RowDefinitions>
                         <Grid Grid.Column="0" Grid.Row="0">
                             <DockPanel>
-                                <materialDesign:PackIcon Kind="Send" Height="60" Width="60" Foreground="RoyalBlue"/>
-                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="手動傳送"/>
+                                <materialDesign:PackIcon Kind="History" Height="60" Width="60" Foreground="#FFC347E8"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="歷史紀錄"/>
                             </DockPanel>
                         </Grid>
                         <Grid Grid.Column="0" Grid.Row="1">
-                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="手動傳送通訊相關指令測試用"/>
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="查詢通訊指令歷史紀錄"/>
                         </Grid>
                     </Grid>
                 </materialDesign:Card>
@@ -101,12 +101,12 @@
                         </Grid.RowDefinitions>
                         <Grid Grid.Column="0" Grid.Row="0">
                             <DockPanel>
-                                <materialDesign:PackIcon Kind="Send" Height="60" Width="60" Foreground="RoyalBlue"/>
-                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="手動傳送"/>
+                                <materialDesign:PackIcon Kind="EqualizerVertical" Height="60" Width="60" Foreground="#FFB9A2AA"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="上報名稱修改"/>
                             </DockPanel>
                         </Grid>
                         <Grid Grid.Column="0" Grid.Row="1">
-                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="手動傳送通訊相關指令測試用"/>
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="設備上報名稱修改"/>
                         </Grid>
                     </Grid>
                 </materialDesign:Card>
@@ -129,6 +129,15 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="PlaylistStar" Height="60" Width="60" Foreground="#FFFF003A"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="退盒明細"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="退盒明細資訊顯示"/>
+                        </Grid>
                     </Grid>
                 </materialDesign:Card>
                 <materialDesign:Card Grid.Column="1" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaRejectHistory_MouseDown">
@@ -137,14 +146,32 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="ClipboardListOutline" Height="60" Width="60" Foreground="#FF01A697"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="退盒歷史查詢"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="退盒歷史資訊查詢顯示"/>
+                        </Grid>
                     </Grid>
                 </materialDesign:Card>
                 <materialDesign:Card Grid.Column="2" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaOperationRecord_MouseDown">
-                    <Grid>
+                    <Grid Height="141" VerticalAlignment="Bottom">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="Judaism" Height="60" Width="60" Foreground="#FFFFDF51"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="操作紀錄"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="系統操作紀錄資訊顯示"/>
+                        </Grid>
                     </Grid>
                 </materialDesign:Card>
                 <materialDesign:Card Grid.Column="3" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaUserPermissions_MouseDown">
@@ -153,6 +180,15 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="AccountSearch" Height="60" Width="60" Foreground="#FF204042"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="權限編譯"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="使用者權限編譯"/>
+                        </Grid>
                     </Grid>
                 </materialDesign:Card>
                 <materialDesign:Card Grid.Column="4" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaSetUp_MouseDown">
@@ -161,6 +197,15 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="CogOutline" Height="60" Width="60" Foreground="#FF828282"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="設定資訊"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="設定系統相關參數"/>
+                        </Grid>
                     </Grid>
                 </materialDesign:Card>
             </Grid>

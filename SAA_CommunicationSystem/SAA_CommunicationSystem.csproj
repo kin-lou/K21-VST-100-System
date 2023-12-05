@@ -71,6 +71,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Attributes\GuiOpetationHistoryAttributes.cs" />
+    <Compile Include="Attributes\GuiUserAttributes.cs" />
     <Compile Include="UI\ucSaaCommunicationElectric.xaml.cs">
       <DependentUpon>ucSaaCommunicationElectric.xaml</DependentUpon>
     </Compile>
@@ -82,6 +84,9 @@
     </Compile>
     <Compile Include="UI\ucSaaCommunicationLogiList.xaml.cs">
       <DependentUpon>ucSaaCommunicationLogiList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ucSaaCommunicationLogin.xaml.cs">
+      <DependentUpon>ucSaaCommunicationLogin.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\ucSaaCommunicationLogMessageComplete.xaml.cs">
       <DependentUpon>ucSaaCommunicationLogMessageComplete.xaml</DependentUpon>
@@ -114,6 +119,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\ucSaaCommunicationLogiList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ucSaaCommunicationLogin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

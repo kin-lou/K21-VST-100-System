@@ -68,11 +68,11 @@ namespace SAA_CommunicationSystem.UI
             }
         }
 
-        private void SaaHistor_MouseDown(object sender, MouseButtonEventArgs e)
+        private void SaaHistory_MouseDown(object sender, MouseButtonEventArgs e)
         {
             try
             {
-                OnDataHome?.Invoke(App.BtnName.BtnHistor);
+                OnDataHome?.Invoke(App.BtnName.BtnHistory);
             }
             catch (Exception ex)
             {

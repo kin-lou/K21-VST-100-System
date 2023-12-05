@@ -89,7 +89,7 @@ namespace SAA_CommunicationSystem
             /// <summary>
             /// 指令歷史紀錄
             /// </summary>
-            BtnHistor,
+            BtnHistory,
 
             /// <summary>
             /// 機台名稱修改

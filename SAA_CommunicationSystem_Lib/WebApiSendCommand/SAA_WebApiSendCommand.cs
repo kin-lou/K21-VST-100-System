@@ -34,7 +34,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
             string paraUrlCoded = Uri.EscapeDataString(paraKey);
             paraUrlCoded += "=" + Uri.EscapeDataString(jsonParas);
 
-            SAA_Database.LogMessage($"【Client->Server】【傳送】{jsonParas}");
+            SAA_Database.LogMessage($"【轉譯程式】【傳送】{jsonParas}");
             byte[] payload;
             //將Json字串轉化為位元組
             //payload = Encoding.UTF8.GetBytes(paraUrlCoded);
@@ -51,15 +51,16 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
             try
             {
                 writer = request.GetRequestStream();//獲取用於寫入請求資料的Stream物件
+                //將請求引數寫入流
+                writer.Write(payload, 0, payload.Length);
+                writer.Close();//關閉請求流
             }
             catch (Exception)
             {
                 writer = null;
                 SAA_Database.LogMessage($"連線伺服器失敗", SAA_Database.LogType.Error);
             }
-            //將請求引數寫入流
-            writer.Write(payload, 0, payload.Length);
-            writer.Close();//關閉請求流
+            
 
             string strValue = "";//strValue為http響應所返回的字元流
             HttpWebResponse response;

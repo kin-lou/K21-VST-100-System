@@ -34,13 +34,19 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public void SetGuiOpetationHistory(GuiOpetationHistoryAttributes guiopetation)
         {
             SaaSql.WriteSqlByAutoOpen($"Insert into GUI_OPETATION_HISTORY Values('{guiopetation.PROJECT_ITEM}', '{guiopetation.OPERATE_DATETIME}', '{guiopetation.USERNAME}', '{guiopetation.OPERATE_CONTENT}')");
-        } 
+        }
         #endregion
 
+        #region [===新增使用者登入===]
+        /// <summary>
+        /// 新增使用者登入
+        /// </summary>
+        /// <param name="guiuser"></param>
         public void SetGuiLoginstatus(GuiUserAttributes guiuser)
         {
             SaaSql.WriteSqlByAutoOpen($"Insert into GUI_LOGINSTATUS Values('{guiuser.USERID}', '{guiuser.USERNAME}','{guiuser.GROUPID}','{guiuser.LAST_LOGIN_TIME}')");
-        }
+        } 
+        #endregion
 
         /*===============================刪除=======================================*/
 
@@ -114,12 +120,18 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public bool GetUserName(string userid)
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From GUI_USER Where USERID='" + userid + "'").Tables[0].Rows.Count == 0;
-        } 
+        }
         #endregion
 
+        #region [===讀取使用者登入===]
+        /// <summary>
+        /// 讀取使用者登入
+        /// </summary>
+        /// <returns></returns>
         public DataTable GetLoginStatus()
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From GUI_LOGINSTATUS").Tables[0];
-        }
+        } 
+        #endregion
     }
 }

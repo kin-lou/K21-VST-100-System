@@ -1,0 +1,313 @@
+﻿<UserControl x:Class="SAA_CommunicationSystem.UI.ucSaaCommunicationManualTransferLcs"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="1000" d:DesignWidth="1920">
+    <materialDesign:Card Grid.Column="0" Grid.Row="0" Margin="3">
+        <Grid Grid.Column="0" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Column="0" Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <materialDesign:Card Grid.Column="0" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaClose_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="Close" Height="60" Width="60" Foreground="Red"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="刪除在籍"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="傳送刪除在籍指令(ClearStorage)"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Grid.Column="1" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaStockOut_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="FlaskRoundBottomEmptyOutline" Height="60" Width="60" Foreground="#FF6DC5D6"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="搬運指令"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="傳送搬運指令(StockOut)"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Grid.Column="2" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaStockIn_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="FountainPen" Height="60" Width="60" Foreground="#FFD88C57"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="入庫指令"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="傳送入庫指令(StockIn)"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Grid.Column="3" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaStockOutToReject_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="AlertRemove" Height="60" Width="60" Foreground="#FFD8579E"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="出料退盒指令"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="5,0,0,0" Text="傳送出料退盒指令(StockOutToReject)"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Grid.Column="4" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaReject_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="BackspaceReverseOutline" Height="60" Width="60" Foreground="#FFE66E79"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="入庫退盒指令"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="傳送入庫退盒指令(Reject)"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+            </Grid>
+            <Grid Grid.Column="0" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <materialDesign:Card Grid.Column="0" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaTimeSync_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="ClockTimeFourOutline" Height="60" Width="60" Foreground="#FF5A00FF"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="時間同步"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="傳送時間同步指令(TimeSync)"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Grid.Column="1" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaAreYouOK_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="AbTesting" Height="60" Width="60" Foreground="#FF2BE68C"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="測試通訊指令"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="傳送測試通訊指令(AreYouOK)"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Grid.Column="2" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaStorageInfo_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="FileTree" Height="60" Width="60" Foreground="#FFF14714"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="詢問儲格資訊"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="傳送詢問儲格資訊指令"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Grid.Column="3" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaInquire_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="PackageVariant" Height="60" Width="60" Foreground="#FFE8E250"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="查詢卡匣"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="傳送查詢卡匣指令(IsCarrierInWip)"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Grid.Column="4" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaLCS_Sts_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="CrystalBall" Height="60" Width="60" Foreground="#FF1446E0"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="詢問 LCS 狀態"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="傳送詢問 LCS 狀態指令(LCS_Sts)"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+            </Grid>
+            <Grid Grid.Column="0" Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <materialDesign:Card Grid.Column="0" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaStatus_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="StarOutline" Height="60" Width="60" Foreground="#FF41F9ED"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="切換 LCS 狀態"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="傳送切換 LCS 狀態指令(TimeSync)"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Grid.Column="1" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaLcsMode_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="ShieldStarOutline" Height="60" Width="60" Foreground="#FF3848D0"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="切換LCS模式"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="傳送切換LCS模式指令"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Grid.Column="2" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaStockOutToBuffer_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="ThoughtBubble" Height="60" Width="60" Foreground="#FF8A14F1"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="移庫至Buffer"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="5,0,0,0" Text="傳送Buffer指令(StockOutToBuffer)"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Grid.Column="3" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaBufferCount_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="HorizontalRotateCounterclockwise" Height="60" Width="60" Foreground="#FFE850D4"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="Buffer可用數量"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="傳送Buffer數量指令(BufferCount)"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Grid.Column="4" Grid.Row="0" Margin="30,20,30,5" Cursor="Hand" MouseDown="SaaQueryPortInfo_MouseDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="AxisZRotateCounterclockwise" Height="60" Width="60" Foreground="#FF0C0C0C"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="13,0,0,0" Text="詢問機構資訊"/>
+                            </DockPanel>
+                        </Grid>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" VerticalAlignment="Top"  FontWeight="Bold" Margin="13,0,0,0" Text="傳送機構資訊指令(QueryPortInfo)"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+            </Grid>
+        </Grid>
+    </materialDesign:Card>
+</UserControl>

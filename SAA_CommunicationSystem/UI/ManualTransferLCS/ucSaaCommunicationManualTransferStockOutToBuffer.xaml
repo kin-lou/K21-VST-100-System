@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="SAA_CommunicationSystem.UI.ManualTransferLCS.ucSaaCommunicationManualTransferStockOutToBuffer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d" 
+        d:DesignHeight="650" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource MaterialDesignPasswordBox}">
+            <Setter Property="Margin" Value="0 8 0 8" />
+        </Style>
+    </UserControl.Resources>
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Margin="16" Width="500">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal"  HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0 0 0 0">
+            <Label  Content="CMD:" FontSize="16" FontWeight="Bold"/>
+            <TextBox Margin="0 0 0 0" x:Name="TextCmd" materialDesign:HintAssist.Hint="CMD" ></TextBox>
+        </StackPanel>
+        <ProgressBar Grid.Column="0" Grid.Row="1" Orientation="Horizontal"  Value="100" IsIndeterminate="False" Margin="0 5 0 16"/>
+        <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal"  HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0 0 0 0">
+            <Label  Content="Station:" FontSize="16" FontWeight="Bold"/>
+            <TextBox Margin="0 0 0 0" x:Name="TextStation" materialDesign:HintAssist.Hint="Station" ></TextBox>
+        </StackPanel>
+        <ProgressBar Grid.Column="0" Grid.Row="3" Orientation="Horizontal"  Value="100" IsIndeterminate="False" Margin="0 5 0 16"/>
+        <StackPanel Grid.Column="0" Grid.Row="4" Orientation="Horizontal"  HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0 0 0 0">
+            <Label  Content="ID:" FontSize="16" FontWeight="Bold"/>
+            <TextBox Margin="0 0 0 0" x:Name="TextID" materialDesign:HintAssist.Hint="ID" ></TextBox>
+        </StackPanel>
+        <ProgressBar Grid.Column="0" Grid.Row="5" Orientation="Horizontal"  Value="100" IsIndeterminate="False" Margin="0 5 0 16"/>
+        <StackPanel Grid.Column="0" Grid.Row="6" Orientation="Horizontal"  HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0 0 0 0">
+            <Label  Content="No:" FontSize="16" FontWeight="Bold"/>
+            <TextBox Margin="0 0 0 0" x:Name="TextNo" materialDesign:HintAssist.Hint="No" ></TextBox>
+        </StackPanel>
+        <ProgressBar Grid.Column="0" Grid.Row="7" Orientation="Horizontal"  Value="100" IsIndeterminate="False" Margin="0 5 0 16"/>
+        <StackPanel Grid.Column="0" Grid.Row="8" Orientation="Horizontal"  HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0 0 0 0">
+            <Label  Content="From:" FontSize="16" FontWeight="Bold"/>
+            <TextBox Margin="0 0 0 0" x:Name="TextFrom" materialDesign:HintAssist.Hint="From" ></TextBox>
+        </StackPanel>
+        <ProgressBar Grid.Column="0" Grid.Row="9" Orientation="Horizontal"  Value="100" IsIndeterminate="False" Margin="0 5 0 16"/>
+        <StackPanel Grid.Column="0" Grid.Row="10" Orientation="Horizontal"  HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0 0 0 0">
+            <Label  Content="To:" FontSize="16" FontWeight="Bold"/>
+            <TextBox Margin="0 0 0 0" x:Name="TextTo" materialDesign:HintAssist.Hint="To" ></TextBox>
+        </StackPanel>
+        <ProgressBar Grid.Column="0" Grid.Row="11" Orientation="Horizontal"  Value="100" IsIndeterminate="False" Margin="0 5 0 16"/>
+        <StackPanel Grid.Column="0" Grid.Row="12" Orientation="Horizontal"  HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0 0 0 0">
+            <Label  Content="Direction:" FontSize="16" FontWeight="Bold"/>
+            <TextBox Margin="0 0 0 0" x:Name="TextDirection" materialDesign:HintAssist.Hint="Direction" ></TextBox>
+        </StackPanel>
+        <ProgressBar Grid.Column="0" Grid.Row="13" Orientation="Horizontal"  Value="100" IsIndeterminate="False" Margin="0 5 0 16"/>
+        <StackPanel Grid.Column="0" Grid.Row="14" Orientation="Horizontal"  HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0 0 0 0">
+            <Label  Content="Type:" FontSize="16" FontWeight="Bold"/>
+            <TextBox Margin="0 0 0 0" x:Name="TextType" materialDesign:HintAssist.Hint="Type" ></TextBox>
+        </StackPanel>
+        <ProgressBar Grid.Column="0" Grid.Row="15" Orientation="Horizontal"  Value="100" IsIndeterminate="False" Margin="0 5 0 16"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="16">
+            <Button IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" HorizontalAlignment="Right" Margin="16 16 16 0" CommandParameter="{Binding MyResult}" x:Name="Btnenter" Click="Btnenter_Click" >
+                傳送
+            </Button>
+            <Button IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" HorizontalAlignment="Right" Margin="16 16 16 0" CommandParameter="{Binding MyResult}" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+                結束
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,6 +1,7 @@
 ﻿using NLog;
 using SAA_CommunicationSystem_Lib.Attributes;
 using SAA_CommunicationSystem_Lib.SqlData;
+using SAA_CommunicationSystem_Lib.WebApiSendCommand;
 using SAA_CommunicationSystem_Lib.WebApiServer;
 using System;
 using System.Collections.Generic;
@@ -50,6 +51,11 @@ namespace SAA_CommunicationSystem_Lib
         /// </summary>
         public static Logger SaaLog;
 
+        /// <summary>
+        /// 傳送Web API方法
+        /// </summary>
+        public static SAA_WebApiSendCommand webapisendcommand = new SAA_WebApiSendCommand();
+
         #region [===寫入Log訊息===]
         /// <summary>
         ///寫入Log訊息
@@ -82,14 +88,16 @@ namespace SAA_CommunicationSystem_Lib
         }
         #endregion
 
+        #region [===讀取當前時間===]
         /// <summary>
-        /// 讀取時間
+        /// 讀取當前時間
         /// </summary>
         /// <returns></returns>
         public static string ReadTime()
         {
             return $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}";
-        }
+        } 
+        #endregion
 
         #region [===LCS命令名稱列舉===]
         /// <summary>

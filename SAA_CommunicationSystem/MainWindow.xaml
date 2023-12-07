@@ -38,7 +38,7 @@
                                         <ToggleButton x:Name="DarkModeToggleButton" Click="MenuDarkModeButton_Click"/>
                                         <TextBlock Text="{DynamicResource TxtBlack}" Margin="10 0 0 0"/>
                                     </StackPanel>
-                                    <Button Content="{DynamicResource BtnLogIn}" Name="BtnLogIn" Click="BtnLogIn_OnClick"/>
+                                    <Button Content="系統登入" Name="BtnLogIn" Click="BtnLogIn_OnClick"/>
                                     <!--<Button Content="{DynamicResource BtnSetUp}" Name="BtnSetUp" Click="BtnSetUp_OnClick"/>-->
                                     <!--<Button Content="{DynamicResource Btnlanguage}" Name="Btnlanguage" Click="Btnlanguage_OnClick"/>-->
                                 </StackPanel>

@@ -27,6 +27,9 @@ namespace SAA_CommunicationSystem_Lib
                     ConfigFile = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
                     SAA_Database.configattributes = new ConfigAttributes
                     {
+                        SaaEquipmentName = ConfigFile.AppSettings.Settings[ConfigName.SaaEquipmentName.ToString()].Value.ToString(),
+                        StorageWebApiServerIP =ConfigFile.AppSettings.Settings[ConfigName.StorageWebApiServerIP.ToString()].Value.ToString(),
+                        iLISWebApiServerIP = ConfigFile.AppSettings.Settings[ConfigName.iLISWebApiServerIP.ToString()].Value.ToString(),
                         WebApiServerIP = ConfigFile.AppSettings.Settings[ConfigName.WebApiServerIP.ToString()].Value.ToString(),
                         SaaDataBaseIP = ConfigFile.AppSettings.Settings[ConfigName.SaaDataBaseIP.ToString()].Value.ToString(),
                         SaaDataBase = ConfigFile.AppSettings.Settings[ConfigName.SaaDataBase.ToString()].Value.ToString(),
@@ -36,7 +39,7 @@ namespace SAA_CommunicationSystem_Lib
                         SaaSystemsName = ConfigFile.AppSettings.Settings[ConfigName.SaaSystemsName.ToString()].Value.ToString(),
                         WebApiResultOK = ConfigFile.AppSettings.Settings[ConfigName.WebApiResultOK.ToString()].Value.ToString(),
                         WebApiResultFAIL = ConfigFile.AppSettings.Settings[ConfigName.WebApiResultFAIL.ToString()].Value.ToString(),
-
+                        ParaKey = ConfigFile.AppSettings.Settings[ConfigName.ParaKey.ToString()].Value.ToString(),
                     };
                 }
             }
@@ -48,6 +51,21 @@ namespace SAA_CommunicationSystem_Lib
 
         private enum ConfigName
         {
+            /// <summary>
+            /// 設備機型
+            /// </summary>
+            SaaEquipmentName,
+
+            /// <summary>
+            /// LCS Web Api伺服器IP位置
+            /// </summary>
+            StorageWebApiServerIP,
+
+            /// <summary>
+            /// iLIS Web Api伺服器IP位置
+            /// </summary>
+            iLISWebApiServerIP,
+
             /// <summary>
             /// Web Api伺服器IP位置
             /// </summary>
@@ -92,6 +110,11 @@ namespace SAA_CommunicationSystem_Lib
             /// 回覆LCS接受結果失敗
             /// </summary>
             WebApiResultFAIL,
+
+            /// <summary>
+            /// 傳送指令至LCS Web Api伺服器關鍵字
+            /// </summary>
+            ParaKey,
         }
     }
 }

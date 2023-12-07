@@ -24,6 +24,9 @@ namespace SAA_CommunicationSystem.UI
         private UserControl control = new UserControl();
         private readonly ucSaaCommunicationHome _mSaaCommunicationHome = new ucSaaCommunicationHome();
         private readonly ucSaaCommunicationLogDisplay _mSaaCommunicationLogDisplay = new ucSaaCommunicationLogDisplay();
+        private readonly ucSaaCommunicationRejectList _mSaaCommunicationRejectList = new ucSaaCommunicationRejectList();
+        private readonly ucSaaCommunicationManualTransfer _mSaaCommunicationManualTransfer = new ucSaaCommunicationManualTransfer(); 
+
         public ucSaaCommunicationElectric()
         {
             InitializeComponent();
@@ -76,6 +79,7 @@ namespace SAA_CommunicationSystem.UI
                         BtnLog.IsEnabled = false;
                         break;
                     case App.BtnName.BtnSend:
+                        GetGrid(_mSaaCommunicationManualTransfer);
                         BtnSend.IsEnabled = false;
                         break;
                     case App.BtnName.BtnImport:
@@ -88,6 +92,7 @@ namespace SAA_CommunicationSystem.UI
                         BtnStorageInfo.IsEnabled = false;
                         break;
                     case App.BtnName.BtnRejectList:
+                        GetGrid(_mSaaCommunicationRejectList);
                         BtnRejectList.IsEnabled = false;
                         break;
                     case App.BtnName.BtnRejectHistory:

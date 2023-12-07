@@ -71,6 +71,36 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferClearStorage.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferClearStorage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ManualTransferLCS\c.xaml.cs">
+      <DependentUpon>c.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferLcsSwitch.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferLcsSwitch.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferQueryPortInfo.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferQueryPortInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferReject.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferReject.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferStockIn.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferStockIn.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferStockOut.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferStockOut.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferStockOutToBuffer.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferStockOutToBuffer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferStockOutToReject.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferStockOutToReject.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferStorageInfo.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferStorageInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\ucSaaCommunicationElectric.xaml.cs">
       <DependentUpon>ucSaaCommunicationElectric.xaml</DependentUpon>
     </Compile>
@@ -92,6 +122,15 @@
     <Compile Include="UI\ucSaaCommunicationLogReceiv.xaml.cs">
       <DependentUpon>ucSaaCommunicationLogReceiv.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\ucSaaCommunicationManualTransfer.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransfer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ucSaaCommunicationManualTransferLcs.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferLcs.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ucSaaCommunicationRejectList.xaml.cs">
+      <DependentUpon>ucSaaCommunicationRejectList.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -104,6 +143,46 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferClearStorage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ManualTransferLCS\c.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferLcsSwitch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferQueryPortInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferReject.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferStockIn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferStockOut.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferStockOutToBuffer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferStockOutToReject.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferStorageInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\ucSaaCommunicationElectric.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,6 +208,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\ucSaaCommunicationLogReceiv.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ucSaaCommunicationManualTransfer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ucSaaCommunicationManualTransferLcs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ucSaaCommunicationRejectList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

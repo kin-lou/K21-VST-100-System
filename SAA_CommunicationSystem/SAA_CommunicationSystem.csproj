@@ -39,6 +39,9 @@
   <PropertyGroup>
     <ApplicationIcon>ups.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MaterialDesignColors, Version=2.0.6.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.2.0.6\lib\net452\MaterialDesignColors.dll</HintPath>
@@ -74,8 +77,8 @@
     <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferClearStorage.xaml.cs">
       <DependentUpon>ucSaaCommunicationManualTransferClearStorage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ManualTransferLCS\c.xaml.cs">
-      <DependentUpon>c.xaml</DependentUpon>
+    <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferInquire.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferInquire.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferLcsSwitch.xaml.cs">
       <DependentUpon>ucSaaCommunicationManualTransferLcsSwitch.xaml</DependentUpon>
@@ -100,6 +103,18 @@
     </Compile>
     <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferStorageInfo.xaml.cs">
       <DependentUpon>ucSaaCommunicationManualTransferStorageInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SaaCommunicationReject\ucSaaCommunicationRejectDetails.xaml.cs">
+      <DependentUpon>ucSaaCommunicationRejectDetails.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SaaCommunicationReject\ucSaaCommunicationRejectDetailsAdd.xaml.cs">
+      <DependentUpon>ucSaaCommunicationRejectDetailsAdd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SaaCommunicationReject\ucSaaCommunicationRejectDetailsHistory.xaml.cs">
+      <DependentUpon>ucSaaCommunicationRejectDetailsHistory.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SaaCommunicationReject\ucSaaCommunicationRejectDetailsUpdate.xaml.cs">
+      <DependentUpon>ucSaaCommunicationRejectDetailsUpdate.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\ucSaaCommunicationElectric.xaml.cs">
       <DependentUpon>ucSaaCommunicationElectric.xaml</DependentUpon>
@@ -128,9 +143,6 @@
     <Compile Include="UI\ucSaaCommunicationManualTransferLcs.xaml.cs">
       <DependentUpon>ucSaaCommunicationManualTransferLcs.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ucSaaCommunicationRejectList.xaml.cs">
-      <DependentUpon>ucSaaCommunicationRejectList.xaml</DependentUpon>
-    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -147,7 +159,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\ManualTransferLCS\c.xaml">
+    <Page Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferInquire.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -180,6 +192,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferStorageInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\SaaCommunicationReject\ucSaaCommunicationRejectDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\SaaCommunicationReject\ucSaaCommunicationRejectDetailsAdd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\SaaCommunicationReject\ucSaaCommunicationRejectDetailsHistory.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\SaaCommunicationReject\ucSaaCommunicationRejectDetailsUpdate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -219,10 +247,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\ucSaaCommunicationRejectList.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -242,6 +266,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

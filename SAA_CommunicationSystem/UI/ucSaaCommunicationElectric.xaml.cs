@@ -1,4 +1,5 @@
-﻿using SAA_CommunicationSystem_Lib;
+﻿using SAA_CommunicationSystem.UI.SaaCommunicationReject;
+using SAA_CommunicationSystem_Lib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,8 +25,10 @@ namespace SAA_CommunicationSystem.UI
         private UserControl control = new UserControl();
         private readonly ucSaaCommunicationHome _mSaaCommunicationHome = new ucSaaCommunicationHome();
         private readonly ucSaaCommunicationLogDisplay _mSaaCommunicationLogDisplay = new ucSaaCommunicationLogDisplay();
-        private readonly ucSaaCommunicationRejectList _mSaaCommunicationRejectList = new ucSaaCommunicationRejectList();
-        private readonly ucSaaCommunicationManualTransfer _mSaaCommunicationManualTransfer = new ucSaaCommunicationManualTransfer(); 
+        private readonly ucSaaCommunicationRejectDetails _mSaaCommunicationRejectList = new ucSaaCommunicationRejectDetails();
+        
+        private readonly ucSaaCommunicationManualTransfer _mSaaCommunicationManualTransfer = new ucSaaCommunicationManualTransfer();
+        private readonly ucSaaCommunicationRejectDetailsHistory _mSaaCommunicationRejectDetailsHistory = new ucSaaCommunicationRejectDetailsHistory();
 
         public ucSaaCommunicationElectric()
         {
@@ -96,6 +99,7 @@ namespace SAA_CommunicationSystem.UI
                         BtnRejectList.IsEnabled = false;
                         break;
                     case App.BtnName.BtnRejectHistory:
+                        GetGrid(_mSaaCommunicationRejectDetailsHistory);
                         BtnRejectHistory.IsEnabled = false;
                         break;
                     case App.BtnName.BtnOperationRecord:

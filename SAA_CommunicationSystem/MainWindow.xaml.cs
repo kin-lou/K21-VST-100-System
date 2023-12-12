@@ -52,6 +52,7 @@ namespace SAA_CommunicationSystem
                 if (SAA_Database.webapiserver == null)
                     SAA_Database.webapiserver = new SAA_CommunicationSystem_Lib.WebApiServer.SAA_WebApiServer();
 
+                TexEquipment.Text = SAA_Database.configattributes.SaaEquipmentName;
                 SAA_Database.webapiserver.WebAPIServerSatrt();
                 SAA_Database.LogMessage($"設備Web Api Server已啟動，Server IP位置:{SAA_Database.configattributes.WebApiServerIP}");
                 SAA_Database.LogMessage("設備資料傳送系統準備開始");

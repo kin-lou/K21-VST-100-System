@@ -65,6 +65,9 @@
   <ItemGroup>
     <Compile Include="Attributes\ConfigAttributes.cs" />
     <Compile Include="Controllers\WebApiController.cs" />
+    <Compile Include="DataTableAttributes\SaaScRejectList.cs" />
+    <Compile Include="DataTableAttributes\SaaScReportConveys.cs" />
+    <Compile Include="DataTableAttributes\SaaScRrejectHistory.cs" />
     <Compile Include="GuiAttributes\GuiOpetationHistoryAttributes.cs" />
     <Compile Include="GuiAttributes\GuiUserAttributes.cs" />
     <Compile Include="GuiAttributes\ScRejectListAttributes.cs" />

@@ -1,9 +1,11 @@
-﻿using SAA_CommunicationSystem_Lib.GuiAttributes;
+﻿using SAA_CommunicationSystem_Lib.DataTableAttributes;
+using SAA_CommunicationSystem_Lib.GuiAttributes;
 using SAA_MsSql;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,6 +47,28 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public void SetGuiLoginstatus(GuiUserAttributes guiuser)
         {
             SaaSql.WriteSqlByAutoOpen($"Insert into GUI_LOGINSTATUS Values('{guiuser.USERID}', '{guiuser.USERNAME}','{guiuser.GROUPID}','{guiuser.LAST_LOGIN_TIME}')");
+        }
+        #endregion
+
+        #region [===新增RejectList===]
+        /// <summary>
+        /// 新增RejectList
+        /// </summary>
+        /// <param name="rejectList"></param>
+        public void SetScRejectList(SaaScRejectList rejectList)
+        {
+            SaaSql.WriteSqlByAutoOpen($"Insert Into SC_REJECT_LIST Values('{rejectList.SETNO}', '{rejectList.MODEL_NAME}', '{rejectList.LOCAL_REJECT_CODE}', '{rejectList.LOCAL_REJECT_MSG}', '{rejectList.REMOTE_REJECT_CODE}', '{rejectList.REMOTE_REJECT_MSG}')");
+        }
+        #endregion
+
+        #region [===新增Reject歷史紀錄===]
+        /// <summary>
+        /// 新增Reject歷史紀錄
+        /// </summary>
+        /// <param name="rejecthistory"></param>
+        public void SetScRejectHistory(SaaScRrejectHistory rejecthistory)
+        {
+            SaaSql.WriteSqlByAutoOpen($"Insert Into SC_REJECT_HISTORY Values('{rejecthistory.SETNO}', '{rejecthistory.REJECT_TIME}', '{rejecthistory.MODEL_NAME}', '{rejecthistory.STATION}', '{rejecthistory.CARRIERID}', '{rejecthistory.PARTNO}', '{rejecthistory.LOCAL_REJECT_CODE}', '{rejecthistory.LOCAL_REJECT_MSG}', '{rejecthistory.REMOTE_REJECT_CODE}', '{rejecthistory.REMOTE_REJECT_MSG}')");
         } 
         #endregion
 
@@ -68,6 +92,17 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public void DelGuiLoginStatus()
         {
             SaaSql.WriteSqlByAutoOpen("Delete From GUI_LOGINSTATUS");
+        }
+        #endregion
+
+        #region [===刪除RejectList===]
+        /// <summary>
+        /// 刪除RejectList
+        /// </summary>
+        /// <param name="screjectlis"></param>
+        public void DelRejectList(SaaScRejectList screjectlis)
+        {
+            SaaSql.WriteSqlByAutoOpen("Delete From SC_REJECT_LIST Where SETNO = '" + screjectlis.SETNO + "' And MODEL_NAME = '" + screjectlis.MODEL_NAME + "' And LOCAL_REJECT_CODE = '" + screjectlis.LOCAL_REJECT_CODE + "'");
         } 
         #endregion
 
@@ -131,6 +166,113 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public DataTable GetLoginStatus()
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From GUI_LOGINSTATUS").Tables[0];
+        }
+        #endregion
+
+        #region [===讀取轉譯上報參數設定===]
+        /// <summary>
+        /// 讀取轉譯上報參數設定
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetScReportConveys()
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_REPORT_CONVEYS").Tables[0];
+        }
+        #endregion
+
+        #region [===讀取Reject 明細===]
+        /// <summary>
+        /// 讀取Reject 明細
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetScRejectList()
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_REJECT_LIST").Tables[0];
+        }
+        #endregion
+
+        #region [===讀取Reject List Code碼查詢===]
+        /// <summary>
+        /// 讀取REJECT LIST Code碼查詢
+        /// </summary>
+        /// <param name="localrejectcode"></param>
+        /// <returns></returns>
+        public DataTable GetScRejectList(string localrejectcode)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_REJECT_LIST Where LOCAL_REJECT_CODE = '" + localrejectcode + "'").Tables[0];
+        }
+        #endregion
+
+        #region [===查詢REJECT歷史紀錄===]
+        /// <summary>
+        /// 查詢REJECT歷史紀錄
+        /// </summary>
+        /// <param name="rejecthistory"></param>
+        /// <param name="starttime"></param>
+        /// <param name="endtime"></param>
+        /// <returns></returns>
+        public DataTable GetScRejectCarrierIdHistory(SaaScRrejectHistory rejecthistory, string starttime, string endtime)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_REJECT_HISTORY Where REJECT_TIME BETWEEN '" + starttime + "' And '" + endtime + "' And MODEL_NAME = '" + rejecthistory.MODEL_NAME + "' And CARRIERID LIKE '" + rejecthistory.CARRIERID + "'").Tables[0];
+        }
+        #endregion
+
+        #region [===查詢REJECT歷史紀錄===]
+        /// <summary>
+        /// 查詢REJECT歷史紀錄
+        /// </summary>
+        /// <param name="rejecthistory"></param>
+        /// <param name="starttime"></param>
+        /// <param name="endtime"></param>
+        /// <returns></returns>
+        public DataTable GetScRejectHistory(SaaScRrejectHistory rejecthistory, string starttime, string endtime)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_REJECT_HISTORY Where REJECT_TIME BETWEEN '" + starttime + "' And '" + endtime + "' And MODEL_NAME = '" + rejecthistory.MODEL_NAME + "'").Tables[0];
+        }
+        #endregion
+
+        #region [===查詢REJECT歷史紀錄===]
+        /// <summary>
+        /// 查詢REJECT歷史紀錄
+        /// </summary>
+        /// <param name="rejecthistory"></param>
+        /// <param name="starttime"></param>
+        /// <param name="endtime"></param>
+        /// <returns></returns>
+        public DataTable GetScRejectIDHistory(SaaScRrejectHistory rejecthistory, string starttime, string endtime)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_REJECT_HISTORY Where REJECT_TIME BETWEEN '" + starttime + "' And '" + endtime + "' And CARRIERID LIKE '" + rejecthistory.CARRIERID + "'").Tables[0];
+        }
+        #endregion
+
+        #region [===查詢REJECT歷史紀錄===]
+        /// <summary>
+        /// 查詢REJECT歷史紀錄
+        /// </summary>
+        /// <param name="starttime"></param>
+        /// <param name="endtime"></param>
+        /// <returns></returns>
+        public DataTable GetScRejectHistory(string starttime, string endtime)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_REJECT_HISTORY Where REJECT_TIME BETWEEN '" + starttime + "' And '" + endtime + "'").Tables[0];
+        } 
+        #endregion
+
+        #region [===讀取前20筆REJECT歷史資料===]
+        /// <summary>
+        /// 讀取前20筆REJECT歷史資料
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetScRejectHistory()
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select TOP(20) * From SC_REJECT_HISTORY Order By REJECT_TIME DESC").Tables[0];
+        }
+        #endregion
+
+        #region [===讀取設備機台名稱===]
+        public DataTable GetScEquipmentZone()
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_EQUIPMENT_ZONE").Tables[0];
         } 
         #endregion
     }

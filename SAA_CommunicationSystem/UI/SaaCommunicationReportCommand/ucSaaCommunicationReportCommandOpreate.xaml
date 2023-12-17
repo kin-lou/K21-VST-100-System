@@ -1,0 +1,97 @@
+﻿<UserControl x:Class="SAA_CommunicationSystem.UI.SaaCommunicationReportCommand.ucSaaCommunicationReportCommandOpreate"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+         mc:Ignorable="d" 
+         d:DesignHeight="450" d:DesignWidth="1360">
+    <materialDesign:Card Grid.Column="0" Grid.Row="3" Loaded="Card_Loaded">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="4*"/>
+            </Grid.RowDefinitions>
+            <materialDesign:Card>
+                <GroupBox Header="選擇點位" Style="{DynamicResource MaterialDesignGroupBox}" Margin="3" materialDesign:ShadowAssist.ShadowDepth="Depth3" BorderThickness="0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                        <Grid Grid.Column="0" Grid.Row="0" Name="gidBargraph" Margin="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Column="0" Grid.Row="0">
+                                <Label Content="請選擇SETNO" HorizontalAlignment="Left" Width="130"/>
+                                <materialDesign:PackIcon Grid.Row="1"  Kind="AboutCircleOutline"  Foreground="{Binding ElementName=CmbAuthority, Path=BorderBrush}" HorizontalAlignment="Right"/>
+                            </Grid>
+                            <Grid Grid.Column="0" Grid.Row="1">
+                                <ComboBox  ItemsSource="{Binding LongListToTestComboVirtualization}" SelectedValue="{Binding SelectedValueOne}" x:Name="CmbEquipment" DropDownOpened="CmbEquipment_DropDownOpened" materialDesign:HintAssist.Hint="SETNO" DropDownClosed="CmbEquipment_DropDownClosed" Margin="0,0,5,0"/>
+                            </Grid>
+                            <Grid Grid.Column="1" Grid.Row="0">
+                                <Label Content="請選擇Alarm Type" HorizontalAlignment="Left" Width="150"/>
+                                <materialDesign:PackIcon Grid.Row="1"  Kind="AboutCircleOutline"  Foreground="{Binding ElementName=CmbAuthority, Path=BorderBrush}" HorizontalAlignment="Right"/>
+                            </Grid>
+                            <Grid Grid.Column="1" Grid.Row="1">
+                                <ComboBox ItemsSource="{Binding LongListToTestComboVirtualization}" SelectedValue="{Binding SelectedValueOne}" x:Name="CmbAlarmType" DropDownOpened="CmbEquipment_DropDownOpened" materialDesign:HintAssist.Hint="Alarm Type" DropDownClosed="CmbEquipment_DropDownClosed"  Margin="5,0,0,0" Grid.ColumnSpan="2"/>
+                            </Grid>
+                            <Grid Grid.Column="2" Grid.Row="0" >
+                                <Label Grid.Row="1" Content="請選擇UNITID"  Width="150"/>
+                                <materialDesign:PackIcon Grid.Row="1"  Kind="ShieldAccountOutline" Foreground="{Binding ElementName=CmbAuthority, Path=BorderBrush}" HorizontalAlignment="Right"/>
+                            </Grid>
+                            <Grid Grid.Column="2" Grid.Row="1">
+                                <ComboBox ItemsSource="{Binding LongListToTestComboVirtualization}" SelectedValue="{Binding SelectedValueOne}"  x:Name="CmbUnitid" DropDownOpened="CmbEquipment_DropDownOpened" materialDesign:HintAssist.Hint="UNITID" DropDownClosed="CmbEquipment_DropDownClosed"  Margin="5,0,0,0" Grid.ColumnSpan="2"/>
+                            </Grid>
+                            <Grid Grid.Column="3" Grid.Row="0">
+                                <Label Content="請輸入ALARMCODE" HorizontalAlignment="Left" Width="150"/>
+                                <materialDesign:PackIcon Grid.Row="1"  Kind="ShieldAccountOutline" Foreground="{Binding ElementName=CmbAuthority, Path=BorderBrush}" HorizontalAlignment="Right"/>
+                            </Grid>
+                            <Grid Grid.Column="3" Grid.Row="1">
+                                <TextBox x:Name="TexLocationid" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="請輸入ALARMCODE" Text="" Margin="5,0,0,8"  />
+                            </Grid>
+                            <Grid Grid.Column="4" Grid.Row="0" Grid.RowSpan ="2">
+                                <Button IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" Margin="16 16 16 0" CommandParameter="{Binding MyResult}" x:Name="BtnInquire" Click="BtnInquire_Click" >
+                                    查詢
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="5" Grid.Row="0" Grid.RowSpan ="2">
+                                <Button IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" Margin="16 16 16 0" CommandParameter="{Binding MyResult}" x:Name="BtnAdd" Click="BtnAdd_Click" >
+                                    新增
+                                </Button>
+                            </Grid>
+                            <!--<Grid Grid.Column="6" Grid.Row="0" Grid.RowSpan ="2">
+                            <Button IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" Margin="16 16 16 0" CommandParameter="{Binding MyResult}" x:Name="Btnenter" Click="Btnenter_Click" >
+                                匯入 Alarm List
+                            </Button>
+                        </Grid>-->
+                            <!--<Grid Grid.Column="7" Grid.Row="0" Grid.RowSpan ="2">
+                            <Button IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" Margin="16 16 16 0" CommandParameter="{Binding MyResult}" x:Name="BtnAlarm" Click="BtnAlarm_Click" >
+                                比對Alarm List
+                            </Button>
+                        </Grid>-->
+                            <Grid Grid.Column="8" Grid.Row="0" Grid.RowSpan ="2">
+                                <Button IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" Margin="16 16 16 0" CommandParameter="{Binding MyResult}" x:Name="BtnAlarmOut" Click="BtnAlarmOut_Click" >
+                                    匯出Alarm List
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </ScrollViewer>
+                </GroupBox>
+            </materialDesign:Card>
+            <Grid Grid.Column="0" Grid.Row="1" x:Name="GdContent">
+            </Grid>
+        </Grid>
+    </materialDesign:Card>
+</UserControl>

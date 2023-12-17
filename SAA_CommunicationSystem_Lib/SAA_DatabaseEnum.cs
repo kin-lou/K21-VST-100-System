@@ -134,6 +134,117 @@ namespace SAA_CommunicationSystem_Lib
             /// 遠端REJECT訊息
             /// </summary>
             REMOTE_REJECT_MSG,
+        }
+        #endregion
+
+        #region [===機台區域===]
+        /// <summary>
+        /// 機台區域
+        /// </summary>
+        public enum SC_EQUIPMENT_ZONE
+        {
+            /// <summary>
+            /// 機型編號
+            /// </summary>
+            SETNO,
+
+            /// <summary>
+            /// 機型名稱
+            /// </summary>
+            MODEL_NAME,
+
+            /// <summary>
+            /// 站點編號
+            /// </summary>
+            STATION_NAME,
+
+            /// <summary>
+            /// 區域名稱
+            /// </summary>
+            ZONE_NAME,
+
+            /// <summary>
+            /// 客戶機台名稱
+            /// </summary>
+            REPORT_NAME,
+        }
+        #endregion
+
+        #region [===上報命令===]
+        public enum ReportCommand
+        {
+            /// <summary>
+            /// Alarm上報
+            /// </summary>
+            ALARM_REPORT,
+
+            /// <summary>
+            /// 詢問上報
+            /// </summary>
+            ASK_CARRIER,
+
+            /// <summary>
+            /// 入庫上報
+            /// </summary>
+            CARRY_IN_REPORT,
+
+            /// <summary>
+            /// 出庫上報
+            /// </summary>
+            CARRY_OUT_REPORT,
+
+            /// <summary>
+            /// 退盒上報
+            /// </summary>
+            CARRY_REJECT,
+
+            /// <summary>
+            /// 清除上報
+            /// </summary>
+            CLEAR_CACHE,
+
+            /// <summary>
+            /// 鎖格上報
+            /// </summary>
+            IN_OUT_LOCK,
+        }
+        #endregion
+
+        #region [===上報指令名稱===]
+        /// <summary>
+        /// 上報指令名稱
+        /// </summary>
+        public enum SC_REPORT_COMMAND_NAME
+        {
+            /// <summary>
+            /// 機型編號
+            /// </summary>
+            SETNO,
+
+            /// <summary>
+            /// 機型名稱
+            /// </summary>
+            MODEL_NAME,
+
+            /// <summary>
+            /// LCS上報名稱
+            /// </summary>
+            LCS_COMMAND_NAME,
+
+            /// <summary>
+            /// 上報指令編號
+            /// </summary>
+            REPORT_COMMAND_NO,
+
+            /// <summary>
+            /// 上報指令名稱
+            /// </summary>
+            REPORT_COMMAND_NAME,
+
+            /// <summary>
+            /// 機構位置
+            /// </summary>
+            LOCATIONID,
         } 
         #endregion
     }

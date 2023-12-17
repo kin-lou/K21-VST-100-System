@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,11 @@ namespace SAA_CommunicationSystem_Lib.Attributes
 {
     public class ConfigAttributes
     {
+        /// <summary>
+        /// 設備編號
+        /// </summary>
+        public string SaaEquipmentNo { get; set; }
+
         /// <summary>
         /// 設備機型
         /// </summary>

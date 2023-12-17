@@ -1,4 +1,5 @@
-﻿using SAA_CommunicationSystem_Lib.ReceivAttributes;
+﻿using Newtonsoft.Json;
+using SAA_CommunicationSystem_Lib.ReceivAttributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
 {
     public class WebApiController : ApiController
     {
+        private string commandcontent = string.Empty;
         private SaaReceiv saareceivsts = new SaaReceiv();
         private SaaReceiv saareceivmode = new SaaReceiv();
         private SaaReceivClear receivclear = new SaaReceivClear();
@@ -71,6 +73,45 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                             break;
                                     }
                                 }
+                                var alarmcommanddata = SAA_Database.SaaSql.GetReportCommandName(SAA_Database.configattributes.SaaEquipmentNo, receivalarm.Station, receivalarm.CMD);
+                                if (alarmcommanddata.Rows.Count!=0)
+                                {
+                                    SaaReceivCommandName receivcommand = new SaaReceivCommandName
+                                    {
+                                        CommandNo = alarmcommanddata.Rows[0][SAA_DatabaseEnum.SC_REPORT_COMMAND_NAME.REPORT_COMMAND_NO.ToString()].ToString(),
+                                        CommandName = alarmcommanddata.Rows[0][SAA_DatabaseEnum.SC_REPORT_COMMAND_NAME.REPORT_COMMAND_NAME.ToString()].ToString(),
+                                    };
+                                    var equipmentzonedata = SAA_Database.SaaSql.GetScEquipmentZone(SAA_Database.configattributes.SaaEquipmentNo, receivalarm.Station);
+                                    receivcommand.CommandStation = equipmentzonedata.Rows.Count != 0 ? equipmentzonedata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_ZONE.REPORT_NAME.ToString()].ToString() : string.Empty;
+                                    for (int i = 0; i < SAA_Database.reportcommand.AlarmReportAry.Count; i++)
+                                    {
+                                        switch (i)
+                                        {
+                                            case 0:
+                                                SAA_Database.reportcommand.DicAlarmReport[SAA_Database.reportcommand.AlarmReportAry[i]] = receivcommand.CommandNo;
+                                                break;
+                                            case 1:
+                                                SAA_Database.reportcommand.DicAlarmReport[SAA_Database.reportcommand.AlarmReportAry[i]] = receivcommand.CommandName;
+                                                break;
+                                            case 2:
+                                                SAA_Database.reportcommand.DicAlarmReport[SAA_Database.reportcommand.AlarmReportAry[i]] = receivcommand.CommandStation;
+                                                break;
+                                            case 3:
+                                                SAA_Database.reportcommand.DicAlarmReport[SAA_Database.reportcommand.AlarmReportAry[i]] = receivalarm.Code;
+                                                break;
+                                            case 4:
+                                                SAA_Database.reportcommand.DicAlarmReport[SAA_Database.reportcommand.AlarmReportAry[i]] = receivalarm.Msg;
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                    commandcontent = GetReportCommands(SAA_Database.reportcommand.DicAlarmReport);
+                                }
+                                else
+                                {
+                                    SAA_Database.LogMessage($"【查無定義指令】查無定義指令無法接收。", SAA_Database.LogType.Error);
+                                }
                                 #endregion
                                 break;
                             case SAA_Database.CommandName.ClearStorage:
@@ -95,6 +136,8 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                             break;
                                     }
                                 }
+
+
                                 #endregion
                                 break;
                             case SAA_Database.CommandName.GoWhere:
@@ -230,10 +273,24 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                     }
                                 }
                                 break;
+                            case SAA_Database.CommandName.RGV_1_MODE_In:
+                            case SAA_Database.CommandName.RGV_1_MODE_Out:
+                                break;
+                            case SAA_Database.CommandName.RGV_2_MODE_In:
+                            case SAA_Database.CommandName.RGV_2_MODE_Out:
+                                break;
+                            case SAA_Database.CommandName.RGV_1_STS_ON:
+                            case SAA_Database.CommandName.RGV_1_STS_OFF:
+                                break; ;
+                            case SAA_Database.CommandName.RGV_2_STS_ON:
+                            case SAA_Database.CommandName.RGV_2_STS_OFF:
+                                break;
+                            case SAA_Database.CommandName.CarrierArrivedPlatform:
+                                break;
                         }
                     }
                 }
-                return SAA_Database.configattributes.WebApiResultFAIL;
+                return SAA_Database.configattributes.WebApiResultOK;
             }
             catch (Exception ex)
             {
@@ -335,6 +392,19 @@ namespace SAA_CommunicationSystem_Lib.Controllers
             {
                 SAA_Database.LogMessage($"{ex.Message}-{ex.StackTrace}", SAA_Database.LogType.Error);
                 return null;
+            }
+        }
+
+        private string GetReportCommands(Dictionary<string, string> dicContent)
+        {
+            try
+            {
+                return JsonConvert.SerializeObject(dicContent).ToString();
+            }
+            catch (Exception ex)
+            {
+                SAA_Database.LogMessage($"{ex.Message}-{ex.StackTrace}", SAA_Database.LogType.Error);
+                return string.Empty;
             }
         }
     }

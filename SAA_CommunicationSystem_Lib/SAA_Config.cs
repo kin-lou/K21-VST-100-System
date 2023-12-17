@@ -27,6 +27,7 @@ namespace SAA_CommunicationSystem_Lib
                     ConfigFile = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
                     SAA_Database.configattributes = new ConfigAttributes
                     {
+                        SaaEquipmentNo = ConfigFile.AppSettings.Settings[ConfigName.SaaEquipmentNo.ToString()].Value.ToString(),
                         SaaEquipmentName = ConfigFile.AppSettings.Settings[ConfigName.SaaEquipmentName.ToString()].Value.ToString(),
                         StorageWebApiServerIP =ConfigFile.AppSettings.Settings[ConfigName.StorageWebApiServerIP.ToString()].Value.ToString(),
                         iLISWebApiServerIP = ConfigFile.AppSettings.Settings[ConfigName.iLISWebApiServerIP.ToString()].Value.ToString(),
@@ -51,6 +52,11 @@ namespace SAA_CommunicationSystem_Lib
 
         private enum ConfigName
         {
+            /// <summary>
+            /// 設備編號
+            /// </summary>
+           SaaEquipmentNo,
+
             /// <summary>
             /// 設備機型
             /// </summary>

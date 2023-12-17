@@ -69,6 +69,17 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public void SetScRejectHistory(SaaScRrejectHistory rejecthistory)
         {
             SaaSql.WriteSqlByAutoOpen($"Insert Into SC_REJECT_HISTORY Values('{rejecthistory.SETNO}', '{rejecthistory.REJECT_TIME}', '{rejecthistory.MODEL_NAME}', '{rejecthistory.STATION}', '{rejecthistory.CARRIERID}', '{rejecthistory.PARTNO}', '{rejecthistory.LOCAL_REJECT_CODE}', '{rejecthistory.LOCAL_REJECT_MSG}', '{rejecthistory.REMOTE_REJECT_CODE}', '{rejecthistory.REMOTE_REJECT_MSG}')");
+        }
+        #endregion
+
+        #region [===新增上報指令===]
+        /// <summary>
+        /// 新增上報指令
+        /// </summary>
+        /// <param name="reportcommand"></param>
+        public void SetScReportCpommand(SaaScReportCommand reportcommand)
+        {
+            SaaSql.WriteSqlByAutoOpen($"Insert Into SC_REPORT_COMMAND Values('{reportcommand.SETNO}', '{reportcommand.MODEL_NAME}',  '{reportcommand.LCS_COMMAND_NAME}', '{reportcommand.LCS_COMMAND_NOTE}', '{reportcommand.GROUP_NO}', '{reportcommand.REPORT_COMMAND}', '{reportcommand.REPORT_COMMAND_NOTE}')");
         } 
         #endregion
 
@@ -275,5 +286,35 @@ namespace SAA_CommunicationSystem_Lib.SqlData
             return SaaSql.QuerySqlByAutoOpen("Select * From SC_EQUIPMENT_ZONE").Tables[0];
         } 
         #endregion
+
+        public DataTable GetScReportCommand()
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_REPORT_COMMAND").Tables[0];
+        }
+
+        public DataTable GetScReportCommand(SaaScReportCommand reportcommand)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_REPORT_COMMAND Where SETNO = '" + reportcommand.SETNO + "' And MODEL_NAME = '" + reportcommand.MODEL_NAME + "' And LCS_COMMAND_NAME = '" + reportcommand.LCS_COMMAND_NAME + "' And REPORT_COMMAND='" + reportcommand.REPORT_COMMAND + "' ").Tables[0];
+        }
+
+        public DataTable GetScReportCommandLcsName()
+        {
+            return SaaSql.QuerySqlByAutoOpen($"Select DISTINCT LCS_COMMAND_NAME From SC_REPORT_COMMAND").Tables[0];
+        }
+
+        public DataTable GetScReportCommand(string setno, string modelname, string lcscommandname)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_REPORT_COMMAND Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "' And LCS_COMMAND_NAME = '" + lcscommandname + "'").Tables[0];
+        }
+
+        public DataTable GetReportCommandName(string setno, string modelname, string lcscommandname)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_REPORT_COMMAND_NAME Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "' And LCS_COMMAND_NAME = '" + lcscommandname + "'").Tables[0];
+        }
+
+        public DataTable GetScEquipmentZone(string setno, string modelname)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_EQUIPMENT_ZONE Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "'").Tables[0];
+        }
     }
 }

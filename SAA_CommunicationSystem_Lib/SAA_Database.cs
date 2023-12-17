@@ -5,6 +5,7 @@ using SAA_CommunicationSystem_Lib.WebApiSendCommand;
 using SAA_CommunicationSystem_Lib.WebApiServer;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,6 +57,11 @@ namespace SAA_CommunicationSystem_Lib
         /// </summary>
         public static SAA_WebApiSendCommand webapisendcommand = new SAA_WebApiSendCommand();
 
+        /// <summary>
+        /// 上報命令
+        /// </summary>
+        public static SAA_ReportCommand reportcommand = new SAA_ReportCommand();
+
         #region [===寫入Log訊息===]
         /// <summary>
         ///寫入Log訊息
@@ -96,7 +102,7 @@ namespace SAA_CommunicationSystem_Lib
         public static string ReadTime()
         {
             return $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}";
-        } 
+        }
         #endregion
 
         #region [===LCS命令名稱列舉===]
@@ -229,8 +235,100 @@ namespace SAA_CommunicationSystem_Lib
             /// LCS 為出料模式
             /// </summary>
             LCS_MODE_Out,
+
+            /// <summary>
+            /// 天車平台1為入料模式
+            /// </summary>
+            RGV_1_MODE_In,
+
+            /// <summary>
+            /// 天車平台1為出料模式
+            /// </summary>
+            RGV_1_MODE_Out,
+
+            /// <summary>
+            /// 天車平台2為入料模式
+            /// </summary>
+            RGV_2_MODE_In,
+
+            /// <summary>
+            /// 天車平台2為出料模式
+            /// </summary>
+            RGV_2_MODE_Out,
+
+            /// <summary>
+            /// 天車平台1為啟用狀態
+            /// </summary>
+            RGV_1_STS_ON,
+
+            /// <summary>
+            /// 天車平台1為關閉狀態
+            /// </summary>
+            RGV_1_STS_OFF,
+
+            /// <summary>
+            /// 天車平台2為啟用狀態
+            /// </summary>
+            RGV_2_STS_ON,
+
+            /// <summary>
+            /// 天車平台2為關閉狀態
+            /// </summary>
+            RGV_2_STS_OFF,
+
+            /// <summary>
+            /// 卡匣到達出料平台
+            /// </summary>
+            CarrierArrivedPlatform,
         }
         #endregion
+
+        public static void GetReportCommand()
+        {
+            var commandnamedata = SaaSql.GetScReportCommandLcsName();
+            foreach (DataRow dr in commandnamedata.Rows)
+            {
+                string commandname = dr["LCS_COMMAND_NAME"].ToString();
+                var reportcommanddata = SaaSql.GetScReportCommand(configattributes.SaaEquipmentNo, configattributes.SaaEquipmentName, commandname);
+                foreach (DataRow command in reportcommanddata.Rows)
+                {
+                    string lcscommandname = command["LCS_COMMAND_NAME"].ToString();
+                    switch ((SAA_DatabaseEnum.ReportCommand)Enum.Parse(typeof(SAA_DatabaseEnum.ReportCommand), lcscommandname))
+                    {
+                        case SAA_DatabaseEnum.ReportCommand.ALARM_REPORT:
+                            reportcommand.DicAlarmReport.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
+                            reportcommand.AlarmReportAry.Add(command["REPORT_COMMAND"].ToString());
+                            break;
+                        case SAA_DatabaseEnum.ReportCommand.ASK_CARRIER:
+                            reportcommand.DicAskCarrier.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
+                            reportcommand.AskCarrierAry.Add(command["REPORT_COMMAND"].ToString());
+                            break;
+                        case SAA_DatabaseEnum.ReportCommand.CARRY_IN_REPORT:
+                            reportcommand.DicCarryInReport.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
+                            reportcommand.CarryInReportAry.Add(command["REPORT_COMMAND"].ToString());
+                            break;
+                        case SAA_DatabaseEnum.ReportCommand.CARRY_OUT_REPORT:
+                            reportcommand.DicCarryOutReport.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
+                            reportcommand.CarryOutReportAry.Add(command["REPORT_COMMAND"].ToString());
+                            break;
+                        case SAA_DatabaseEnum.ReportCommand.CARRY_REJECT:
+                            reportcommand.DicCarryReject.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
+                            reportcommand.CarryRejectAry.Add(command["REPORT_COMMAND"].ToString());
+                            break;
+                        case SAA_DatabaseEnum.ReportCommand.CLEAR_CACHE:
+                            reportcommand.DicClearCache.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
+                            reportcommand.ClearCacheAry.Add(command["REPORT_COMMAND"].ToString());
+                            break;
+                        case SAA_DatabaseEnum.ReportCommand.IN_OUT_LOCK:
+                            reportcommand.DicInOutLock.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
+                            reportcommand.InOutLockAry.Add(command["REPORT_COMMAND"].ToString());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
 
         public enum LogType
         {

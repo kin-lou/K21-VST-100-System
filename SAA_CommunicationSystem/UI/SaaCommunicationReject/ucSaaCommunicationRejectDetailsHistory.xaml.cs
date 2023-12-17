@@ -52,7 +52,7 @@ namespace SAA_CommunicationSystem.UI.SaaCommunicationReject
                 var data = SAA_Database.SaaSql.GetScEquipmentZone();
                 foreach ( DataRow dr in data.Rows )
                 {
-                    CmdEquipmentName.Items.Add(dr["MODEL_NAME"].ToString());
+                    CmdEquipmentName.Items.Add(dr[SAA_DatabaseEnum.SC_EQUIPMENT_ZONE.MODEL_NAME.ToString()].ToString());
                 }
             }
             catch (Exception ex)

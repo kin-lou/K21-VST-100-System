@@ -49,8 +49,13 @@ namespace SAA_CommunicationSystem
                 if (SAA_Database.SaaSql == null)
                     SAA_Database.SaaSql = new SAA_CommunicationSystem_Lib.SqlData.MsSqlData();
 
+                if(SAA_Database.readcommon==null)
+                    SAA_Database.readcommon = new SAA_ReadCommon();
+
                 if (SAA_Database.webapiserver == null)
                     SAA_Database.webapiserver = new SAA_CommunicationSystem_Lib.WebApiServer.SAA_WebApiServer();
+
+                SAA_Database.readcommon.ReadScCommon();
                 SAA_Database.GetReportCommand();
                 TexEquipment.Text = SAA_Database.configattributes.SaaEquipmentName;
                 SAA_Database.webapiserver.WebAPIServerSatrt();

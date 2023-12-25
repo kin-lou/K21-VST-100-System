@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
+using SAA_CommunicationSystem_Lib.DataTableAttributes;
 using SAA_CommunicationSystem_Lib.ReceivAttributes;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace SAA_CommunicationSystem_Lib.Controllers
@@ -74,39 +74,40 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                     }
                                 }
                                 var alarmcommanddata = SAA_Database.SaaSql.GetReportCommandName(SAA_Database.configattributes.SaaEquipmentNo, receivalarm.Station, receivalarm.CMD);
-                                if (alarmcommanddata.Rows.Count!=0)
+                                if (alarmcommanddata.Rows.Count != 0)
                                 {
-                                    SaaReceivCommandName receivcommand = new SaaReceivCommandName
-                                    {
-                                        CommandNo = alarmcommanddata.Rows[0][SAA_DatabaseEnum.SC_REPORT_COMMAND_NAME.REPORT_COMMAND_NO.ToString()].ToString(),
-                                        CommandName = alarmcommanddata.Rows[0][SAA_DatabaseEnum.SC_REPORT_COMMAND_NAME.REPORT_COMMAND_NAME.ToString()].ToString(),
-                                    };
-                                    var equipmentzonedata = SAA_Database.SaaSql.GetScEquipmentZone(SAA_Database.configattributes.SaaEquipmentNo, receivalarm.Station);
-                                    receivcommand.CommandStation = equipmentzonedata.Rows.Count != 0 ? equipmentzonedata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_ZONE.REPORT_NAME.ToString()].ToString() : string.Empty;
+                                    SaaReceivCommandName receivcommand = GetReceivCommandName(alarmcommanddata);
                                     for (int i = 0; i < SAA_Database.reportcommand.AlarmReportAry.Count; i++)
                                     {
+                                        int ReportNo = i + 1;
                                         switch (i)
                                         {
                                             case 0:
                                                 SAA_Database.reportcommand.DicAlarmReport[SAA_Database.reportcommand.AlarmReportAry[i]] = receivcommand.CommandNo;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo} 】{SAA_Database.reportcommand.ClearCacheAry[i]}={receivcommand.CommandNo}");
                                                 break;
                                             case 1:
                                                 SAA_Database.reportcommand.DicAlarmReport[SAA_Database.reportcommand.AlarmReportAry[i]] = receivcommand.CommandName;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.ClearCacheAry[i]}={receivcommand.CommandName}");
                                                 break;
                                             case 2:
                                                 SAA_Database.reportcommand.DicAlarmReport[SAA_Database.reportcommand.AlarmReportAry[i]] = receivcommand.CommandStation;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.ClearCacheAry[i]}={receivcommand.CommandStation}");
                                                 break;
                                             case 3:
                                                 SAA_Database.reportcommand.DicAlarmReport[SAA_Database.reportcommand.AlarmReportAry[i]] = receivalarm.Code;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.ClearCacheAry[i]}={receivalarm.Code}");
                                                 break;
                                             case 4:
                                                 SAA_Database.reportcommand.DicAlarmReport[SAA_Database.reportcommand.AlarmReportAry[i]] = receivalarm.Msg;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.InOutLockAry[i]}={receivalarm.Msg}");
                                                 break;
                                             default:
                                                 break;
                                         }
                                     }
                                     commandcontent = GetReportCommands(SAA_Database.reportcommand.DicAlarmReport);
+                                    SetSaaDirective(receivcommand.CommandName, receivcommand.CommandStation, string.Empty, receivcommand.CommandNo, commandcontent);
                                 }
                                 else
                                 {
@@ -130,14 +131,42 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                             receivclear.ID = dataAry[i];
                                             break;
                                         case 3:
-                                            receivclear.Loc = dataAry[i];
+                                            receivclear.Loc = GetLocationHostId(int.Parse(SAA_Database.configattributes.SaaEquipmentNo), receivclear.Station, dataAry[i]);//需轉換為客戶編碼
                                             break;
                                         default:
                                             break;
                                     }
                                 }
-
-
+                                var clearcommanddata = SAA_Database.SaaSql.GetReportCommandName(SAA_Database.configattributes.SaaEquipmentNo, receivclear.Station, receivclear.CMD);
+                                if (clearcommanddata.Rows.Count != 0)
+                                {
+                                    SaaReceivCommandName receivcommand = GetReceivCommandName(clearcommanddata);
+                                    for (int i = 0; i < SAA_Database.reportcommand.ClearCacheAry.Count; i++)
+                                    {
+                                        int ReportNo = i + 1;
+                                        switch (i)
+                                        {
+                                            case 0:
+                                                SAA_Database.reportcommand.DicClearCache[SAA_Database.reportcommand.ClearCacheAry[i]] = receivcommand.CommandNo;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.ClearCacheAry[i]}={receivcommand.CommandNo}");
+                                                break;
+                                            case 1:
+                                                SAA_Database.reportcommand.DicClearCache[SAA_Database.reportcommand.ClearCacheAry[i]] = receivcommand.CommandName;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.ClearCacheAry[i]}={receivcommand.CommandName}");
+                                                break;
+                                            case 2:
+                                                SAA_Database.reportcommand.DicClearCache[SAA_Database.reportcommand.ClearCacheAry[i]] = receivclear.ID;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.ClearCacheAry[i]}={receivclear.ID}");
+                                                break;
+                                            case 3:
+                                                SAA_Database.reportcommand.DicClearCache[SAA_Database.reportcommand.ClearCacheAry[i]] = receivclear.Loc;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.ClearCacheAry[i]}={receivclear.Loc}");
+                                                break;
+                                        }
+                                    }
+                                    commandcontent = GetReportCommands(SAA_Database.reportcommand.DicClearCache);
+                                    SetSaaDirective(receivcommand.CommandName, receivcommand.CommandStation, string.Empty, receivcommand.CommandNo, commandcontent);
+                                }
                                 #endregion
                                 break;
                             case SAA_Database.CommandName.GoWhere:
@@ -156,11 +185,47 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                             receivgowhere.ID = dataAry[i];
                                             break;
                                         case 3:
-                                            receivgowhere.From = dataAry[i];
+                                            receivgowhere.From = dataAry[i];//需轉換為客戶編碼
                                             break;
                                         default:
                                             break;
                                     }
+                                }
+                                var gowherecommanddata = SAA_Database.SaaSql.GetReportCommandName(SAA_Database.configattributes.SaaEquipmentNo, receivgowhere.Station, receivgowhere.CMD);
+                                if (gowherecommanddata.Rows.Count != 0)
+                                {
+                                    SaaReceivCommandName receivcommand = GetReceivCommandName(gowherecommanddata);
+                                    for (int i = 0; i < SAA_Database.reportcommand.AskCarrierAry.Count; i++)
+                                    {
+                                        int ReportNo = i + 1;
+                                        switch (i)
+                                        {
+                                            case 0:
+                                                SAA_Database.reportcommand.DicAskCarrier[SAA_Database.reportcommand.AskCarrierAry[i]] = receivcommand.CommandNo;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.AskCarrierAry[i]}={receivcommand.CommandNo}");
+                                                break;
+                                            case 1:
+                                                SAA_Database.reportcommand.DicAskCarrier[SAA_Database.reportcommand.AskCarrierAry[i]] = receivcommand.CommandName;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.AskCarrierAry[i]}={receivcommand.CommandName}");
+                                                break;
+                                            case 2:
+                                                SAA_Database.reportcommand.DicAskCarrier[SAA_Database.reportcommand.AskCarrierAry[i]] = receivgowhere.ID;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.AskCarrierAry[i]}={receivgowhere.ID}");
+                                                break;
+                                            case 3:
+                                                SAA_Database.reportcommand.DicAskCarrier[SAA_Database.reportcommand.AskCarrierAry[i]] = receivgowhere.From;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.AskCarrierAry[i]}={receivgowhere.From}");
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                    commandcontent = GetReportCommands(SAA_Database.reportcommand.DicAskCarrier);
+                                    SetSaaDirective(receivcommand.CommandName, receivcommand.CommandStation, receivgowhere.ID, receivcommand.CommandNo, commandcontent);
+                                }
+                                else
+                                {
+                                    SAA_Database.LogMessage($"【查無定義指令】查無定義指令無法接收。", SAA_Database.LogType.Error);
                                 }
                                 #endregion
                                 break;
@@ -190,19 +255,268 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                 #endregion
                                 break;
                             case SAA_Database.CommandName.DeviceLoadIn:
+                                #region [===平台至手臂===]
                                 receivdeviceloadin = GetReceivPurpose(dataAry);
+                                if (receivdeviceloadin.WhereCarrier == SAA_Database.SaaCommon.ReportCraneName)
+                                {
+                                    var deviceloadincommanddata = SAA_Database.SaaSql.GetReportCommandName(SAA_Database.configattributes.SaaEquipmentNo, receivdeviceloadin.Station, receivdeviceloadin.CMD);
+                                    if (deviceloadincommanddata.Rows.Count != 0)
+                                    {
+                                        SaaReceivCommandName receivcommand = GetReceivCommandName(deviceloadincommanddata);
+                                        for (int i = 0; i < SAA_Database.reportcommand.CarryInReportAry.Count; i++)
+                                        {
+                                            int ReportNo = i + 1;
+                                            switch (i)
+                                            {
+                                                case 0:
+                                                    SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivcommand.CommandNo;
+                                                    SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivcommand.CommandNo}");
+                                                    break;
+                                                case 1:
+                                                    SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivcommand.CommandName;
+                                                    SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivcommand.CommandName}");
+                                                    break;
+                                                case 2:
+                                                    SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivdeviceloadin.ID;
+                                                    SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivdeviceloadin.ID}");
+                                                    break;
+                                                case 3:
+                                                    SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivdeviceloadin.NO;
+                                                    SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivdeviceloadin.NO}");
+                                                    break;
+                                                case 4:
+                                                    string hostid = GetLocationHostId(int.Parse(SAA_Database.configattributes.SaaEquipmentNo), receivdeviceloadin.Station, receivdeviceloadin.From);
+                                                    SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = hostid;
+                                                    SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={hostid}");
+                                                    break;
+                                                case 5:
+                                                    SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = SAA_Database.SaaCommon.ReportCraneName;
+                                                    SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={SAA_Database.SaaCommon.ReportCraneName}");
+                                                    break;
+                                                case 6:
+                                                    SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivdeviceloadin.WareCount;
+                                                    SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivdeviceloadin.WareCount}");
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                        commandcontent = GetReportCommands(SAA_Database.reportcommand.DicCarryInReport);
+                                        SetSaaDirective(receivcommand.CommandName, receivcommand.CommandStation, receivdeviceloadin.ID, receivcommand.CommandNo, commandcontent);
+                                    }
+                                }
+                                #endregion
                                 break;
                             case SAA_Database.CommandName.StorageLoadIn:
+                                #region [===手臂至儲格===]
                                 receivstorageloadin = GetReceivPurpose(dataAry);
+                                var storageloadincommanddata = SAA_Database.SaaSql.GetReportCommandName(SAA_Database.configattributes.SaaEquipmentNo, receivstorageloadin.Station, receivstorageloadin.CMD);
+                                if (storageloadincommanddata.Rows.Count != 0)
+                                {
+                                    SaaReceivCommandName receivcommand = GetReceivCommandName(storageloadincommanddata);
+                                    for (int i = 0; i < SAA_Database.reportcommand.CarryInReportAry.Count; i++)
+                                    {
+                                        int ReportNo = i + 1;
+                                        switch (i)
+                                        {
+                                            case 0:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivcommand.CommandNo;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivcommand.CommandNo}");
+                                                break;
+                                            case 1:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivcommand.CommandName;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivcommand.CommandName}");
+                                                break;
+                                            case 2:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivstorageloadin.ID;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivstorageloadin.ID}");
+                                                break;
+                                            case 3:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivstorageloadin.NO;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivstorageloadin.NO}");
+                                                break;
+                                            case 4:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = SAA_Database.SaaCommon.ReportCraneName;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={SAA_Database.SaaCommon.ReportCraneName}");
+                                                break;
+                                            case 5:
+                                                string hostid = GetLocationHostId(int.Parse(SAA_Database.configattributes.SaaEquipmentNo), receivstorageloadin.Station, receivstorageloadin.To);
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = hostid;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={hostid}");
+                                                break;
+                                            case 6:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivstorageloadin.WareCount;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivstorageloadin.WareCount}");
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                    commandcontent = GetReportCommands(SAA_Database.reportcommand.DicCarryInReport);
+                                    SetSaaDirective(receivcommand.CommandName, receivcommand.CommandStation, receivstorageloadin.ID, receivcommand.CommandNo, commandcontent);
+                                }
+                                #endregion
                                 break;
                             case SAA_Database.CommandName.StorageLoadOut:
+                                #region [===儲格至手臂===]
                                 receivstorageloadout = GetReceivPurpose(dataAry);
-                                break;
-                            case SAA_Database.CommandName.RejectDown:
-                                receivrejectdown = GetReceivPurpose(dataAry);
+                                var storageloadoutcommanddata = SAA_Database.SaaSql.GetReportCommandName(SAA_Database.configattributes.SaaEquipmentNo, receivstorageloadout.Station, receivstorageloadout.CMD);
+                                if (storageloadoutcommanddata.Rows.Count != 0)
+                                {
+                                    SaaReceivCommandName receivcommand = GetReceivCommandName(storageloadoutcommanddata);
+                                    for (int i = 0; i < SAA_Database.reportcommand.CarryInReportAry.Count; i++)
+                                    {
+                                        int ReportNo = i + 1;
+                                        switch (i)
+                                        {
+                                            case 0:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivcommand.CommandNo;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivcommand.CommandNo}");
+                                                break;
+                                            case 1:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivcommand.CommandName;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivcommand.CommandName}");
+                                                break;
+                                            case 2:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivstorageloadout.ID;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivstorageloadout.ID}");
+                                                break;
+                                            case 3:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivstorageloadout.NO;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivstorageloadout.NO}");
+                                                break;
+                                            case 4:
+                                                string hostid = GetLocationHostId(int.Parse(SAA_Database.configattributes.SaaEquipmentNo), receivstorageloadout.Station, receivstorageloadout.From);
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = hostid;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={hostid}");
+                                                break;
+                                            case 5:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = SAA_Database.SaaCommon.ReportCraneName;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={SAA_Database.SaaCommon.ReportCraneName}");
+                                                break;
+                                            case 6:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivstorageloadout.WareCount;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivstorageloadout.WareCount}");
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                    commandcontent = GetReportCommands(SAA_Database.reportcommand.DicCarryInReport);
+                                    SetSaaDirective(receivcommand.CommandName, receivcommand.CommandStation, receivstorageloadout.ID, receivcommand.CommandNo, commandcontent);
+                                }
+                                #endregion
                                 break;
                             case SAA_Database.CommandName.PortLoadOut:
+                                #region [===手臂至平台===]
                                 receivportloadout = GetReceivPurpose(dataAry);
+                                var portloadoutcommanddata = SAA_Database.SaaSql.GetReportCommandName(SAA_Database.configattributes.SaaEquipmentNo, receivportloadout.Station, receivportloadout.CMD);
+                                if (portloadoutcommanddata.Rows.Count != 0)
+                                {
+                                    SaaReceivCommandName receivcommand = GetReceivCommandName(portloadoutcommanddata);
+                                    for (int i = 0; i < SAA_Database.reportcommand.CarryInReportAry.Count; i++)
+                                    {
+                                        int ReportNo = i + 1;
+                                        switch (i)
+                                        {
+                                            case 0:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivcommand.CommandNo;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivcommand.CommandNo}");
+                                                break;
+                                            case 1:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivcommand.CommandName;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivcommand.CommandName}");
+                                                break;
+                                            case 2:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivportloadout.ID;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivportloadout.ID}");
+                                                break;
+                                            case 3:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivportloadout.NO;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivportloadout.NO}");
+                                                break;
+                                            case 4:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = SAA_Database.SaaCommon.ReportCraneName;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={SAA_Database.SaaCommon.ReportCraneName}");
+                                                break;
+                                            case 5:
+                                                string hostid = GetLocationHostId(int.Parse(SAA_Database.configattributes.SaaEquipmentNo), receivportloadout.Station, receivportloadout.To);
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = hostid;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={hostid}");
+                                                break;
+                                            case 6:
+                                                SAA_Database.reportcommand.DicCarryInReport[SAA_Database.reportcommand.CarryInReportAry[i]] = receivportloadout.WareCount;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryInReportAry[i]}={receivportloadout.WareCount}");
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                    commandcontent = GetReportCommands(SAA_Database.reportcommand.DicCarryInReport);
+                                    SetSaaDirective(receivcommand.CommandName, receivcommand.CommandStation, receivportloadout.ID, receivcommand.CommandNo, commandcontent);
+                                } 
+                                #endregion
+                                break;
+                            case SAA_Database.CommandName.RejectDown:
+                                #region [===搬運至Reject區===]
+                                receivrejectdown = GetReceivPurpose(dataAry);
+                                var rejectdowncommanddata = SAA_Database.SaaSql.GetReportCommandName(SAA_Database.configattributes.SaaEquipmentNo, receivrejectdown.Station, receivrejectdown.CMD);
+                                if (rejectdowncommanddata.Rows.Count != 0)
+                                {
+                                    SaaScRejectList saareject = new SaaScRejectList();
+                                    var rejecrdata = SAA_Database.SaaSql.GetScRejectMessage(receivrejectdown.RejectInfo);
+                                    if (rejecrdata.Rows.Count != 0)
+                                    {
+                                        saareject.REMOTE_REJECT_CODE = rejecrdata.Rows[0][SAA_DatabaseEnum.SC_REJECT_LIST.REMOTE_REJECT_CODE.ToString()].ToString();
+                                        saareject.REMOTE_REJECT_MSG = rejecrdata.Rows[0][SAA_DatabaseEnum.SC_REJECT_LIST.REMOTE_REJECT_MSG.ToString()].ToString();
+                                    }
+                                    SaaReceivCommandName receivcommand = GetReceivCommandName(rejectdowncommanddata);
+                                    for (int i = 0; i < SAA_Database.reportcommand.CarryRejectAry.Count; i++)
+                                    {
+                                        int ReportNo = i + 1;
+                                        switch (i)
+                                        {
+                                            case 0:
+                                                SAA_Database.reportcommand.DicCarryReject[SAA_Database.reportcommand.CarryRejectAry[i]] = receivcommand.CommandNo;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryRejectAry[i]}={receivcommand.CommandNo}");
+                                                break;
+                                            case 1:
+                                                SAA_Database.reportcommand.DicCarryReject[SAA_Database.reportcommand.CarryRejectAry[i]] = receivcommand.CommandName;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryRejectAry[i]}={receivcommand.CommandName}");
+                                                break;
+                                            case 2:
+                                                SAA_Database.reportcommand.DicCarryReject[SAA_Database.reportcommand.CarryRejectAry[i]] = receivrejectdown.ID;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryRejectAry[i]}={receivrejectdown.ID}");
+                                                break;
+                                            case 3:
+                                                SAA_Database.reportcommand.DicCarryReject[SAA_Database.reportcommand.CarryRejectAry[i]] = receivrejectdown.NO;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryRejectAry[i]}={receivrejectdown.NO}");
+                                                break;
+                                            case 4:
+                                                SAA_Database.reportcommand.DicCarryReject[SAA_Database.reportcommand.CarryRejectAry[i]] = SAA_Database.SaaCommon.ReportCraneName;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryRejectAry[i]}={SAA_Database.SaaCommon.ReportCraneName}");
+                                                break;
+                                            case 5:
+                                                string hostid = GetLocationHostId(int.Parse(SAA_Database.configattributes.SaaEquipmentNo), receivrejectdown.Station, receivrejectdown.To);
+                                                SAA_Database.reportcommand.DicCarryReject[SAA_Database.reportcommand.CarryRejectAry[i]] = hostid;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryRejectAry[i]}={hostid}");
+                                                break;
+                                            case 6:
+                                                SAA_Database.reportcommand.DicCarryReject[SAA_Database.reportcommand.CarryRejectAry[i]] = saareject.REMOTE_REJECT_CODE;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryRejectAry[i]}={saareject.REMOTE_REJECT_CODE}");
+                                                break;
+                                            case 7:
+                                                SAA_Database.reportcommand.DicCarryReject[SAA_Database.reportcommand.CarryRejectAry[i]] = saareject.REMOTE_REJECT_MSG;
+                                                SAA_Database.LogMessage($"【上報指令】【{ReportNo}】{SAA_Database.reportcommand.CarryRejectAry[i]}={saareject.REMOTE_REJECT_MSG}");
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                    commandcontent = GetReportCommands(SAA_Database.reportcommand.DicCarryReject);
+                                    SetSaaDirective(receivcommand.CommandName, receivcommand.CommandStation, receivrejectdown.ID, receivcommand.CommandNo, commandcontent);
+                                }
+                                #endregion
                                 break;
                             case SAA_Database.CommandName.StorageInfo:
                                 #region [===儲格狀態===]
@@ -229,10 +543,47 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                             break;
                                     }
                                 }
+                                var storageInfocommanddata = SAA_Database.SaaSql.GetReportCommandName(SAA_Database.configattributes.SaaEquipmentNo, receivstorageinfo.Station, receivstorageinfo.CMD);
+                                if (storageInfocommanddata.Rows.Count != 0)
+                                {
+                                    SaaReceivCommandName receivcommand = GetReceivCommandName(storageInfocommanddata);
+                                    for (int i = 0; i < SAA_Database.reportcommand.InOutLockAry.Count; i++)
+                                    {
+                                        int ReportNo = i + 1;
+                                        switch (i)
+                                        {
+                                            case 0:
+                                                SAA_Database.reportcommand.DicInOutLock[SAA_Database.reportcommand.InOutLockAry[i]] = receivcommand.CommandNo;
+                                                SAA_Database.LogMessage($"【上報指令】{SAA_Database.reportcommand.InOutLockAry[i]}={receivcommand.CommandNo}");
+                                                break;
+                                            case 1:
+                                                SAA_Database.reportcommand.DicAlarmReport[SAA_Database.reportcommand.AlarmReportAry[i]] = receivcommand.CommandName;
+                                                SAA_Database.LogMessage($"【上報指令】{SAA_Database.reportcommand.InOutLockAry[i]}={receivcommand.CommandName}");
+
+                                                break;
+                                            case 2:
+                                                SAA_Database.reportcommand.DicInOutLock[SAA_Database.reportcommand.InOutLockAry[i]] = receivstorageinfo.Sts;
+                                                SAA_Database.LogMessage($"【上報指令】{SAA_Database.reportcommand.InOutLockAry[i]}={receivstorageinfo.Sts}");
+
+                                                break;
+                                            case 3:
+                                                SAA_Database.reportcommand.DicInOutLock[SAA_Database.reportcommand.InOutLockAry[i]] = receivstorageinfo.Loc;
+                                                SAA_Database.LogMessage($"【上報指令】{SAA_Database.reportcommand.InOutLockAry[i]}={receivstorageinfo.Loc}");
+                                                break;
+                                            case 4:
+                                                SAA_Database.reportcommand.DicInOutLock[SAA_Database.reportcommand.InOutLockAry[i]] = receivstorageinfo.WareCount;
+                                                SAA_Database.LogMessage($"【上報指令】{SAA_Database.reportcommand.InOutLockAry[i]}={receivstorageinfo.WareCount}");
+                                                break;
+                                        }
+                                    }
+                                    commandcontent = GetReportCommands(SAA_Database.reportcommand.DicInOutLock);
+                                    SetSaaDirective(receivcommand.CommandName, receivcommand.CommandStation, string.Empty, receivcommand.CommandNo, commandcontent);
+                                }
                                 #endregion
                                 break;
                             case SAA_Database.CommandName.CmdCancel:
                                 receivcmdcancel = GetReceivCancel(dataAry);
+
                                 break;
                             case SAA_Database.CommandName.EqpCmdCancel:
                                 receiveqpcmdcancel = GetReceivCancel(dataAry);
@@ -319,10 +670,10 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                             saareceivpurpose.WhereCarrier = dataAry[i];
                             break;
                         case 3:
-                            //saareceivpurpose.ID = dataAry[i].Contains(SAA_Database.configattributes.ReaderError) ? SAA_Database.configattributes.ReaderError : dataAry[i];
+                            saareceivpurpose.ID = dataAry[i].Contains(SAA_Database.SaaCommon.ReaderError) ? SAA_Database.SaaCommon.ReaderError : dataAry[i];
                             break;
                         case 4:
-                            //saareceivpurpose.NO = (dataAry[i] == SAA_Database.configattributes.Empty || dataAry[i] == string.Empty) ? SAA_Database.configattributes.NA : dataAry[i];
+                            saareceivpurpose.NO = (dataAry[i] == SAA_Database.SaaCommon.Empty || dataAry[i] == string.Empty) ? SAA_Database.SaaCommon.NA : dataAry[i];
                             break;
                         case 5:
                             saareceivpurpose.From = dataAry[i];
@@ -400,6 +751,79 @@ namespace SAA_CommunicationSystem_Lib.Controllers
             try
             {
                 return JsonConvert.SerializeObject(dicContent).ToString();
+            }
+            catch (Exception ex)
+            {
+                SAA_Database.LogMessage($"{ex.Message}-{ex.StackTrace}", SAA_Database.LogType.Error);
+                return string.Empty;
+            }
+        }
+
+        public SaaReceivCommandName GetReceivCommandName(DataTable db)
+        {
+            lock (this)
+            {
+                SaaReceivCommandName receivcommand = new SaaReceivCommandName
+                {
+                    CommandNo = db.Rows[0][SAA_DatabaseEnum.SC_REPORT_COMMAND_NAME.REPORT_COMMAND_NO.ToString()].ToString(),
+                    CommandName = db.Rows[0][SAA_DatabaseEnum.SC_REPORT_COMMAND_NAME.REPORT_COMMAND_NAME.ToString()].ToString(),
+                };
+                var equipmentzonedata = SAA_Database.SaaSql.GetScEquipmentZone(SAA_Database.configattributes.SaaEquipmentNo, receivalarm.Station);
+                receivcommand.CommandStation = equipmentzonedata.Rows.Count != 0 ? equipmentzonedata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_ZONE.REPORT_NAME.ToString()].ToString() : string.Empty;
+                return receivcommand;
+            }
+        }
+
+        public bool ScDirectiveCount(string saaequipmentno, string commandname, string commandtext, SAA_DatabaseEnum.ReportSource reportSource)
+        {
+            if (SAA_Database.SaaSql.GetScDirective(saaequipmentno, commandname, commandtext, reportSource.ToString()).Rows.Count == 0)
+                return true;
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandname"></param>
+        /// <param name="commandstation"></param>
+        /// <param name="carrierid"></param>
+        /// <param name="commandno"></param>
+        public void SetSaaDirective(string commandname, string commandstation, string carrierid, string commandno, string commandcontent)
+        {
+            if (ScDirectiveCount(SAA_Database.configattributes.SaaEquipmentNo, commandname, commandcontent, SAA_DatabaseEnum.ReportSource.LCS))
+            {
+                SaaScReportInadx reportInadx = new SaaScReportInadx()
+                {
+                    SETNO = int.Parse(SAA_Database.configattributes.SaaEquipmentNo),
+                    MODEL_NAME = commandstation,
+                    REPORT_NAME = SAA_DatabaseEnum.IndexTableName.SC_DIRECTIVE.ToString(),
+                };
+                SaaScDirective directive = new SaaScDirective()
+                {
+                    TASKDATETIME = SAA_Database.ReadTime(),
+                    SETNO = SAA_Database.configattributes.SaaEquipmentNo,
+                    COMMANDON = SAA_Database.ReadRequorIndex(reportInadx).ToString(),
+                    STATION = commandstation,
+                    CARRIERID = carrierid,
+                    COMMANDID = commandno,
+                    COMMANDTEXT = commandcontent,
+                    SOURCE = SAA_DatabaseEnum.ReportSource.LCS.ToString(),
+                };
+                SAA_Database.SaaSql.SetScDirective(directive);
+                SAA_Database.LogMessage($"【新增指令】新增資料至SC_SC_DIRECTIVE=>Command_ON:{directive.COMMANDON} Command_Id:{directive.COMMANDID} Command_Text:{directive.COMMANDTEXT}。");
+            }
+            else
+            {
+                SAA_Database.LogMessage($"【指令相同】已有相同指令無法新增。", SAA_Database.LogType.Error);
+            }
+        }
+
+        public string GetLocationHostId(int setno, string modelname, string locationid)
+        {
+            try
+            {
+                var locationdata = SAA_Database.SaaSql.GetScLocationsetting(setno, modelname, locationid);
+                return locationdata.Rows.Count != 0 ? locationdata.Rows[0][SAA_DatabaseEnum.SC_LOCATIONSETTING.HOSTID.ToString()].ToString() : string.Empty;
             }
             catch (Exception ex)
             {

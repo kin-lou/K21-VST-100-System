@@ -1,5 +1,6 @@
 ﻿using NLog;
 using SAA_CommunicationSystem_Lib.Attributes;
+using SAA_CommunicationSystem_Lib.DataTableAttributes;
 using SAA_CommunicationSystem_Lib.SqlData;
 using SAA_CommunicationSystem_Lib.WebApiSendCommand;
 using SAA_CommunicationSystem_Lib.WebApiServer;
@@ -38,6 +39,11 @@ namespace SAA_CommunicationSystem_Lib
         public static ConfigAttributes configattributes;
 
         /// <summary>
+        /// 讀取設定參數
+        /// </summary>
+        public static SAA_ReadCommon readcommon;
+
+        /// <summary>
         /// Web Api啟動
         /// </summary>
         public static SAA_WebApiServer webapiserver;
@@ -61,6 +67,11 @@ namespace SAA_CommunicationSystem_Lib
         /// 上報命令
         /// </summary>
         public static SAA_ReportCommand reportcommand = new SAA_ReportCommand();
+
+        /// <summary>
+        /// 設定檔參數
+        /// </summary>
+        public static ScCommonAttributes SaaCommon = new ScCommonAttributes();
 
         #region [===寫入Log訊息===]
         /// <summary>
@@ -288,40 +299,40 @@ namespace SAA_CommunicationSystem_Lib
             var commandnamedata = SaaSql.GetScReportCommandLcsName();
             foreach (DataRow dr in commandnamedata.Rows)
             {
-                string commandname = dr["LCS_COMMAND_NAME"].ToString();
+                string commandname = dr[SAA_DatabaseEnum.SC_REPORT_COMMAND.LCS_COMMAND_NAME.ToString()].ToString();
                 var reportcommanddata = SaaSql.GetScReportCommand(configattributes.SaaEquipmentNo, configattributes.SaaEquipmentName, commandname);
                 foreach (DataRow command in reportcommanddata.Rows)
                 {
-                    string lcscommandname = command["LCS_COMMAND_NAME"].ToString();
+                    string lcscommandname = command[SAA_DatabaseEnum.SC_REPORT_COMMAND.LCS_COMMAND_NAME.ToString()].ToString();
                     switch ((SAA_DatabaseEnum.ReportCommand)Enum.Parse(typeof(SAA_DatabaseEnum.ReportCommand), lcscommandname))
                     {
                         case SAA_DatabaseEnum.ReportCommand.ALARM_REPORT:
-                            reportcommand.DicAlarmReport.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
-                            reportcommand.AlarmReportAry.Add(command["REPORT_COMMAND"].ToString());
+                            reportcommand.DicAlarmReport.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString(), string.Empty);
+                            reportcommand.AlarmReportAry.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString());
                             break;
                         case SAA_DatabaseEnum.ReportCommand.ASK_CARRIER:
-                            reportcommand.DicAskCarrier.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
-                            reportcommand.AskCarrierAry.Add(command["REPORT_COMMAND"].ToString());
+                            reportcommand.DicAskCarrier.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString(), string.Empty);
+                            reportcommand.AskCarrierAry.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString());
                             break;
                         case SAA_DatabaseEnum.ReportCommand.CARRY_IN_REPORT:
-                            reportcommand.DicCarryInReport.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
-                            reportcommand.CarryInReportAry.Add(command["REPORT_COMMAND"].ToString());
+                            reportcommand.DicCarryInReport.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString(), string.Empty);
+                            reportcommand.CarryInReportAry.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString());
                             break;
                         case SAA_DatabaseEnum.ReportCommand.CARRY_OUT_REPORT:
-                            reportcommand.DicCarryOutReport.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
-                            reportcommand.CarryOutReportAry.Add(command["REPORT_COMMAND"].ToString());
+                            reportcommand.DicCarryOutReport.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString(), string.Empty);
+                            reportcommand.CarryOutReportAry.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString());
                             break;
                         case SAA_DatabaseEnum.ReportCommand.CARRY_REJECT:
-                            reportcommand.DicCarryReject.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
-                            reportcommand.CarryRejectAry.Add(command["REPORT_COMMAND"].ToString());
+                            reportcommand.DicCarryReject.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString(), string.Empty);
+                            reportcommand.CarryRejectAry.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString());
                             break;
                         case SAA_DatabaseEnum.ReportCommand.CLEAR_CACHE:
-                            reportcommand.DicClearCache.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
-                            reportcommand.ClearCacheAry.Add(command["REPORT_COMMAND"].ToString());
+                            reportcommand.DicClearCache.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString(), string.Empty);
+                            reportcommand.ClearCacheAry.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString());
                             break;
                         case SAA_DatabaseEnum.ReportCommand.IN_OUT_LOCK:
-                            reportcommand.DicInOutLock.Add(command["REPORT_COMMAND"].ToString(), string.Empty);
-                            reportcommand.InOutLockAry.Add(command["REPORT_COMMAND"].ToString());
+                            reportcommand.DicInOutLock.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString(), string.Empty);
+                            reportcommand.InOutLockAry.Add(command[SAA_DatabaseEnum.SC_REPORT_COMMAND.REPORT_COMMAND.ToString()].ToString());
                             break;
                         default:
                             break;
@@ -329,6 +340,34 @@ namespace SAA_CommunicationSystem_Lib
                 }
             }
         }
+
+        #region [===讀取命令編號===]
+        /// <summary>
+        /// 讀取命令編號
+        /// </summary>
+        /// <param name="reportInadx"></param>
+        /// <returns></returns>
+        public static int ReadRequorIndex(SaaScReportInadx reportInadx)
+        {
+            var indexdata = SaaSql.GetScReportIndex(reportInadx.SETNO, reportInadx.MODEL_NAME, reportInadx.REPORT_NAME);
+            if (indexdata.Rows.Count != 0)
+            {
+                reportInadx.REPORT_MAX = int.Parse(indexdata.Rows[0][SAA_DatabaseEnum.SC_REPORT_INDEX.REPORT_MAX.ToString()].ToString());
+                reportInadx.REPORT_INDEX = int.Parse(indexdata.Rows[0][SAA_DatabaseEnum.SC_REPORT_INDEX.REPORT_INDEX.ToString()].ToString());
+                reportInadx.REPORT_INDEX = reportInadx.REPORT_INDEX + 1;
+                if (reportInadx.REPORT_INDEX > reportInadx.REPORT_MAX)
+                {
+                    reportInadx.REPORT_INDEX = 1;
+                    LogMessage($"【更新資料】Index大於最大值:{reportInadx.REPORT_MAX}更新為:{reportInadx.REPORT_INDEX}");
+                }
+                LogMessage($"【回傳資料】回傳Index值:{reportInadx.REPORT_INDEX}");
+                SaaSql.UpdScReportIndex(reportInadx);
+                return reportInadx.REPORT_INDEX;
+            }
+            LogMessage("【無此資料】查無此Index資料回傳時間數直為Index", LogType.Error);
+            return int.Parse($"{DateTime.Now:ssfff}");
+        } 
+        #endregion
 
         public enum LogType
         {

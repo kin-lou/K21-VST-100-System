@@ -64,11 +64,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ConfigAttributes.cs" />
+    <Compile Include="Attributes\ScCommonAttributes.cs" />
     <Compile Include="Controllers\WebApiController.cs" />
+    <Compile Include="DataTableAttributes\SaaScCommon.cs" />
+    <Compile Include="DataTableAttributes\SaaScDevice.cs" />
+    <Compile Include="DataTableAttributes\SaaScDirective.cs" />
+    <Compile Include="DataTableAttributes\SaaScEquipmentStatus.cs" />
     <Compile Include="DataTableAttributes\SaaScEquipmentZone.cs" />
+    <Compile Include="DataTableAttributes\SaaScLocationSettin.cs" />
     <Compile Include="DataTableAttributes\SaaScRejectList.cs" />
     <Compile Include="DataTableAttributes\SaaScReportCommand.cs" />
     <Compile Include="DataTableAttributes\SaaScReportConveys.cs" />
+    <Compile Include="DataTableAttributes\SaaScReportInadx.cs" />
     <Compile Include="DataTableAttributes\SaaScRrejectHistory.cs" />
     <Compile Include="DataTableAttributes\SaaScSquipmentStatus.cs" />
     <Compile Include="GuiAttributes\GuiOpetationHistoryAttributes.cs" />
@@ -88,6 +95,7 @@
     <Compile Include="SAA_Config.cs" />
     <Compile Include="SAA_Database.cs" />
     <Compile Include="SAA_DatabaseEnum.cs" />
+    <Compile Include="SAA_ReadCommon.cs" />
     <Compile Include="SAA_ReportCommand.cs" />
     <Compile Include="SendAttributes\SaaSend.cs" />
     <Compile Include="SendAttributes\SaaSend3190StockIn.cs" />

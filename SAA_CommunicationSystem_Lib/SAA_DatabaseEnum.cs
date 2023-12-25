@@ -210,6 +210,49 @@ namespace SAA_CommunicationSystem_Lib
         }
         #endregion
 
+        public enum SC_REPORT_COMMAND
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            SETNO,
+
+            /// <summary>
+            /// 機型名稱
+            /// </summary>
+            MODEL_NAME,
+
+            /// <summary>
+            /// LCS上報名稱
+            /// </summary>
+            LCS_COMMAND_NAME,
+
+            /// <summary>
+            /// 上報註解內容
+            /// </summary>
+            LCS_COMMAND_NOTE,
+
+            /// <summary>
+            /// 上報
+            /// </summary>
+            GROUP_NO,
+
+            /// <summary>
+            /// 群組編號
+            /// </summary>
+            REPORT_COMMAND_NO,
+
+            /// <summary>
+            /// 上報名稱
+            /// </summary>
+            REPORT_COMMAND,
+
+            /// <summary>
+            /// 上報名稱註解內容
+            /// </summary>
+            REPORT_COMMAND_NOTE
+        }
+
         #region [===上報指令名稱===]
         /// <summary>
         /// 上報指令名稱
@@ -245,7 +288,195 @@ namespace SAA_CommunicationSystem_Lib
             /// 機構位置
             /// </summary>
             LOCATIONID,
-        } 
+        }
         #endregion
+
+        public enum ReportSource
+        {
+            /// <summary>
+            /// 設備端口
+            /// </summary>
+            LCS,
+
+            /// <summary>
+            /// 上位端口
+            /// </summary>
+            iLIS,
+        }
+
+        public enum SC_REPORT_INDEX
+        {
+            /// <summary>
+            /// 機型編號
+            /// </summary>
+            SETNO,
+
+            /// <summary>
+            /// 機型名稱
+            /// </summary>
+            MODEL_NAME,
+
+            /// <summary>
+            /// 上報名稱
+            /// </summary>
+            REPORT_NAME,
+
+            /// <summary>
+            /// 目前Index值
+            /// </summary>
+            REPORT_INDEX,
+
+            /// <summary>
+            /// Inex最大值
+            /// </summary>
+            REPORT_MAX
+        }
+
+        public enum IndexTableName
+        {
+            SC_DIRECTIVE,
+        }
+
+        public enum SC_COMMON
+        {
+            SETNO,
+
+            MODEL_NAME,
+
+            ITEM_NAME,
+
+            ITEM_VALUE,
+
+            VALUECOMMENT,
+        }
+
+        public enum SC_COMMON_ITEM_NAME
+        {
+            ReaderError,
+
+            Empty,
+
+            NA,
+
+            CRANE,
+
+            ReportCraneName,
+        }
+
+        public enum SC_DEVICE
+        {
+            /// <summary>
+            /// 機型編號
+            /// </summary>
+            SETNO,
+
+            /// <summary>
+            /// 機型名稱
+            /// </summary>
+            MODEL_NAME,
+
+            /// <summary>
+            /// 站點編號
+            /// </summary>
+            STATION_NAME,
+
+            /// <summary>
+            /// 機台手臂編號
+            /// </summary>
+            DEVICENO,
+
+            /// <summary> 
+            /// 機台手臂名稱
+            /// </summary>
+            DEVICEID,
+
+            /// <summary>
+            /// 客戶機台手臂名稱
+            /// </summary>
+            HOSTDEVICEID,
+
+            /// <summary>
+            /// 機台種類
+            /// </summary>
+            DEVICETYPE,
+        }
+
+        public enum SC_LOCATIONSETTING
+        {
+            /// <summary>
+            /// 機型編號
+            /// </summary>
+            SETNO,
+
+            /// <summary>
+            /// 機型名稱
+            /// </summary>
+            MODEL_NAME,
+
+            /// <summary>
+            /// 位置編號
+            /// </summary>
+            LOCATIONID,
+
+            /// <summary>
+            /// 上報編號
+            /// </summary>
+            HOSTID,
+
+            /// <summary>
+            /// 卡匣號碼
+            /// </summary>
+            CARRIERID,
+
+            /// <summary>
+            /// 卡匣批號
+            /// </summary>
+            PARTNO,
+
+            /// <summary>
+            /// BANK
+            /// </summary>
+            BANK,
+
+            /// <summary>
+            /// BAY
+            /// </summary>
+            BAY,
+
+            /// <summary>
+            /// LV
+            /// </summary>
+            LV,
+
+            /// <summary>
+            /// 位置狀態
+            /// </summary>
+            LOCATIONSTATUS,
+
+            /// <summary>
+            /// 位置模式
+            /// </summary>
+            LOCATIONMODE,
+
+            /// <summary>
+            /// 位置種類
+            /// </summary>
+            LOCATIONTYPE,
+
+            /// <summary>
+            /// 是否有卡匣(0:無卡匣 1:有卡匣)
+            /// </summary>
+            INVENTORYFULL,
+
+            /// <summary>
+            /// 區域名稱
+            /// </summary>
+            ZONEID,
+
+            /// <summary>
+            /// 位置排序
+            /// </summary>
+            LOCATIONPRIORITIZ,
+        }
     }
 }

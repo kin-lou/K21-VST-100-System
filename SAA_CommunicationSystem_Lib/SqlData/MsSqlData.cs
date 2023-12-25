@@ -1,13 +1,8 @@
 ﻿using SAA_CommunicationSystem_Lib.DataTableAttributes;
 using SAA_CommunicationSystem_Lib.GuiAttributes;
 using SAA_MsSql;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace SAA_CommunicationSystem_Lib.SqlData
 {
@@ -80,7 +75,18 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public void SetScReportCpommand(SaaScReportCommand reportcommand)
         {
             SaaSql.WriteSqlByAutoOpen($"Insert Into SC_REPORT_COMMAND Values('{reportcommand.SETNO}', '{reportcommand.MODEL_NAME}',  '{reportcommand.LCS_COMMAND_NAME}', '{reportcommand.LCS_COMMAND_NOTE}', '{reportcommand.GROUP_NO}', '{reportcommand.REPORT_COMMAND}', '{reportcommand.REPORT_COMMAND_NOTE}')");
-        } 
+        }
+        #endregion
+
+        #region [===新增傳送指令===]
+        /// <summary>
+        /// 新增傳送指令
+        /// </summary>
+        /// <param name="scdirective"></param>
+        public void SetScDirective(SaaScDirective scdirective)
+        {
+            SaaSql.WriteSqlByAutoOpen($"Insert Into SC_DIRECTIVE(TASKDATETIME, SETNO, COMMANDON, STATION, CARRIERID, COMMANDID, COMMANDTEXT, SOURCE) Values('{scdirective.TASKDATETIME}', '{scdirective.SETNO}',  '{scdirective.COMMANDON}', '{scdirective.STATION}', '{scdirective.CARRIERID}', '{scdirective.COMMANDID}', '{scdirective.COMMANDTEXT}', '{scdirective.SOURCE}')");
+        }
         #endregion
 
         /*===============================刪除=======================================*/
@@ -114,7 +120,7 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public void DelRejectList(SaaScRejectList screjectlis)
         {
             SaaSql.WriteSqlByAutoOpen("Delete From SC_REJECT_LIST Where SETNO = '" + screjectlis.SETNO + "' And MODEL_NAME = '" + screjectlis.MODEL_NAME + "' And LOCAL_REJECT_CODE = '" + screjectlis.LOCAL_REJECT_CODE + "'");
-        } 
+        }
         #endregion
 
         /*===============================更新=======================================*/
@@ -139,6 +145,17 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public void UpdGuiUserLoginTime(string userid, string lastlogintime)
         {
             SaaSql.WriteSqlByAutoOpen("Update GUI_USER Set LAST_LOGIN_TIME = '" + lastlogintime + "' Where USERID = '" + userid + "'");
+        }
+        #endregion
+
+        #region [===更新上報Inedex===]
+        /// <summary>
+        /// 更新上報Inedex
+        /// </summary>
+        /// <param name="reportinadx"></param>
+        public void UpdScReportIndex(SaaScReportInadx reportinadx)
+        {
+            SaaSql.WriteSqlByAutoOpen("Update SC_REPORT_INDEX Set REPORT_INDEX = '" + reportinadx.REPORT_INDEX + "' Where SETNO = '" + reportinadx.SETNO + "' And MODEL_NAME = '" + reportinadx.MODEL_NAME + "' And REPORT_NAME = '" + reportinadx.REPORT_NAME + "'");
         } 
         #endregion
 
@@ -154,7 +171,7 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public DataTable GetGuiUserConfirm(string userid, string pwd)
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From GUI_USER Where USERID='" + userid + "' And PWD = '" + pwd + "'").Tables[0];
-        } 
+        }
         #endregion
 
         #region [===讀取帳號===]
@@ -214,6 +231,11 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         }
         #endregion
 
+        public DataTable GetScRejectMessage(string localrejectmesage)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_REJECT_LIST Where LOCAL_REJECT_MSG = '" + localrejectmesage + "'").Tables[0];
+        }
+
         #region [===查詢REJECT歷史紀錄===]
         /// <summary>
         /// 查詢REJECT歷史紀錄
@@ -266,7 +288,7 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public DataTable GetScRejectHistory(string starttime, string endtime)
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From SC_REJECT_HISTORY Where REJECT_TIME BETWEEN '" + starttime + "' And '" + endtime + "'").Tables[0];
-        } 
+        }
         #endregion
 
         #region [===讀取前20筆REJECT歷史資料===]
@@ -284,37 +306,126 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public DataTable GetScEquipmentZone()
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From SC_EQUIPMENT_ZONE").Tables[0];
-        } 
+        }
         #endregion
 
+        #region [===讀取上報命令===]
+        /// <summary>
+        /// 讀取上報命令
+        /// </summary>
+        /// <returns></returns>
         public DataTable GetScReportCommand()
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From SC_REPORT_COMMAND").Tables[0];
         }
+        #endregion
 
+        #region [===讀取上報指令===]
+        /// <summary>
+        /// 讀取上報指令
+        /// </summary>
+        /// <param name="reportcommand"></param>
+        /// <returns></returns>
         public DataTable GetScReportCommand(SaaScReportCommand reportcommand)
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From SC_REPORT_COMMAND Where SETNO = '" + reportcommand.SETNO + "' And MODEL_NAME = '" + reportcommand.MODEL_NAME + "' And LCS_COMMAND_NAME = '" + reportcommand.LCS_COMMAND_NAME + "' And REPORT_COMMAND='" + reportcommand.REPORT_COMMAND + "' ").Tables[0];
-        }
+        } 
+        #endregion
 
+        #region [===讀取上報指令名稱===]
+        /// <summary>
+        /// 讀取上報指令名稱
+        /// </summary>
+        /// <returns></returns>
         public DataTable GetScReportCommandLcsName()
         {
             return SaaSql.QuerySqlByAutoOpen($"Select DISTINCT LCS_COMMAND_NAME From SC_REPORT_COMMAND").Tables[0];
-        }
+        } 
+        #endregion
 
+        #region [===讀取上報指令===]
+        /// <summary>
+        /// 讀取上報指令
+        /// </summary>
+        /// <param name="setno"></param>
+        /// <param name="modelname"></param>
+        /// <param name="lcscommandname"></param>
+        /// <returns></returns>
         public DataTable GetScReportCommand(string setno, string modelname, string lcscommandname)
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From SC_REPORT_COMMAND Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "' And LCS_COMMAND_NAME = '" + lcscommandname + "'").Tables[0];
-        }
+        } 
+        #endregion
 
+        #region [===讀取客戶上報代碼===]
+        /// <summary>
+        /// 讀取客戶上報代碼
+        /// </summary>
+        /// <param name="setno">機台編碼</param>
+        /// <param name="modelname">機台型號</param>
+        /// <param name="lcscommandname">LCS上報名稱</param>
+        /// <returns></returns>
         public DataTable GetReportCommandName(string setno, string modelname, string lcscommandname)
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From SC_REPORT_COMMAND_NAME Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "' And LCS_COMMAND_NAME = '" + lcscommandname + "'").Tables[0];
         }
+        #endregion
 
+        #region [===查詢機台站點名稱===]
+        /// <summary>
+        /// 查詢機台站點名稱
+        /// </summary>
+        /// <param name="setno">機台編號</param>
+        /// <param name="modelname">機台型號</param>
+        /// <returns></returns>
         public DataTable GetScEquipmentZone(string setno, string modelname)
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From SC_EQUIPMENT_ZONE Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "'").Tables[0];
+        }
+        #endregion
+
+        #region [===查詢上報資料表===]
+        /// <summary>
+        /// 查詢上報資料表
+        /// </summary>
+        /// <param name="setno">機台編碼</param>
+        /// <param name="commandid">指令編碼</param>
+        /// <param name="commandtext">指令內容</param>
+        /// <param name="source">來源</param>
+        /// <returns></returns>
+        public DataTable GetScDirective(string setno, string commandid, string commandtext, string source)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_DIRECTIVE Where SETNO = '" + setno + "' And COMMANDID = '" + commandid + "' And COMMANDTEXT = '" + commandtext + "' And SOURCE = '" + source + "'").Tables[0];
+        }
+        #endregion
+
+        #region [===查詢上報編號===]
+        /// <summary>
+        /// 查詢上報編號
+        /// </summary>
+        /// <param name="setno">機台編碼</param>
+        /// <param name="modelname">機台型號</param>
+        /// <param name="reportname">資料表名稱</param>
+        /// <returns></returns>
+        public DataTable GetScReportIndex(int setno, string modelname, string reportname)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_REPORT_INDEX Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "' And REPORT_NAME = '" + reportname + "'").Tables[0];
+        } 
+        #endregion
+
+        public DataTable GetScCommon(int setno,string modelname)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_COMMON Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "'").Tables[0];
+        }
+
+        public DataTable GetScDevice(int setno, string modelname, string deviceid)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_DEVICE Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "' And DEVICEID = '" + deviceid + "'").Tables[0];
+        }
+
+        public DataTable GetScLocationsetting(int setno, string modelname, string locationid)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_LOCATIONSETTING Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "' And LOCATIONID = '" + locationid + "'").Tables[0];
         }
     }
 }

@@ -366,6 +366,26 @@ namespace SAA_CommunicationSystem_Lib
             }
             LogMessage("【無此資料】查無此Index資料回傳時間數直為Index", LogType.Error);
             return int.Parse($"{DateTime.Now:ssfff}");
+        }
+        #endregion
+
+        #region [===傳送指令至LCS===]
+        /// <summary>
+        /// 傳送指令至LCS
+        /// </summary>
+        /// <param name="commanddata">指令內容</param>
+        /// <returns></returns>
+        public static string SaaSendCommandLcs(string commanddata)
+        {
+            try
+            {
+                return webapisendcommand.Post(configattributes.StorageWebApiServerIP, configattributes.ParaKey, commanddata);
+            }
+            catch (Exception ex)
+            {
+                LogMessage($"{ex.Message}-{ex.StackTrace}", LogType.Error);
+                return string.Empty;
+            }
         } 
         #endregion
 

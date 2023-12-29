@@ -12,5 +12,10 @@ namespace SAA_CommunicationSystem_Lib.ReceivAttributes
         /// 狀態
         /// </summary>
         public string Status { get; set; }
+
+        /// <summary>
+        /// 機台名稱
+        /// </summary>
+        public string Model_Name { get; set; }
     }
 }

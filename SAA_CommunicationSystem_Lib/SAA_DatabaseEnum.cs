@@ -361,6 +361,62 @@ namespace SAA_CommunicationSystem_Lib
             CRANE,
 
             ReportCraneName,
+
+            AskCarrier,
+
+            AskResultNo,
+
+            AskResultYes,
+
+            LCS_STS_OFFLINE,
+
+            LCS_STS_LOCAL_ONLINE,
+
+            LCS_STS_REMOTE_ONLINE,
+
+            LCS_MODE_InOut,
+
+            LCS_MODE_In,
+
+            LCS_MODE_Out,
+
+            DeviceSts_1,
+
+            DeviceSts_2,
+
+            DeviceSts_3,
+
+            DeviceSts_4,
+
+            DeviceSts_5,
+
+            RGV_1_MODE_In,
+
+            RGV_1_MODE_Out,
+
+            RGV_2_MODE_In,
+
+            RGV_2_MODE_Out,
+
+            RGV_1_STS_ON,
+
+            RGV_1_STS_OFF,
+
+            RGV_2_STS_ON,
+
+            RGV_2_STS_OFF,
+
+            Pire1Name,
+
+            Pire2Name,
+
+            PireModeIn,
+
+            PireModOut,
+
+            PireStatusOn,
+
+            PireStatusOff,
         }
 
         public enum SC_DEVICE

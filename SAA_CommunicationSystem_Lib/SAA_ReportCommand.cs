@@ -44,6 +44,11 @@ namespace SAA_CommunicationSystem_Lib
         /// </summary>
         public Dictionary<string, string> DicInOutLock = new Dictionary<string, string>();
 
+        /// <summary>
+        /// 設備狀態用
+        /// </summary>
+        public Dictionary<string, int>DicCommon = new Dictionary<string, int>();
+
         public List<string> AlarmReportAry= new List<string>();
 
         public List<string> AskCarrierAry = new List<string>();

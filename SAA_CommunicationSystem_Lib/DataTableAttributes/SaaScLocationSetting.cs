@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SAA_CommunicationSystem_Lib.DataTableAttributes
 {
-    public class SaaScLocationSettin
+    public class SaaScLocationSetting
     {
         /// <summary>
         /// 機型編號
@@ -56,12 +56,12 @@ namespace SAA_CommunicationSystem_Lib.DataTableAttributes
         /// <summary>
         /// 位置狀態
         /// </summary>
-        public string LOCATIONSTATUS { get; set; }
+        public int LOCATIONSTATUS { get; set; }
 
         /// <summary>
         /// 位置模式
         /// </summary>
-        public string LOCATIONMODE { get; set; }
+        public int LOCATIONMODE { get; set; }
 
         /// <summary>
         /// 位置種類

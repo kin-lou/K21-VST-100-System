@@ -37,7 +37,7 @@ namespace SAA_CommunicationSystem_Lib.DataTableAttributes
         /// <summary>
         /// 設備狀態代碼
         /// </summary>
-        public string EQUIPMENT_STATUS_CODE { get; set; }
+        public int EQUIPMENT_STATUS_CODE { get; set; }
 
         /// <summary>
         /// 設備狀態更新時間(yyyy-MM-dd HH:mm:ss.fff)
@@ -52,11 +52,26 @@ namespace SAA_CommunicationSystem_Lib.DataTableAttributes
         /// <summary>
         /// 設備模式代碼
         /// </summary>
-        public string EQUIPMENT_MODEL_CODE { get; set; }
+        public int EQUIPMENT_MODEL_CODE { get; set; }
 
         /// <summary>
         /// 設備模式更新時間(yyyy-MM-dd HH:mm:ss.fff)
         /// </summary>
         public string MODEL_UPDATE_TIME { get; set; }
+
+        /// <summary>
+        /// LCS狀態
+        /// </summary>
+        public string LCS_STATUS { get; set; }
+
+        /// <summary>
+        /// LCS狀態代碼
+        /// </summary>
+        public int LCS_STATUS_CODE { get; set; }
+
+        /// <summary>
+        /// LCS狀態更新時間(yyyy-MM-dd HH:mm:ss.fff)
+        /// </summary>
+        public string LCS_UPDATE_TIME { get; set; }
     }
 }

@@ -156,6 +156,61 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public void UpdScReportIndex(SaaScReportInadx reportinadx)
         {
             SaaSql.WriteSqlByAutoOpen("Update SC_REPORT_INDEX Set REPORT_INDEX = '" + reportinadx.REPORT_INDEX + "' Where SETNO = '" + reportinadx.SETNO + "' And MODEL_NAME = '" + reportinadx.MODEL_NAME + "' And REPORT_NAME = '" + reportinadx.REPORT_NAME + "'");
+        }
+        #endregion
+
+        #region [===更新設備狀態===]
+        /// <summary>
+        /// 更新設備狀態
+        /// </summary>
+        /// <param name="equipmentstatus"></param>
+        public void UpdSaaEquipmentStatus(SaaScEquipmentStatus equipmentstatus)
+        {
+            SaaSql.WriteSqlByAutoOpen("Update SC_EQUIPMENT_STATUS Set EQUIPMENT_STATUS = '" + equipmentstatus.EQUIPMENT_STATUS + "', EQUIPMENT_STATUS_CODE = '" + equipmentstatus.EQUIPMENT_STATUS_CODE + "', STATUS_UPDATE_TIME = '" + equipmentstatus.STATUS_UPDATE_TIME + "' Where SETNO = '" + equipmentstatus.SETNO + "' And MODEL_NAME = '" + equipmentstatus.MODEL_NAME + "'");
+        } 
+        #endregion
+
+        #region [===更新設備模式===]
+        /// <summary>
+        /// 更新設備模式
+        /// </summary>
+        /// <param name="equipmentstatus"></param>
+        public void UpdSaaEquipmentModel(SaaScEquipmentStatus equipmentstatus)
+        {
+            SaaSql.WriteSqlByAutoOpen("Update SC_EQUIPMENT_STATUS Set EQUIPMENT_MODEL = '" + equipmentstatus.EQUIPMENT_MODEL_CODE + "', EQUIPMENT_MODEL_CODE = '" + equipmentstatus.EQUIPMENT_STATUS_CODE + "', MODEL_UPDATE_TIME = '" + equipmentstatus.MODEL_UPDATE_TIME + "' Where SETNO = '" + equipmentstatus.SETNO + "' And MODEL_NAME = '" + equipmentstatus.MODEL_NAME + "'");
+        }
+        #endregion
+
+        #region [===更新LCS狀態===]
+        /// <summary>
+        /// 更新LCS狀態
+        /// </summary>
+        /// <param name="equipmentstatus"></param>
+        public void UpdSaaEquipmentLcsStatus(SaaScEquipmentStatus equipmentstatus)
+        {
+            SaaSql.WriteSqlByAutoOpen("Update SC_EQUIPMENT_STATUS Set LCS_STATUS = '" + equipmentstatus.LCS_STATUS + "', LCS_STATUS_CODE = '" + equipmentstatus.LCS_STATUS_CODE + "', LCS_UPDATE_TIME = '" + equipmentstatus.LCS_UPDATE_TIME + "' Where SETNO = '" + equipmentstatus.SETNO + "' And MODEL_NAME = '" + equipmentstatus.MODEL_NAME + "'");
+        }
+        #endregion
+
+        #region [===更新平台狀態===]
+        /// <summary>
+        /// 更新平台狀態
+        /// </summary>
+        /// <param name="saalocationsetting"></param>
+        public void UpdScLocationSettingStatus(SaaScLocationSetting saalocationsetting)
+        {
+            SaaSql.WriteSqlByAutoOpen("Update SC_LOCATIONSETTING Set LOCATIONSTATUS = '" + saalocationsetting.LOCATIONSTATUS + "' Where SETNO = '" + saalocationsetting.SETNO + "' And MODEL_NAME = '" + saalocationsetting.MODEL_NAME + "' And HOSTID = '" + saalocationsetting.HOSTID + "'");
+        } 
+        #endregion
+
+        #region [===更新平台模式===]
+        /// <summary>
+        /// 更新平台模式
+        /// </summary>
+        /// <param name="saalocationsetting"></param>
+        public void UpdScLocationSettingMode(SaaScLocationSetting saalocationsetting)
+        {
+            SaaSql.WriteSqlByAutoOpen("Update SC_LOCATIONSETTING Set LOCATIONMODE = '" + saalocationsetting.LOCATIONMODE + "' Where SETNO = '" + saalocationsetting.SETNO + "' And MODEL_NAME = '" + saalocationsetting.MODEL_NAME + "' And HOSTID = '" + saalocationsetting.HOSTID + "'");
         } 
         #endregion
 
@@ -426,6 +481,11 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public DataTable GetScLocationsetting(int setno, string modelname, string locationid)
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From SC_LOCATIONSETTING Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "' And LOCATIONID = '" + locationid + "'").Tables[0];
+        }
+
+        public DataTable GetScCommon(int setno, string modelname, string itemname)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_COMMON Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "' And ITEM_NAME = '" + itemname + "'").Tables[0];
         }
     }
 }

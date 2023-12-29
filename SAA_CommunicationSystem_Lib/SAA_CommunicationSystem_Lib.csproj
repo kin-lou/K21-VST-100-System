@@ -71,7 +71,7 @@
     <Compile Include="DataTableAttributes\SaaScDirective.cs" />
     <Compile Include="DataTableAttributes\SaaScEquipmentStatus.cs" />
     <Compile Include="DataTableAttributes\SaaScEquipmentZone.cs" />
-    <Compile Include="DataTableAttributes\SaaScLocationSettin.cs" />
+    <Compile Include="DataTableAttributes\SaaScLocationSetting.cs" />
     <Compile Include="DataTableAttributes\SaaScRejectList.cs" />
     <Compile Include="DataTableAttributes\SaaScReportCommand.cs" />
     <Compile Include="DataTableAttributes\SaaScReportConveys.cs" />

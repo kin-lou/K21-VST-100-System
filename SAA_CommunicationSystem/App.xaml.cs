@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SAA_CommunicationSystem_Lib.WebApiSendCommand;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -17,12 +18,14 @@ namespace SAA_CommunicationSystem
         /// <summary>
         /// Log行數
         /// </summary>
-        public static readonly int DisplayLogLineCount = 200;
+        public static readonly int DisplayLogLineCount = 50;
 
         /// <summary>
         /// 錯誤
         /// </summary>
         public static string Error = "錯誤";
+
+        public static SAA_WebApiSend SaaWebApiSend = new SAA_WebApiSend();
 
         #region [===版本資訊===]
         /// <summary>

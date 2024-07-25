@@ -78,5 +78,17 @@ namespace SAA_CommunicationSystem_Lib.Attributes
         /// 傳送指令至LCS Web Api伺服器關鍵字
         /// </summary>
         public string ParaKey { get; set; }
+
+        public string SaaVST101StationName { get; set; }
+
+        public string SaaDestinationIniName { get; set; }
+
+        public string SaaIniParaKey { get; set; }
+
+        public string SaaIniParaKeyStation { get; set; }
+
+        public string PARTICLE { get; set; }
+
+        public string LiftWebApiServerIP { get; set; }
     }
 }

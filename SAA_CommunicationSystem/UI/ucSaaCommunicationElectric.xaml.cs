@@ -1,4 +1,5 @@
 ﻿using SAA_CommunicationSystem.UI.SaaCommunicationReject;
+using SAA_CommunicationSystem.UI.SaaParameterImport;
 using SAA_CommunicationSystem_Lib;
 using System;
 using System.Collections.Generic;
@@ -40,8 +41,7 @@ namespace SAA_CommunicationSystem.UI
             }
             BtnMenu.IsEnabled = false;
             GetGrid(_mSaaCommunicationHome);
-            _mSaaCommunicationHome.OnDataHome += _mSaaCommunicationHome_OnDataHome
-                ;
+            _mSaaCommunicationHome.OnDataHome += _mSaaCommunicationHome_OnDataHome;
         }
 
         private void _mSaaCommunicationHome_OnDataHome(App.BtnName home)
@@ -110,7 +110,16 @@ namespace SAA_CommunicationSystem.UI
                         BtnUserPermissions.IsEnabled = false;
                         break;
                     case App.BtnName.BtnSetUp:
-                        BtnSetUp.IsEnabled = false;
+                        //BtnSetUp.IsEnabled = false;
+                        var scdevicedata = SAA_Database.SaaSql.GetScDeviceStation(int.Parse(SAA_Database.configattributes.SaaEquipmentNo), SAA_Database.configattributes.SaaEquipmentName);
+                        if (scdevicedata.Rows.Count != 0)
+                        {
+                            string StationID = scdevicedata.Rows[0]["STATION_NAME"].ToString();
+                            string Time = SAA_Database.ReadTeid();
+                            string TEID = $"{StationID}_{Time}";
+                            App.SaaWebApiSend.WebApiSendTransportRequirementInfo(StationID, Time, TEID);
+                            MessageBox.Show("傳送詢問指令完成", "傳送指令", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
                         break;
                     
                 }

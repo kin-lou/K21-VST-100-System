@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="SAA_CommunicationSystem.UI.SaaParameterImport.ucSaaCommunicationParameterCommand"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <materialDesign:Card Grid.Column="0" Grid.Row="0">
+        <GroupBox Grid.Column="0" Grid.Row="1" Header="上報命令格式" Style="{DynamicResource MaterialDesignGroupBox}" Margin="6" materialDesign:ShadowAssist.ShadowDepth="Depth3" BorderThickness="0" x:Name="GroupParameterCommand">
+            <DataGrid ItemsSource="{Binding Items1}" CanUserSortColumns="True" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" x:Name="DgParameterCommandList">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding SETNO}" Header="設備編號" />
+                    <DataGridTextColumn Binding="{Binding MODEL_NAME}" Header="設備名稱"/>
+                    <DataGridTextColumn Binding="{Binding LCS_COMMAND_NAME}" Header="LCS上報名稱"/>
+                    <DataGridTextColumn Binding="{Binding LCS_COMMAND_NOTE}" Header="LCS上報註解"/>
+                    <DataGridTextColumn Binding="{Binding REPORT_COMMAND_NO}" Header="上報編號"/>
+                    <DataGridTextColumn Binding="{Binding REPORT_COMMAND}" Header="上報名稱"/>
+                    <DataGridTextColumn Binding="{Binding REPORT_COMMAND_NOTE}" Header="上報名稱註解"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+    </materialDesign:Card>
+</UserControl>

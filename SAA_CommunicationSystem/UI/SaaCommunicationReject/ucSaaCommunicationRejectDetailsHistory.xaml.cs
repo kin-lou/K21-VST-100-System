@@ -66,7 +66,7 @@ namespace SAA_CommunicationSystem.UI.SaaCommunicationReject
         {
             try
             {
-                if (DprStartDay.SelectedDate != null&& DprStoptDay.SelectedDate != null)
+                if (DprStartDay.SelectedDate != null && DprStoptDay.SelectedDate != null)
                 {
                     string daystrat = DprStartDay.SelectedDate.Value.ToString("yyyy-MM-dd 00:00:00.000");
                     string daystope = DprStoptDay.SelectedDate.Value.ToString("yyyy-MM-dd 23:59:59.997");
@@ -77,55 +77,58 @@ namespace SAA_CommunicationSystem.UI.SaaCommunicationReject
                     };
                     daystrat = DprStartDay.SelectedDate.Value.ToString("yyyy-MM-dd 00:00:00.000");
                     daystope = DprStoptDay.SelectedDate.Value.ToString("yyyy-MM-dd 23:59:59.997");
-                    RadioButton radiobutton = (RadioButton)sender;
-                    if (radiobutton.IsChecked == true)
+                    DataTable data = null;
+                    if (RadDateTime.IsChecked == true)
                     {
-                        DataTable data = null;
-                        switch ((RadName)Enum.Parse(typeof(RadName), radiobutton.Name))
+                        if (string.IsNullOrEmpty(daystrat) && string.IsNullOrEmpty(daystope))
                         {
-                            case RadName.RadDateTime:
-                                if (string.IsNullOrEmpty(daystrat) && string.IsNullOrEmpty(daystope))
-                                {
-                                    SAA_Database.LogMessage($"查詢REJECT資料日期不可空白，請重新選擇", SAA_Database.LogType.Error);
-                                    MessageBox.Show($"查詢REJECT資料日期不可空白，請重新選擇", "查詢REJECT", MessageBoxButton.OK, MessageBoxImage.Error);
-                                    break;
-                                }
-                                data = SAA_Database.SaaSql.GetScRejectHistory(daystrat, daystope);
-                                break;
-                            case RadName.RadModel:
-                                if (string.IsNullOrEmpty(daystrat) && string.IsNullOrEmpty(daystope) && string.IsNullOrEmpty(scrrejecthistory.MODEL_NAME))
-                                {
-                                    SAA_Database.LogMessage($"查詢REJECT資料日期或機型不可空白，請重新選擇", SAA_Database.LogType.Error);
-                                    MessageBox.Show($"查詢REJECT資料日期或機型不可空白，請重新選擇", "查詢REJECT", MessageBoxButton.OK, MessageBoxImage.Error);
-                                    break;
-                                }
-                                data = SAA_Database.SaaSql.GetScRejectHistory(scrrejecthistory, daystrat, daystope);
-                                break;
-                            case RadName.RadCarrierId:
-                                if (string.IsNullOrEmpty(daystrat) && string.IsNullOrEmpty(daystope) && string.IsNullOrEmpty(scrrejecthistory.CARRIERID))
-                                {
-                                    SAA_Database.LogMessage($"查詢REJECT資料日期或機型不可空白，請重新選擇", SAA_Database.LogType.Error);
-                                    MessageBox.Show($"查詢REJECT資料日期或機型不可空白，請重新選擇", "查詢REJECT", MessageBoxButton.OK, MessageBoxImage.Error);
-                                    break;
-                                }
-                                data = SAA_Database.SaaSql.GetScRejectIDHistory(scrrejecthistory, daystrat, daystope);
-                                break;
-                            case RadName.RadModelCarrierId:
-                                if (string.IsNullOrEmpty(daystrat) && string.IsNullOrEmpty(daystope) && string.IsNullOrEmpty(scrrejecthistory.CARRIERID))
-                                {
-                                    SAA_Database.LogMessage($"查詢REJECT資料日期或機型或卡匣ID不可空白，請重新選擇", SAA_Database.LogType.Error);
-                                    MessageBox.Show($"查詢REJECT資料日期或機型不可空白，請重新選擇", "查詢REJECT", MessageBoxButton.OK, MessageBoxImage.Error);
-                                    break;
-                                }
-                                data = SAA_Database.SaaSql.GetScRejectCarrierIdHistory(scrrejecthistory, daystrat, daystope);
-                                break;
-                            default:
-                                break;
+                            SAA_Database.LogMessage($"查詢REJECT資料日期不可空白，請重新選擇", SAA_Database.LogType.Error);
+                            MessageBox.Show($"查詢REJECT資料日期不可空白，請重新選擇", "查詢REJECT", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
-                        if (data != null)
+                        else
                         {
-                            App.UpdateUi(() => { DgRejectListHistory.ItemsSource = GetRejectHistory(data); });
+                            data = SAA_Database.SaaSql.GetScRejectHistory(daystrat, daystope);
                         }
+                    }
+                    else if (RadModel.IsChecked == true)
+                    {
+                        if (string.IsNullOrEmpty(daystrat) && string.IsNullOrEmpty(daystope) && string.IsNullOrEmpty(scrrejecthistory.MODEL_NAME))
+                        {
+                            SAA_Database.LogMessage($"查詢REJECT資料日期或機型不可空白，請重新選擇", SAA_Database.LogType.Error);
+                            MessageBox.Show($"查詢REJECT資料日期或機型不可空白，請重新選擇", "查詢REJECT", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                        else
+                        {
+                            data = SAA_Database.SaaSql.GetScRejectHistory(scrrejecthistory, daystrat, daystope);
+                        }
+                    }
+                    else if (RadCarrierId.IsChecked == true)
+                    {
+                        if (string.IsNullOrEmpty(daystrat) && string.IsNullOrEmpty(daystope) && string.IsNullOrEmpty(scrrejecthistory.CARRIERID))
+                        {
+                            SAA_Database.LogMessage($"查詢REJECT資料日期或機型不可空白，請重新選擇", SAA_Database.LogType.Error);
+                            MessageBox.Show($"查詢REJECT資料日期或機型不可空白，請重新選擇", "查詢REJECT", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                        else
+                        {
+                            data = SAA_Database.SaaSql.GetScRejectIDHistory(scrrejecthistory, daystrat, daystope);
+                        }
+                    }
+                    else if (RadModelCarrierId.IsChecked == true)
+                    {
+                        if (string.IsNullOrEmpty(daystrat) && string.IsNullOrEmpty(daystope) && string.IsNullOrEmpty(scrrejecthistory.CARRIERID))
+                        {
+                            SAA_Database.LogMessage($"查詢REJECT資料日期或機型或卡匣ID不可空白，請重新選擇", SAA_Database.LogType.Error);
+                            MessageBox.Show($"查詢REJECT資料日期或機型不可空白，請重新選擇", "查詢REJECT", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                        else
+                        {
+                            data = SAA_Database.SaaSql.GetScRejectCarrierIdHistory(scrrejecthistory, daystrat, daystope);
+                        }
+                    }
+                    if (data != null)
+                    {
+                        App.UpdateUi(() => { DgRejectListHistory.ItemsSource = GetRejectHistory(data); });
                     }
                 }
                 else

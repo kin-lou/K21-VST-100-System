@@ -26,14 +26,14 @@ namespace SAA_CommunicationSystem.UI
         {
             InitializeComponent();
 
-            SAA_Database.OnLogMessage += SAA_Database_OnLogMessage;
+            OnLogMessage += SAA_Database_OnLogMessage;
         }
 
         private void SAA_Database_OnLogMessage(string message, LogType logtype, LogSystmes logsystmes)
         {
             if (logsystmes== LogSystmes.LCS)
             {
-                App.UpdateUi(() =>
+                App.UpdateUi( () =>
                 {
                     if (logtype == LogType.Error)
                     {

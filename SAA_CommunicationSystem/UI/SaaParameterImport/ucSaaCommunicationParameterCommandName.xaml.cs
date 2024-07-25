@@ -13,21 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SAA_CommunicationSystem.UI
+namespace SAA_CommunicationSystem.UI.SaaParameterImport
 {
     /// <summary>
-    /// ucSaaCommunicationParameterImport.xaml 的互動邏輯
+    /// ucSaaCommunicationParameterCommandName.xaml 的互動邏輯
     /// </summary>
-    public partial class ucSaaCommunicationParameterImport : UserControl
+    public partial class ucSaaCommunicationParameterCommandName : UserControl
     {
-        public ucSaaCommunicationParameterImport()
+        public ucSaaCommunicationParameterCommandName()
         {
             InitializeComponent();
-        }
-
-        private void BtnReportCommand_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

@@ -16,6 +16,7 @@
                 <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal"  HorizontalAlignment="Right"  VerticalAlignment="Center" Margin="0 0 0 0">
                     <Button Style="{DynamicResource MaterialDesignFlatButton}" ToolTip="{DynamicResource ToolTipUpdate}" Content="傳送至LCS"  Margin="10,0,0,0" x:Name="BtnReceiv" Click="BtnManualTransfer_Click" />
                     <Button Style="{DynamicResource MaterialDesignFlatButton}" ToolTip="{DynamicResource ToolTipUpdate}" Content="傳送至iList"  Margin="10,0,0,0" x:Name="BtniList" Click="BtnManualTransfer_Click" />
+                    <Button Style="{DynamicResource MaterialDesignFlatButton}" ToolTip="{DynamicResource ToolTipUpdate}" Content="傳送ASE指令"  Margin="10,0,0,0" x:Name="BtnASE" Click="BtnManualTransfer_Click" />
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="0" Grid.Row="1" x:Name="GdContent">

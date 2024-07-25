@@ -41,6 +41,12 @@ namespace SAA_CommunicationSystem_Lib
                         WebApiResultOK = ConfigFile.AppSettings.Settings[ConfigName.WebApiResultOK.ToString()].Value.ToString(),
                         WebApiResultFAIL = ConfigFile.AppSettings.Settings[ConfigName.WebApiResultFAIL.ToString()].Value.ToString(),
                         ParaKey = ConfigFile.AppSettings.Settings[ConfigName.ParaKey.ToString()].Value.ToString(),
+                        SaaVST101StationName = ConfigFile.AppSettings.Settings[ConfigName.SaaVST101StationName.ToString()].Value.ToString(),
+                        SaaDestinationIniName = ConfigFile.AppSettings.Settings[ConfigName.SaaDestinationIniName.ToString()].Value.ToString(),
+                        SaaIniParaKey = ConfigFile.AppSettings.Settings[ConfigName.SaaIniParaKey.ToString()].Value.ToString(),
+                        SaaIniParaKeyStation = ConfigFile.AppSettings.Settings[ConfigName.SaaIniParaKeyStation.ToString()].Value.ToString(),
+                        PARTICLE = ConfigFile.AppSettings.Settings[ConfigName.PARTICLE.ToString()].Value.ToString(),
+                        LiftWebApiServerIP =ConfigFile.AppSettings.Settings[ConfigName.LiftWebApiServerIP.ToString()].Value.ToString(),
                     };
                 }
             }
@@ -121,6 +127,19 @@ namespace SAA_CommunicationSystem_Lib
             /// 傳送指令至LCS Web Api伺服器關鍵字
             /// </summary>
             ParaKey,
+
+            SaaVST101StationName,
+
+
+            SaaDestinationIniName,
+
+            SaaIniParaKey,
+
+            SaaIniParaKeyStation,
+
+            PARTICLE,
+
+            LiftWebApiServerIP
         }
     }
 }

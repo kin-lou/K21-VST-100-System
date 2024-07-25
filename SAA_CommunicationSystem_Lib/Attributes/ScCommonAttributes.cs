@@ -172,5 +172,105 @@ namespace SAA_CommunicationSystem_Lib.Attributes
         /// 碼頭平台狀態關閉
         /// </summary>
         public string PireStatusOff { get; set; }
+
+        /// <summary>
+        /// 讀取條碼上報站點名稱
+        /// </summary>
+        public string ReaderSataion { get; set; }
+
+        /// <summary>
+        /// 平台上報位置
+        /// </summary>
+        public string ReadStatge { get; set; }
+
+        /// <summary>
+        /// 回覆iLIS接收成功
+        /// </summary>
+        public string Success { get; set; }
+
+        /// <summary>
+        /// 回覆iLIS接收失敗
+        /// </summary>
+        public string Fail { get; set; }
+
+        /// <summary>
+        /// REJECT平台編號
+        /// </summary>
+        public string RejectStage { get; set; }
+
+        /// <summary>
+        /// 平台上報位置名稱
+        /// </summary>
+        public string ReadStatgeName { get; set; }
+
+        /// <summary>
+        /// LIFT物料追蹤-搬移
+        /// </summary>
+        public string Move { get; set; }=string.Empty;
+
+        /// <summary>
+        /// LIFT物料追蹤-建立
+        /// </summary>
+        public string Establish { get; set; } = string.Empty;
+
+        /// <summary>
+        /// LIFT物料追蹤-清除
+        /// </summary>
+        public string Clear { get; set; } = string.Empty;
+
+        /// <summary>
+        /// LIFT物料追蹤-詢問
+        /// </summary>
+        public string Ask { get; set; } = string.Empty;
+
+        /// <summary>
+        /// LIFT物料追蹤-更新
+        /// </summary>
+        public string Update { get; set; } = string.Empty;
+
+        /// <summary>
+        /// LIFT物料追蹤-回覆
+        /// </summary>
+        public string Reply { get; set; } = string.Empty;
+
+        /// <summary>
+        /// LIFT資料同步-有帳
+        /// </summary>
+        public string Have { get; set; } = string.Empty;
+
+        /// <summary>
+        /// LIFT資料同步-無帳
+        /// </summary>
+        public string None { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 卡匣屬性為空值時顯示文字
+        /// </summary>
+        public string CarrierType { get; set; }
+
+        /// <summary>
+        /// UD管控空盒數量
+        /// </summary>
+        public int LiftCarrierInfoEmptyCount { get; set; }
+
+        /// <summary>
+        /// LIFT LD代號
+        /// </summary>
+        public int DevicetTypeLD { get; set; } = 1;
+
+        /// <summary>
+        /// LIFT UD代號
+        /// </summary>
+        public int DeivertTypeUD { get; set; } = 2;
+
+        /// <summary>
+        /// LIFT卡匣回倉儲編號
+        /// </summary>
+        public string SaaZipStationName { get; set; }
+
+        /// <summary>
+        /// 多少秒詢問一次iLis天車任務
+        /// </summary>
+        public int AskShuttleTaskTime { get; set; }
     }
 }

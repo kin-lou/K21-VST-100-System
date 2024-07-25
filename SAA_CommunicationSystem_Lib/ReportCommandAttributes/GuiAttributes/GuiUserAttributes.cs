@@ -9,6 +9,11 @@ namespace SAA_CommunicationSystem_Lib.GuiAttributes
     public class GuiUserAttributes
     {
         /// <summary>
+        /// 程式名稱
+        /// </summary>
+        public string PROGRAMNAME { get; set; }
+
+        /// <summary>
         /// 帳號
         /// </summary>
         public string USERID { get; set; }

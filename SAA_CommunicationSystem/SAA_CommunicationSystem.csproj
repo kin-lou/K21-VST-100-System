@@ -61,6 +61,10 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=4.5.0.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.4.5.0\lib\net452\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.5.2.3\lib\net46\NLog.dll</HintPath>
     </Reference>
@@ -132,6 +136,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="UI\ManualTransferiASE\ucSaaCommunicationManualTransferS001.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferS001.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ManualTransferiLIS\ucSaaCommunicationManualTransferEsReportTransportEquipmentHardwareInfo.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferEsReportTransportEquipmentHardwareInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ManualTransferiLIS\ucSaaCommunicationManualTransferEsReportTransportRquirenent.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferEsReportTransportRquirenent.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferClearStorage.xaml.cs">
       <DependentUpon>ucSaaCommunicationManualTransferClearStorage.xaml</DependentUpon>
     </Compile>
@@ -180,6 +193,15 @@
     <Compile Include="UI\SaaCommunicationReportCommand\ucSaaCommunicationReportCommandOpreate.xaml.cs">
       <DependentUpon>ucSaaCommunicationReportCommandOpreate.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\SaaParameterImport\ucSaaCommunicationParameterCommand.xaml.cs">
+      <DependentUpon>ucSaaCommunicationParameterCommand.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SaaParameterImport\ucSaaCommunicationParameterCommandName.xaml.cs">
+      <DependentUpon>ucSaaCommunicationParameterCommandName.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SaaParameterImport\ucSaaCommunicationParameterImport.xaml.cs">
+      <DependentUpon>ucSaaCommunicationParameterImport.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\ucSaaCommunicationElectric.xaml.cs">
       <DependentUpon>ucSaaCommunicationElectric.xaml</DependentUpon>
     </Compile>
@@ -204,11 +226,14 @@
     <Compile Include="UI\ucSaaCommunicationManualTransfer.xaml.cs">
       <DependentUpon>ucSaaCommunicationManualTransfer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\ucSaaCommunicationManualTransferAse.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferAse.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ucSaaCommunicationManualTransferiLis.xaml.cs">
+      <DependentUpon>ucSaaCommunicationManualTransferiLis.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\ucSaaCommunicationManualTransferLcs.xaml.cs">
       <DependentUpon>ucSaaCommunicationManualTransferLcs.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\ucSaaCommunicationParameterImport.xaml.cs">
-      <DependentUpon>ucSaaCommunicationParameterImport.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -222,6 +247,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UI\ManualTransferiASE\ucSaaCommunicationManualTransferS001.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ManualTransferiLIS\ucSaaCommunicationManualTransferEsReportTransportEquipmentHardwareInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ManualTransferiLIS\ucSaaCommunicationManualTransferEsReportTransportRquirenent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\ManualTransferLCS\ucSaaCommunicationManualTransferClearStorage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -286,6 +323,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\SaaParameterImport\ucSaaCommunicationParameterCommand.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\SaaParameterImport\ucSaaCommunicationParameterCommandName.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\SaaParameterImport\ucSaaCommunicationParameterImport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\ucSaaCommunicationElectric.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -318,11 +367,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\ucSaaCommunicationManualTransferLcs.xaml">
+    <Page Include="UI\ucSaaCommunicationManualTransferAse.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\ucSaaCommunicationParameterImport.xaml">
+    <Page Include="UI\ucSaaCommunicationManualTransferiLis.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ucSaaCommunicationManualTransferLcs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

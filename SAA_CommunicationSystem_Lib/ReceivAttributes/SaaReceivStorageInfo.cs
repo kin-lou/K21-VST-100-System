@@ -22,5 +22,7 @@ namespace SAA_CommunicationSystem_Lib.ReceivAttributes
         ///儲格總數
         /// </summary>
         public string WareCount { get; set; }
+
+        public string CarrideID { get; set; } = string.Empty;
     }
 }

@@ -17,5 +17,10 @@ namespace SAA_CommunicationSystem_Lib.ReceivAttributes
         /// 卡匣位置
         /// </summary>
         public string From { get; set; }
+
+        public string Type { get; set; }
+
+        public string Direction { get; set; }
+
     }
 }

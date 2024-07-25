@@ -84,6 +84,7 @@ namespace SAA_CommunicationSystem.UI
                     {
                         GuiUserAttributes guiuser = new GuiUserAttributes
                         {
+                            PROGRAMNAME = SAA_Database.configattributes.SaaSystemsName,
                             USERID = guiuserdata.Rows[0][SAA_DatabaseEnum.GUI_USER.USERID.ToString()].ToString(),
                             USERNAME = guiuserdata.Rows[0][SAA_DatabaseEnum.GUI_USER.USERNAME.ToString()].ToString(),
                             GROUPID = guiuserdata.Rows[0][SAA_DatabaseEnum.GUI_USER.GROUPID.ToString()].ToString(),

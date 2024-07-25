@@ -19,6 +19,11 @@ namespace SAA_CommunicationSystem_Lib.DataTableAttributes
         public string MODEL_NAME { get; set; }
 
         /// <summary>
+        /// 站點名稱
+        /// </summary>
+        public string STATION_NAME { get; set; }
+
+        /// <summary>
         /// 上報名稱
         /// </summary>
         public string REPORT_NAME { get; set; }

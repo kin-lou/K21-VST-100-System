@@ -26,7 +26,7 @@ namespace SAA_CommunicationSystem_Lib.DataTableAttributes
         /// <summary>
         /// 站點
         /// </summary>
-        public string STATION { get; set; }
+        public string STATION_NAME { get; set; }
 
         /// <summary>
         /// 卡匣號碼

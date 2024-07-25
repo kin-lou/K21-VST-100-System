@@ -34,7 +34,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
             string paraUrlCoded = Uri.EscapeDataString(paraKey);
             paraUrlCoded += "=" + Uri.EscapeDataString(jsonParas);
 
-            SAA_Database.LogMessage($"【轉譯程式】【傳送】{jsonParas}");
+            SAA_Database.LogMessage($"【轉譯程式->LCS】【傳送】{jsonParas}");
             byte[] payload;
             //將Json字串轉化為位元組
             //payload = Encoding.UTF8.GetBytes(paraUrlCoded);
@@ -88,7 +88,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                 strValue = Reader.ReadInnerXml();//取出Content中的Json資料
                 Reader.Close();
                 s.Close();
-                SAA_Database.LogMessage($"【Server->Client】【接收】{strValue}");
+                SAA_Database.LogMessage($"【LCS->轉譯程式】【接收】{strValue}");
             }
             catch (Exception ex)
             {

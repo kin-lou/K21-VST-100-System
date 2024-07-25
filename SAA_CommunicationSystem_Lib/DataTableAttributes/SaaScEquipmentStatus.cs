@@ -22,7 +22,7 @@ namespace SAA_CommunicationSystem_Lib.DataTableAttributes
         /// <summary>
         /// 站點
         /// </summary>
-        public string STATION { get; set; }
+        public string STATION_NAME { get; set; }
 
         /// <summary>
         /// 客戶機台名稱
@@ -73,5 +73,10 @@ namespace SAA_CommunicationSystem_Lib.DataTableAttributes
         /// LCS狀態更新時間(yyyy-MM-dd HH:mm:ss.fff)
         /// </summary>
         public string LCS_UPDATE_TIME { get; set; }
+
+        /// <summary>
+        /// 上位詢問回覆狀態
+        /// </summary>
+        public string READREPLY { get; set; }
     }
 }

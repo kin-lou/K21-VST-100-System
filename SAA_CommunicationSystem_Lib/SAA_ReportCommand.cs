@@ -49,18 +49,39 @@ namespace SAA_CommunicationSystem_Lib
         /// </summary>
         public Dictionary<string, int>DicCommon = new Dictionary<string, int>();
 
+        /// <summary>
+        /// ALARM上報
+        /// </summary>
         public List<string> AlarmReportAry= new List<string>();
 
+        /// <summary>
+        /// 詢問上報
+        /// </summary>
         public List<string> AskCarrierAry = new List<string>();
 
+        /// <summary>
+        /// 入庫上報
+        /// </summary>
         public List<string> CarryInReportAry = new List<string>();
 
+        /// <summary>
+        /// 清除上報
+        /// </summary>
         public List<string> CarryOutReportAry = new List<string>();
 
+        /// <summary>
+        /// 退盒上報
+        /// </summary>
         public List<string> CarryRejectAry = new List<string>();
 
+        /// <summary>
+        /// 清除上報
+        /// </summary>
         public List<string> ClearCacheAry = new List<string>();
 
+        /// <summary>
+        /// 鎖格上報
+        /// </summary>
         public List<string> InOutLockAry = new List<string>();
     }
 }

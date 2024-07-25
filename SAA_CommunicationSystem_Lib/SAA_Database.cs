@@ -1,6 +1,8 @@
-﻿using NLog;
+﻿using Newtonsoft.Json;
+using NLog;
 using SAA_CommunicationSystem_Lib.Attributes;
 using SAA_CommunicationSystem_Lib.DataTableAttributes;
+using SAA_CommunicationSystem_Lib.ReportCommandAttributes;
 using SAA_CommunicationSystem_Lib.SqlData;
 using SAA_CommunicationSystem_Lib.WebApiSendCommand;
 using SAA_CommunicationSystem_Lib.WebApiServer;
@@ -113,6 +115,17 @@ namespace SAA_CommunicationSystem_Lib
         public static string ReadTime()
         {
             return $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}";
+        }
+        #endregion
+
+        #region [===讀取Report時間===]
+        /// <summary>
+        /// 讀取Report時間
+        /// </summary>
+        /// <returns></returns>
+        public static string ReadTeid()
+        {
+            return $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.ffffff}";
         }
         #endregion
 
@@ -291,6 +304,14 @@ namespace SAA_CommunicationSystem_Lib
             /// 卡匣到達出料平台
             /// </summary>
             CarrierArrivedPlatform,
+
+            RGV_1,
+
+            Carrier_1D_Fail,
+
+            Carrier_Repeat,
+
+            WIP_Full,
         }
         #endregion
 
@@ -349,7 +370,7 @@ namespace SAA_CommunicationSystem_Lib
         /// <returns></returns>
         public static int ReadRequorIndex(SaaScReportInadx reportInadx)
         {
-            var indexdata = SaaSql.GetScReportIndex(reportInadx.SETNO, reportInadx.MODEL_NAME, reportInadx.REPORT_NAME);
+            var indexdata = SaaSql.GetScReportIndex(reportInadx.SETNO, reportInadx.MODEL_NAME, reportInadx.REPORT_NAME, reportInadx.STATION_NAME);
             if (indexdata.Rows.Count != 0)
             {
                 reportInadx.REPORT_MAX = int.Parse(indexdata.Rows[0][SAA_DatabaseEnum.SC_REPORT_INDEX.REPORT_MAX.ToString()].ToString());
@@ -386,7 +407,143 @@ namespace SAA_CommunicationSystem_Lib
                 LogMessage($"{ex.Message}-{ex.StackTrace}", LogType.Error);
                 return string.Empty;
             }
-        } 
+        }
+        #endregion
+
+        public static string SaaSendCommandiLis(string commanddata, string reportevent)
+        {
+            try
+            {
+                return webapisendcommand.Post(configattributes.iLISWebApiServerIP + "LCS/" + reportevent, commanddata);
+            }
+            catch (Exception ex)
+            {
+                LogMessage($"{ex.Message}-{ex.StackTrace}", LogType.Error);
+                return string.Empty;
+            }
+        }
+
+        public static string SaaSendCommandLift(string commanddata, string reportevent)
+        {
+            try
+            {
+                return webapisendcommand.Post($"{configattributes.LiftWebApiServerIP}/" + reportevent, commanddata);
+            }
+            catch (Exception ex)
+            {
+                LogMessage($"{ex.Message}-{ex.StackTrace}", LogType.Error);
+                return string.Empty;
+            }
+        }
+
+        public static void SaaSendAutoMation(SaaReportCommandAutpMation autpmation)
+        {
+            var commondb = SaaSql.GetScDevice(autpmation.STATION);
+            Dictionary<string, string> CarrierGoTo = new Dictionary<string, string>
+            {
+               { "CMD_NO", autpmation.CMD_NO },
+               { "CMD_NAME",autpmation.CMD_NAME},
+               { "STATION",$"{autpmation.STATION}_ROBOT"},
+            };
+            string commandcontent = JsonConvert.SerializeObject(CarrierGoTo);
+            int saaequipmentno = commondb.Rows.Count != 0 ? int.Parse(commondb.Rows[0]["SETNO"].ToString()) : 0;
+            string stationid = commondb.Rows.Count != 0 ? commondb.Rows[0]["STATION_NAME"].ToString() : string.Empty;
+            string teid = $"{stationid}_{ReadTeid()}";
+
+            SetSaaDirective(saaequipmentno, stationid, string.Empty, autpmation.CMD_NO, commandcontent, SAA_DatabaseEnum.ReportSource.LCS);
+        }
+
+        #region [===新增Directive資料===]
+        /// <summary>
+        /// 新增Directive資料
+        /// </summary>
+        /// <param name="saaequipmentno">設備編號</param>
+        /// <param name="commandstation">站點</param>
+        /// <param name="carrierid">卡匣ID</param>
+        /// <param name="commandno">指令編號</param>
+        /// <param name="commandcontent">指令內容</param>
+        /// <param name="reportsource">來源(LCS or iLIS)</param>
+        public static void SetSaaDirective(int saaequipmentno, string commandstation, string carrierid, string commandno, string commandcontent, SAA_DatabaseEnum.ReportSource reportsource = SAA_DatabaseEnum.ReportSource.LCS)
+        {
+            if (ReadScDirectiveCount(saaequipmentno, commandno, commandcontent, reportsource))
+            {
+                SaaScReportInadx reportInadx = new SaaScReportInadx()
+                {
+                    SETNO = saaequipmentno,
+                    MODEL_NAME = configattributes.SaaEquipmentName,
+                    STATION_NAME = commandstation,
+                    REPORT_NAME = SAA_DatabaseEnum.IndexTableName.SC_DIRECTIVE.ToString(),
+                };
+                SaaScDirective directive = new SaaScDirective()
+                {
+                    TASKDATETIME = ReadTime(),
+                    SETNO = saaequipmentno.ToString(),
+                    COMMANDON = ReadRequorIndex(reportInadx).ToString(),
+                    STATION_NAME = commandstation,
+                    CARRIERID = carrierid,
+                    COMMANDID = commandno,
+                    COMMANDTEXT = commandcontent,
+                    SOURCE = reportsource.ToString(),
+                };
+                SaaSql.SetScDirective(directive);
+                LogMessage($"【新增指令】新增資料至SC_DIRECTIVE=>Command_ON:{directive.COMMANDON} Command_ID:{directive.COMMANDID} Command_Text:{directive.COMMANDTEXT}。");
+                LogMessage($"【新增指令】新增Directive表，指令新增完成");
+            }
+            else
+            {
+                LogMessage($"【指令相同】已有相同指令無法新增。", LogType.Error);
+            }
+        }
+        #endregion
+
+        public static string SaaSendCommandSystems(string commanddata, string reportevent)
+        {
+            try
+            {
+                return webapisendcommand.Post($"{configattributes.WebApiServerIP}/" + reportevent, commanddata);
+            }
+            catch (Exception ex)
+            {
+                LogMessage($"{ex.Message}-{ex.StackTrace}", LogType.Error);
+                return string.Empty;
+            }
+        }
+
+        #region [===讀取是否有相同資料===]
+        public static bool ReadScDirectiveCount(int saaequipmentno, string commandid, string commandtext, SAA_DatabaseEnum.ReportSource reportSource)
+        {
+            if (SaaSql.GetScDirective(saaequipmentno, commandid, commandtext, reportSource.ToString()).Rows.Count == 0)
+                return true;
+            return false;
+        }
+        #endregion
+
+        #region [===字串轉Dictionary===]
+        /// <summary>
+        /// 字串轉Dictionary
+        /// </summary>
+        /// <param name="commandtext"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string> ContentToDictionary(string commandtext)
+        {
+            try
+            {
+                string messagetemp = commandtext.Replace("\r\n", "").Replace("\"", "").Replace("{", "").Replace("}", "");
+                Dictionary<string, string> mydictionary = new Dictionary<string, string>();
+                string[] aftercontent = messagetemp.Split(',');
+                foreach (var datas in aftercontent)
+                {
+                    var data = datas.Split(':');
+                    mydictionary.Add(data[0], data[1]);
+                }
+                return mydictionary;
+            }
+            catch (Exception ex)
+            {
+                LogMessage($"{ex.Message}-{ex.StackTrace}");
+                return null;
+            }
+        }
         #endregion
 
         public enum LogType

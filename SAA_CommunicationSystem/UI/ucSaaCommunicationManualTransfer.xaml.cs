@@ -21,7 +21,10 @@ namespace SAA_CommunicationSystem.UI
     public partial class ucSaaCommunicationManualTransfer : UserControl
     {
         private UserControl control = new UserControl();
+        private readonly ucSaaCommunicationManualTransferiLis _mSaaCommunicationManualTransferiLis = new ucSaaCommunicationManualTransferiLis();
         private readonly ucSaaCommunicationManualTransferLcs _mSaaCommunicationManualTransferLcs = new ucSaaCommunicationManualTransferLcs();
+        private readonly ucSaaCommunicationManualTransferAse _mSaaCommunicationManualTransferAse = new ucSaaCommunicationManualTransferAse();
+
         public ucSaaCommunicationManualTransfer()
         {
             InitializeComponent();
@@ -35,10 +38,13 @@ namespace SAA_CommunicationSystem.UI
             switch ((BtnName)Enum.Parse(typeof(BtnName), button.Name))
             {
                 case BtnName.BtniList:
-                    //GetGrid(_mSaaCommunicationLogiList);
+                    GetGrid(_mSaaCommunicationManualTransferiLis);
                     break;
                 case BtnName.BtnReceiv:
                     GetGrid(_mSaaCommunicationManualTransferLcs);
+                    break;
+                case BtnName.BtnASE:
+                    GetGrid(_mSaaCommunicationManualTransferAse);
                     break;
             }
         }
@@ -64,6 +70,11 @@ namespace SAA_CommunicationSystem.UI
             /// 傳送至LCS
             /// </summary>
             BtnReceiv,
+
+            /// <summary>
+            /// 傳送ASE指令
+            /// </summary>
+            BtnASE,
         }
         #endregion
     }

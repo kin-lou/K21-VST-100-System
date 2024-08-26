@@ -836,11 +836,23 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                 var data = SAA_Database.SaaSql.GetScDevice(equipmentcarrierinfo.STATIOM_NAME);
                                 if (data.Rows.Count != 0)
                                 {
+                                    var carrierinfodata = SAA_Database.SaaSql.GetEquipmentCarrierInfo(equipmentcarrierinfo);
+                                    if (carrierinfodata.Rows.Count != 0)
+                                    {
+                                        SAA_Database.SaaSql.UpdEquipmentCarrierInfo(equipmentcarrierinfo);
+                                        SAA_Database.LogMessage($"【{reporthandshake.StationID}】【更新資料】【有更新批號】更新設備資訊完成");
+                                    }
+                                    else
+                                    {
+                                        SAA_Database.SaaSql.SetScEquipmentCarrierInfo(equipmentcarrierinfo);
+                                        SAA_Database.LogMessage($"【{reporthandshake.StationID}】【新增資料】新增設備資訊完成");
+                                    }
+
                                     string devicetype = data.Rows[0]["DEVICETYPE"].ToString();
                                     if (devicetype == "1")
                                     {
                                         SAA_Database.LogMessage($"【新增實盒卡匣】站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}，載體狀態:{equipmentcarrierinfo.DESTINATIONTYPE}，載體資訊:{equipmentcarrierinfo.CARRIERSTATE}");
-                                        if (equipmentcarrierinfo.DESTINATIONTYPE == SAA_DatabaseEnum.DestinationType.EQP.ToString() && equipmentcarrierinfo.CARRIERSTATE == SAA_DatabaseEnum.CarrierState.Material.ToString())
+                                        if ((equipmentcarrierinfo.DESTINATIONTYPE == SAA_DatabaseEnum.DestinationType.EQP.ToString() && equipmentcarrierinfo.CARRIERSTATE == SAA_DatabaseEnum.CarrierState.Material.ToString()))
                                         {
                                             SaaScLiftCarrierInfoMaterial LiftCarrierInfoMaterial = new SaaScLiftCarrierInfoMaterial()
                                             {
@@ -856,25 +868,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                             var carrierinfomaterialdata = SAA_Database.SaaSql.GetLiftCarrierInfoMaterial(LiftCarrierInfoMaterial);
                                             if (carrierinfomaterialdata.Rows.Count == 0)
                                             {
-                                                var carrierinfodata = SAA_Database.SaaSql.GetEquipmentCarrierInfo(equipmentcarrierinfo);
-                                                if (carrierinfodata.Rows.Count != 0)
-                                                {
-                                                    if (string.IsNullOrEmpty(equipmentcarrierinfo.PARTNO) || equipmentcarrierinfo.PARTNO == SAA_Database.SaaCommon.NA || equipmentcarrierinfo.PARTNO.Contains("Unfind"))
-                                                    {
-                                                        SAA_Database.SaaSql.UpdEquipmentCarrierInfoNotPartno(equipmentcarrierinfo);
-                                                        SAA_Database.LogMessage($"【{reporthandshake.StationID}】【更新資料】【未更新批號】更新設備資訊完成");
-                                                    }
-                                                    else
-                                                    {
-                                                        SAA_Database.SaaSql.UpdEquipmentCarrierInfo(equipmentcarrierinfo);
-                                                        SAA_Database.LogMessage($"【{reporthandshake.StationID}】【更新資料】【有更新批號】更新設備資訊完成");
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    SAA_Database.SaaSql.SetScEquipmentCarrierInfo(equipmentcarrierinfo);
-                                                    SAA_Database.LogMessage($"【{reporthandshake.StationID}】【新增資料】新增設備資訊完成");
-                                                }
+
 
                                                 SAA_Database.SaaSql.SetScLiftCarrierInfoMaterial(LiftCarrierInfoMaterial);
                                                 SAA_Database.LogMessage($"【新增實盒卡匣】新增ScLiftCarrierInfoMaterial資料表完成，站點:{LiftCarrierInfoMaterial.STATION_NAME}，卡匣ID:{LiftCarrierInfoMaterial.CARRIERID}");
@@ -906,7 +900,6 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                 {
                                     SAA_Database.LogMessage($"【新增實盒卡匣】查無此站點，站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}");
                                 }
-
                             }
                         }
                     }

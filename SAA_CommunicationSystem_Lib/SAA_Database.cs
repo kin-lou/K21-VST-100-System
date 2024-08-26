@@ -9,6 +9,7 @@ using SAA_CommunicationSystem_Lib.WebApiServer;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -428,6 +429,20 @@ namespace SAA_CommunicationSystem_Lib
             try
             {
                 return webapisendcommand.Post($"{configattributes.LiftWebApiServerIP}/" + reportevent, commanddata);
+            }
+            catch (Exception ex)
+            {
+                LogMessage($"{ex.Message}-{ex.StackTrace}", LogType.Error);
+                return string.Empty;
+            }
+        }
+
+        public static string SaaSendCommandJumpDie(string commanddata, string reportevent)
+        {
+            try
+            {
+                Console.WriteLine($"{configattributes.JumpDieApiServerIP}/" + reportevent, commanddata);
+                return webapisendcommand.Post($"{configattributes.JumpDieApiServerIP}/" + reportevent, commanddata);
             }
             catch (Exception ex)
             {

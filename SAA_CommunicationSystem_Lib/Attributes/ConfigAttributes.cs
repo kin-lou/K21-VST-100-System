@@ -90,5 +90,14 @@ namespace SAA_CommunicationSystem_Lib.Attributes
         public string PARTICLE { get; set; }
 
         public string LiftWebApiServerIP { get; set; }
+
+        public string Station6SideLD { get; set; }
+
+        public string Station6SideUD { get; set; }
+
+        /// <summary>
+        /// JumpDie Server Host
+        /// </summary>
+        public string JumpDieApiServerIP { get; set; }
     }
 }

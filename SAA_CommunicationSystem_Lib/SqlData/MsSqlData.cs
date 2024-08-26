@@ -456,6 +456,11 @@ namespace SAA_CommunicationSystem_Lib.SqlData
             SaaSql.WriteSqlByAutoOpen($"Update SC_EQUIPMENT_REPORT Set SENDFLAG = '" + equipmentreport.SENDFLAG + "' Where TASKDATETIME = '" + equipmentreport.TASKDATETIME + "' And SETNO = '" + equipmentreport.SETNO + "' And MODEL_NAME = '" + equipmentreport.MODEL_NAME + "' And STATION_NAME ='" + equipmentreport.STATION_NAME + "' And CARRIERID ='" + equipmentreport.CARRIERID + "' And REPORE_DATATRACK ='" + equipmentreport.REPORE_DATATRACK + "' And REPORE_DATAREMOTE = '" + equipmentreport.REPORE_DATAREMOTE + "' And REPORE_DATALOCAL='" + equipmentreport.REPORE_DATALOCAL + "'");
         }
 
+        public void UpdScEquipmentReportJumpDie(SaaScEquipmentReport equipmentreport)
+        {
+            SaaSql.WriteSqlByAutoOpen($"Update SC_EQUIPMENT_REPORT Set SENDFLAG = '" + equipmentreport.SENDFLAG + "' Where TASKDATETIME = '" + equipmentreport.TASKDATETIME + "' And SETNO = '" + equipmentreport.SETNO + "' And MODEL_NAME = '" + equipmentreport.MODEL_NAME + "' And STATION_NAME ='" + equipmentreport.STATION_NAME + "' And CARRIERID ='" + equipmentreport.CARRIERID + "' And REPORE_DATATRACK ='" + equipmentreport.REPORE_DATATRACK + "'");
+        }
+
         public void UpdScEquipmnetHardwareInfo(SaaScEquipmnetHardwareInfo hardwareinfo)
         {
             SaaSql.WriteSqlByAutoOpen("Update SC_EQUIPMNET_HARDWARE_INFO Set SENDFLAG = '" + hardwareinfo.SENDFLAG + "' Where STATION_NAME = '" + hardwareinfo.STATION_NAME + "' And EQUIPMNET_TIME = '" + hardwareinfo.EQUIPMNET_TIME + "' And EQUIPMNET_TEID = '" + hardwareinfo.EQUIPMNET_TEID + "' ");

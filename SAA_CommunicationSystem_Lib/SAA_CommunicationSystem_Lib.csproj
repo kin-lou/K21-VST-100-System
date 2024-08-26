@@ -63,7 +63,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\AseResponseAttribute.cs" />
     <Compile Include="Attributes\ConfigAttributes.cs" />
+    <Compile Include="Attributes\JumpDieResult.cs" />
     <Compile Include="Attributes\ReportCommandNameAttributes.cs" />
     <Compile Include="Attributes\ScCommonAttributes.cs" />
     <Compile Include="CommandReportAttributes\CommandReport.cs" />

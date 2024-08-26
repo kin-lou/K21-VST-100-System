@@ -47,6 +47,9 @@ namespace SAA_CommunicationSystem_Lib
                         SaaIniParaKeyStation = ConfigFile.AppSettings.Settings[ConfigName.SaaIniParaKeyStation.ToString()].Value.ToString(),
                         PARTICLE = ConfigFile.AppSettings.Settings[ConfigName.PARTICLE.ToString()].Value.ToString(),
                         LiftWebApiServerIP =ConfigFile.AppSettings.Settings[ConfigName.LiftWebApiServerIP.ToString()].Value.ToString(),
+                        Station6SideLD = ConfigFile.AppSettings.Settings[ConfigName.Station6SideLD.ToString()].Value.ToString(),
+                        Station6SideUD = ConfigFile.AppSettings.Settings[ConfigName.Station6SideUD.ToString()].Value.ToString(),
+                        JumpDieApiServerIP = ConfigFile.AppSettings.Settings[ConfigName.JumpDieApiServerIP.ToString()].Value.ToString(),
                     };
                 }
             }
@@ -139,7 +142,19 @@ namespace SAA_CommunicationSystem_Lib
 
             PARTICLE,
 
-            LiftWebApiServerIP
+            LiftWebApiServerIP,
+
+            /// <summary>
+            /// 6Side 站點名稱
+            /// </summary>
+            Station6SideLD,
+
+            Station6SideUD,
+
+            /// <summary>
+            /// JumpDie Server Host
+            /// </summary>
+            JumpDieApiServerIP,
         }
     }
 }

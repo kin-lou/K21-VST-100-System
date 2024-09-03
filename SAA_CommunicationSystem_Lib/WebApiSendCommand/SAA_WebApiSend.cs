@@ -279,8 +279,59 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                         var fulldata = SAA_Database.SaaSql.GetScScLocationsettingFull(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.MODEL_NAME, equipmentcarrierinfo.STATIOM_NAME);
                                         if (fulldata.Rows.Count == 0)
                                         {
-                                            sendReply = SaaSendReply.N.ToString();
-                                            SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】儲格已滿，退至 reject，機台編號:{equipmentcarrierinfo.SETNO} 站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}");
+                                            SaaScLiftCarrierInfo liftCarrierInfo = new SaaScLiftCarrierInfo()
+                                            {
+                                                SETNO = equipmentcarrierinfo.SETNO,
+                                                MODEL_NAME = equipmentcarrierinfo.MODEL_NAME,
+                                                STATION_NAME = equipmentcarrierinfo.STATIOM_NAME,
+                                                CARRIERID = equipmentcarrierinfo.CARRIERID,
+                                            };
+                                            var liftcarrierinfodata = SAA_Database.SaaSql.GetLiftCarrierInfo(liftCarrierInfo);
+                                            string infodata = liftcarrierinfodata.Rows.Count != 0 ? liftcarrierinfodata.Rows[0]["REMOTE"].ToString() : string.Empty;
+                                            SAA_Database.LogMessage($"【{liftCarrierInfo.STATION_NAME}】【查詢來源站點】來源站點:{infodata}，卡匣ID:{liftCarrierInfo.CARRIERID}");
+                                            if (infodata=="PGV-IN")
+                                            {
+                                                sendReply = SaaSendReply.N.ToString();
+                                                SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】儲格已滿，退至 reject，機台編號:{equipmentcarrierinfo.SETNO} 站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}");
+                                            }
+                                            else
+                                            {
+                                                sendReply = SaaSendReply.Y.ToString();
+
+                                                carrierinfodata = SAA_Database.SaaSql.GetEquipmentCarrierInfo(equipmentcarrierinfo);
+                                                SaaEsReportTransportRequirement EsReportTransport = new SaaEsReportTransportRequirement
+                                                {
+                                                    STATION = scdevicedata.Rows.Count != 0 ? scdevicedata.Rows[0][SC_DEVICE.STATION_NAME.ToString()].ToString() : string.Empty,
+                                                    DATATIME = SAA_Database.ReadTime(),
+                                                    CARRIERID = equipmentcarrierinfo.CARRIERID,
+                                                    BEGINSTATION = reportcommand.ORIGIN,
+                                                    ENDSTATION = reportcommand.DESTINATION,
+                                                };
+                                                EsReportTransport.TEID = $"{EsReportTransport.STATION}_{EsReportTransport.DATATIME}";
+
+                                                SaaScTransportrEquirementMaterial ScTransportrEquirement = new SaaScTransportrEquirementMaterial
+                                                {
+                                                    SETNO = scdevicedata.Rows.Count != 0 ? scdevicedata.Rows[0][SC_DEVICE.SETNO.ToString()].ToString() : SAA_Database.configattributes.SaaEquipmentNo,
+                                                    MODEL_NAME = scdevicedata.Rows.Count != 0 ? scdevicedata.Rows[0][SC_DEVICE.MODEL_NAME.ToString()].ToString() : SAA_Database.configattributes.SaaEquipmentName,
+                                                    STATION_NAME = EsReportTransport.STATION,
+                                                    REPORT_STATION = EsReportTransport.STATION,
+                                                    REPORT_TIME = EsReportTransport.DATATIME,
+                                                    CARRIERID = EsReportTransport.CARRIERID,
+                                                    REQUIREMENT_TYPE = "2",
+                                                    BEGIN_STATION = EsReportTransport.BEGINSTATION,
+                                                    END_STATION = SAA_Database.SaaCommon.SaaZipStationName,
+                                                };
+                                                ScTransportrEquirement.REPORTID = $"{ScTransportrEquirement.REPORT_STATION}_{ScTransportrEquirement.REPORT_TIME}";
+                                                if (SAA_Database.SaaSql.GetScTransportrEquirementMaterialCarrierId(ScTransportrEquirement.CARRIERID).Rows.Count == 0)
+                                                {
+                                                    SAA_Database.SaaSql.SetScTransportrEquirementMaterial(ScTransportrEquirement);
+                                                    SAA_Database.LogMessage($"【新增資料】【天車】新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                }
+                                                else
+                                                {
+                                                    SAA_Database.LogMessage($"【新增資料】【天車】已有需求無法新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                }
+                                            }
                                         }
 
                                         SAA_Database.SaaSql.UpdScScPurchase(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, sendReply);
@@ -903,6 +954,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                             REPORE_DATATRACK = dr[SC_EQUIPMENT_REPORT.REPORE_DATATRACK.ToString()].ToString(),
                             REPORE_DATAREMOTE = dr[SC_EQUIPMENT_REPORT.REPORE_DATAREMOTE.ToString()].ToString(),
                             REPORE_DATALOCAL = dr[SC_EQUIPMENT_REPORT.REPORE_DATALOCAL.ToString()].ToString(),
+                            REPORE_SEND = dr[SC_EQUIPMENT_REPORT.REPORE_SEND.ToString()].ToString(),
                         };
                         SaaEquipmentCarrierInfo equipmentcarrierinfo = new SaaEquipmentCarrierInfo
                         {
@@ -1812,20 +1864,22 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                     destination = "K21-8F_ASEF1-2493-A01_UDREJECT";
                                 else
                                     destination = hostidlocal.Rows.Count != 0 ? hostidlocal.Rows[0]["HOSTID"].ToString() : "查無資料";
-
-                                Dictionary<string, string> CarrierReject = new Dictionary<string, string>
+                                if(!string.IsNullOrEmpty(equipmentreportt.REPORE_SEND))
                                 {
-                                    { "CMD_NO", "M004" },
-                                    { "CMD_NAME", "CARRIER_REJECT" },
-                                    { "CARRIER", equipmentreportt.CARRIERID.Contains(SAA_Database.SaaCommon.ReaderError)?"ERROR": equipmentreportt.CARRIERID},
-                                    { "SCHEDULE", carrierinfodata.Rows.Count!=0?!string.IsNullOrEmpty(carrierinfodata.Rows[0]["PARTNO"].ToString())?carrierinfodata.Rows[0]["PARTNO"].ToString():SAA_Database.SaaCommon.NA:SAA_Database.SaaCommon.NA},
-                                    { "ORIGIN",order},
-                                    { "DESTINATION",destination},
-                                    { "REJECT_CODE", carrierdata.Rows.Count!=0?!string.IsNullOrEmpty(carrierdata.Rows[0]["REJECT_CODE"].ToString())?carrierdata.Rows[0]["REJECT_CODE"].ToString():SAA_Database.SaaCommon.NA:SAA_Database.SaaCommon.NA},
-                                    { "REJECT_MESSAGE",carrierdata.Rows.Count!=0?!string.IsNullOrEmpty(carrierdata.Rows[0]["REJECT_MESSAGE"].ToString())?carrierdata.Rows[0]["REJECT_MESSAGE"].ToString():SAA_Database.SaaCommon.NA:SAA_Database.SaaCommon.NA}
-                                };
-                                string commandcontent = JsonConvert.SerializeObject(CarrierReject);
-                                SAA_Database.SetSaaDirective(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, "M004", commandcontent, ReportSource.LCS);
+                                    Dictionary<string, string> CarrierReject = new Dictionary<string, string>
+                                    {
+                                        { "CMD_NO", "M004" },
+                                        { "CMD_NAME", "CARRIER_REJECT" },
+                                        { "CARRIER", equipmentreportt.CARRIERID.Contains(SAA_Database.SaaCommon.ReaderError)?"ERROR": equipmentreportt.CARRIERID},
+                                        { "SCHEDULE", carrierinfodata.Rows.Count!=0?!string.IsNullOrEmpty(carrierinfodata.Rows[0]["PARTNO"].ToString())?carrierinfodata.Rows[0]["PARTNO"].ToString():SAA_Database.SaaCommon.NA:SAA_Database.SaaCommon.NA},
+                                        { "ORIGIN",order},
+                                        { "DESTINATION",destination},
+                                        { "REJECT_CODE", carrierdata.Rows.Count!=0?!string.IsNullOrEmpty(carrierdata.Rows[0]["REJECT_CODE"].ToString())?carrierdata.Rows[0]["REJECT_CODE"].ToString():SAA_Database.SaaCommon.NA:SAA_Database.SaaCommon.NA},
+                                        { "REJECT_MESSAGE",carrierdata.Rows.Count!=0?!string.IsNullOrEmpty(carrierdata.Rows[0]["REJECT_MESSAGE"].ToString())?carrierdata.Rows[0]["REJECT_MESSAGE"].ToString():SAA_Database.SaaCommon.NA:SAA_Database.SaaCommon.NA}
+                                    };
+                                    string commandcontent = JsonConvert.SerializeObject(CarrierReject);
+                                    SAA_Database.SetSaaDirective(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, "M004", commandcontent, ReportSource.LCS);
+                                }
                                 equipmentreportt.SENDFLAG = SendFlag.Y.ToString();
                                 SAA_Database.SaaSql.UpdScEquipmentReport(equipmentreportt);
                             }
@@ -1833,7 +1887,13 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                             {
                                 SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】開始執行 JumpDie 流程");
                                 SendToJumpDieServer(equipmentreportt);
-                                SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】轉發 JumpDie 內容至中轉 server");
+                                SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】轉發開始執行 JumpDie 內容至中轉 server");
+                            }
+                            else if (equipmentreportt.REPORE_DATATRACK == "315")
+                            {
+                                SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】結束執行 JumpDie 流程");
+                                SendToJumpDieServer(equipmentreportt);
+                                SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】轉發結束執行 JumpDie 內容至中轉 server");
                             }
                         }
                         else
@@ -2723,6 +2783,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                 { "StationName", equipmentreport.STATION_NAME },
                 { "CarrierID", equipmentreport.CARRIERID },
                 { "PartNo", carrierdata.Rows.Count != 0 ? !string.IsNullOrEmpty(carrierdata.Rows[0]["PARTNO"].ToString()) ? carrierdata.Rows[0]["PARTNO"].ToString() : SAA_Database.SaaCommon.NA : SAA_Database.SaaCommon.NA },
+                { "ReportTrack", equipmentreport.REPORE_DATATRACK },
                 { "TimeStamp", equipmentreport.TASKDATETIME}
             };
 

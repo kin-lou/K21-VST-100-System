@@ -671,7 +671,9 @@ namespace SAA_CommunicationSystem_Lib
 
             REPORE_DATALOCAL,
 
-            SENDFLAG
+            SENDFLAG,
+
+            REPORE_SEND
         }
 
         #region [===指令名稱===]

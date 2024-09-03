@@ -667,7 +667,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
         {
             try
             {
-                SAA_Database.LogMessage($"【接收iLIST】詢問帳料資訊站點:{requestequipmenthardwareinfo.StationID}");
+                SAA_Database.LogMessage($"【{requestequipmenthardwareinfo.StationID}】【接收iLIST】詢問帳料資訊站點:{requestequipmenthardwareinfo.StationID}");
                 var devicedata = SAA_Database.SaaSql.GetScDevice(requestequipmenthardwareinfo.StationID);
                 if (devicedata != null)
                 {
@@ -696,11 +696,11 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                         };
                         string commandcontent = JsonConvert.SerializeObject(saaLift);
                         string ReportMessage = SAA_Database.SaaSendCommandSystems(commandcontent, SAA_DatabaseEnum.SendWebApiCommandName.GetLiftMessage.ToString());
-                        SAA_Database.LogMessage($"【傳送設備】【{saaLift.Statiom_Name}】【轉譯程式】自行接收結果:{ReportMessage}");
+                        SAA_Database.LogMessage($"【{saaLift.Statiom_Name}】【傳送設備】【轉譯程式】自行接收結果:{ReportMessage}");
                     }
                     else
                     {
-                        SAA_Database.LogMessage($"站點{requestequipmenthardwareinfo.StationID}資料為空", SAA_Database.LogType.Error);
+                        SAA_Database.LogMessage($"【{requestequipmenthardwareinfo.StationID}】站點{requestequipmenthardwareinfo.StationID}資料為空", SAA_Database.LogType.Error);
                     }
                 }
                 return saareportresult;
@@ -803,8 +803,8 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                     Handshake = handshakecarriertransport.Handshake,
                     CarrierInfo = handshakecarriertransport.CarrierInfo,
                 };
-                SAA_Database.LogMessage($"【接收iLIST】【{reporthandshake.StationID}】【{reporthandshake.HandsHakeType}】天車交握:車號{reporthandshake.ShuttleID} CarrierID:{reporthandshake.CarrierInfo.CarrierID}，L_REQ:{reporthandshake.Handshake.L_REQ}，U_REQ:{reporthandshake.Handshake.U_REQ}，Ready:{reporthandshake.Handshake.READY}，HO_AVBL:{reporthandshake.Handshake.HO_AVBL}，ES:{reporthandshake.Handshake.ES}，VA:{reporthandshake.Handshake.VA}，VS_0:{reporthandshake.Handshake.VS_0}，VS_1:{reporthandshake.Handshake.VS_1}");
-                SAA_Database.LogMessage($"【接收iLIST】【{reporthandshake.StationID}】【{reporthandshake.HandsHakeType}】載體資訊 CarrierID:{reporthandshake.CarrierInfo.CarrierID}，批號:{reporthandshake.CarrierInfo.Schedule}，CarrierState:{reporthandshake.CarrierInfo.CarrierState}，DestinationType:{reporthandshake.CarrierInfo.DestinationType}");
+                SAA_Database.LogMessage($"【{reporthandshake.StationID}】【接收iLIST】【{reporthandshake.HandsHakeType}】天車交握:車號{reporthandshake.ShuttleID} CarrierID:{reporthandshake.CarrierInfo.CarrierID}，L_REQ:{reporthandshake.Handshake.L_REQ}，U_REQ:{reporthandshake.Handshake.U_REQ}，Ready:{reporthandshake.Handshake.READY}，HO_AVBL:{reporthandshake.Handshake.HO_AVBL}，ES:{reporthandshake.Handshake.ES}，VA:{reporthandshake.Handshake.VA}，VS_0:{reporthandshake.Handshake.VS_0}，VS_1:{reporthandshake.Handshake.VS_1}");
+                SAA_Database.LogMessage($"【{reporthandshake.StationID}】【接收iLIST】【{reporthandshake.HandsHakeType}】載體資訊 CarrierID:{reporthandshake.CarrierInfo.CarrierID}，批號:{reporthandshake.CarrierInfo.Schedule}，CarrierState:{reporthandshake.CarrierInfo.CarrierState}，DestinationType:{reporthandshake.CarrierInfo.DestinationType}");
                 if (handshakecarriertransport.CarrierInfo.CarrierID != string.Empty || handshakecarriertransport.HandsHakeType == SAA_DatabaseEnum.HandshakeType.Report.ToString())
                 {
                     if (reporthandshake.Handshake.U_REQ == SAA_DatabaseEnum.E84Handshake.True.ToString())
@@ -851,7 +851,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                     string devicetype = data.Rows[0]["DEVICETYPE"].ToString();
                                     if (devicetype == "1")
                                     {
-                                        SAA_Database.LogMessage($"【新增實盒卡匣】站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}，載體狀態:{equipmentcarrierinfo.DESTINATIONTYPE}，載體資訊:{equipmentcarrierinfo.CARRIERSTATE}");
+                                        SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增實盒卡匣】站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}，載體狀態:{equipmentcarrierinfo.DESTINATIONTYPE}，載體資訊:{equipmentcarrierinfo.CARRIERSTATE}");
                                         if ((equipmentcarrierinfo.DESTINATIONTYPE == SAA_DatabaseEnum.DestinationType.EQP.ToString() && equipmentcarrierinfo.CARRIERSTATE == SAA_DatabaseEnum.CarrierState.Material.ToString()))
                                         {
                                             SaaScLiftCarrierInfoMaterial LiftCarrierInfoMaterial = new SaaScLiftCarrierInfoMaterial()
@@ -868,10 +868,11 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                             var carrierinfomaterialdata = SAA_Database.SaaSql.GetLiftCarrierInfoMaterial(LiftCarrierInfoMaterial);
                                             if (carrierinfomaterialdata.Rows.Count == 0)
                                             {
-
-
-                                                SAA_Database.SaaSql.SetScLiftCarrierInfoMaterial(LiftCarrierInfoMaterial);
-                                                SAA_Database.LogMessage($"【新增實盒卡匣】新增ScLiftCarrierInfoMaterial資料表完成，站點:{LiftCarrierInfoMaterial.STATION_NAME}，卡匣ID:{LiftCarrierInfoMaterial.CARRIERID}");
+                                                if(!equipmentcarrierinfo.CARRIERID.Contains(SAA_Database.configattributes.PARTICLE))
+                                                {
+                                                    SAA_Database.SaaSql.SetScLiftCarrierInfoMaterial(LiftCarrierInfoMaterial);
+                                                    SAA_Database.LogMessage($"【新增實盒卡匣】新增ScLiftCarrierInfoMaterial資料表完成，站點:{LiftCarrierInfoMaterial.STATION_NAME}，卡匣ID:{LiftCarrierInfoMaterial.CARRIERID}");
+                                                }
                                             }
                                             else
                                             {

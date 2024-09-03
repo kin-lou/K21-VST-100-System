@@ -26,5 +26,7 @@ namespace SAA_CommunicationSystem_Lib.DataTableAttributes
         public string REPORE_DATALOCAL { get; set; }
         
         public string SENDFLAG { get; set; }
+
+        public string REPORE_SEND { get; set; }
     }
 }

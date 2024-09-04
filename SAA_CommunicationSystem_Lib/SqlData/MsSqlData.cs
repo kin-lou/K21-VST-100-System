@@ -208,6 +208,12 @@ namespace SAA_CommunicationSystem_Lib.SqlData
             SaaSql.WriteSqlByAutoOpen($"Insert into SC_LIFT_CARRIER_INFO_REJECT(TASKDATETIME, SETNO, MODEL_NAME, STATION_NAME, CARRIERID, DEVICETYPE, QTIME, CYCLETIME) Values('{ScLiftCarrierInfoReject.TASKDATETIME}','{ScLiftCarrierInfoReject.SETNO}','{ScLiftCarrierInfoReject.MODEL_NAME}','{ScLiftCarrierInfoReject.STATION_NAME}','{ScLiftCarrierInfoReject.CARRIERID}', '{ScLiftCarrierInfoReject.DEVICETYPE}', '{ScLiftCarrierInfoReject.QTIME}', '{ScLiftCarrierInfoReject.CYCLETIME}')");
         }
 
+        public void SetScEquipmentCarrierInfoReject(SaaEquipmentCarrierInfo equipmentcarrierinfo)
+        {
+            SaaSql.WriteSqlByAutoOpen($"Insert into SC_EQUIPMENT_CARRIER_INFO(SETNO, MODEL_NAME, STATIOM_NAME, CARRIERID, REJECT_CODE, REJECT_MESSAGE) " +
+                $"Values('{equipmentcarrierinfo.SETNO}', '{equipmentcarrierinfo.MODEL_NAME}', '{equipmentcarrierinfo.STATIOM_NAME}', '{equipmentcarrierinfo.CARRIERID}', '{equipmentcarrierinfo.REJECT_CODE}', '{equipmentcarrierinfo.REJECT_MESSAGE}')");
+        }
+
         /*===============================刪除=======================================*/
 
         #region [===刪除使用者===]
@@ -480,6 +486,11 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public void UpdEquipmentCarrierInfo(SaaEquipmentCarrierInfo equipmentcarrierinfo)
         {
             SaaSql.WriteSqlByAutoOpen("Update SC_EQUIPMENT_CARRIER_INFO Set PARTNO = '" + equipmentcarrierinfo.PARTNO + "', CARRIERTYOE = '" + equipmentcarrierinfo.CARRIERTYOE + "', ROTFLAG = '" + equipmentcarrierinfo.ROTFLAG + "', FLIPFLAG = '" + equipmentcarrierinfo.FLIPFLAG + "', CARRIERSTATE = '" + equipmentcarrierinfo.CARRIERSTATE + "', DESTINATIONTYPE = '" + equipmentcarrierinfo.DESTINATIONTYPE + "', REJECT_CODE = '" + equipmentcarrierinfo.REJECT_CODE + "', REJECT_MESSAGE = '" + equipmentcarrierinfo.REJECT_MESSAGE + "' Where SETNO = '" + equipmentcarrierinfo.SETNO + "' And MODEL_NAME = '" + equipmentcarrierinfo.MODEL_NAME + "' And STATIOM_NAME = '" + equipmentcarrierinfo.STATIOM_NAME + "' And CARRIERID = '" + equipmentcarrierinfo.CARRIERID + "'");
+        }
+
+        public void UpdEquipmentCarrierInfoReject(SaaEquipmentCarrierInfo equipmentcarrierinfo)
+        {
+            SaaSql.WriteSqlByAutoOpen("Update SC_EQUIPMENT_CARRIER_INFO Set REJECT_CODE = '" + equipmentcarrierinfo.REJECT_CODE + "', REJECT_MESSAGE = '" + equipmentcarrierinfo.REJECT_MESSAGE + "' Where SETNO = '" + equipmentcarrierinfo.SETNO + "' And MODEL_NAME = '" + equipmentcarrierinfo.MODEL_NAME + "' And STATIOM_NAME = '" + equipmentcarrierinfo.STATIOM_NAME + "' And CARRIERID = '" + equipmentcarrierinfo.CARRIERID + "'");
         }
 
         public void UpdEquipmentCarrierInfoNotPartno(SaaEquipmentCarrierInfo equipmentcarrierinfo)

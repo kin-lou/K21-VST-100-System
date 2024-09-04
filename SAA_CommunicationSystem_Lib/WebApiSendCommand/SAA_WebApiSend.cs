@@ -1646,13 +1646,13 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                     };
                                     var liftcarrierinfoErrdata = SAA_Database.SaaSql.GetLiftCarrierInfo(liftCarrierInfErr);
                                     string infoerrdata = liftcarrierinfoErrdata.Rows.Count != 0 ? liftcarrierinfoErrdata.Rows[0]["REMOTE"].ToString() : string.Empty;
-                                    SAA_Database.LogMessage($"【查詢來源站點】來源站點:{infoerrdata}");
+                                    SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【查詢來源站點】來源站點:{infoerrdata}");
                                     var ReportStargData = SAA_Database.SaaSql.GetReportStargName(liftCarrierInfErr.STATION_NAME, infoerrdata);
                                     if (ReportStargData.Rows.Count != 0)
                                         order = ReportStargData.Rows[0]["HOSTID"].ToString();
                                     else
                                         order = hostidremote.Rows.Count != 0 ? hostidremote.Rows[0]["HOSTID"].ToString() : "查無資料";
-                                    SAA_Database.LogMessage($"【查詢起點】查詢起點名稱:{order}");
+                                    SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【查詢起點】查詢起點名稱:{order}");
                                     string destination = string.Empty;
                                     if (equipmentcarrierinfo.STATIOM_NAME.Contains(SAA_Database.configattributes.Station6SideLD))
                                         destination = "K21-8F_ASEF1-2493-A01_LDREJECT";
@@ -1691,7 +1691,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                         };
                                         var liftCarrierInfError = SAA_Database.SaaSql.GetLiftCarrierInfo(liftCarrierInfErr);
                                         infoerrdata = liftcarrierinfoErrdata.Rows.Count != 0 ? liftcarrierinfoErrdata.Rows[0]["REMOTE"].ToString() : string.Empty;
-                                        SAA_Database.LogMessage($"【查詢來源站點】來源站點:{infoerrdata}");
+                                        SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【查詢來源站點】來源站點:{infoerrdata}");
                                         ReportStargData = SAA_Database.SaaSql.GetReportStargName(liftCarrierInfErr.STATION_NAME, infoerrdata);
                                         if (ReportStargData.Rows.Count != 0)
                                             order = ReportStargData.Rows[0]["HOSTID"].ToString();
@@ -1729,13 +1729,13 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                 };
                                 var liftcarrierinfoErrdata = SAA_Database.SaaSql.GetLiftCarrierInfo(liftCarrierInfErr);
                                 string infoerrdata = liftcarrierinfoErrdata.Rows.Count != 0 ? liftcarrierinfoErrdata.Rows[0]["REMOTE"].ToString() : string.Empty;
-                                SAA_Database.LogMessage($"【查詢來源站點】來源站點:{infoerrdata}");
+                                SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【查詢來源站點】來源站點:{infoerrdata}");
                                 var ReportStargData = SAA_Database.SaaSql.GetReportStargName(liftCarrierInfErr.STATION_NAME, infoerrdata);
                                 if (ReportStargData.Rows.Count != 0)
                                     order = ReportStargData.Rows[0]["HOSTID"].ToString();
                                 else
                                     order = hostidremote.Rows.Count != 0 ? hostidremote.Rows[0]["HOSTID"].ToString() : "查無資料";
-                                SAA_Database.LogMessage($"【查詢起點】查詢起點名稱:{order}");
+                                SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【查詢起點】查詢起點名稱:{order}");
 
                                 string destination = string.Empty;
                                 if (equipmentcarrierinfo.STATIOM_NAME.Contains(SAA_Database.configattributes.Station6SideLD))
@@ -1744,6 +1744,8 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                     destination = "K21-8F_ASEF1-2493-A01_UDREJECT";
                                 else
                                     destination = hostidlocal.Rows.Count != 0 ? hostidlocal.Rows[0]["HOSTID"].ToString() : "查無資料";
+                                string reject_code = "RS0004";
+                                string reject_message = "Residual_substrate";
                                 Dictionary<string, string> CarrierReject = new Dictionary<string, string>
                                     {
                                         { "CMD_NO", "M004" },
@@ -1752,8 +1754,8 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                         { "SCHEDULE", carrierinfodata.Rows.Count!=0?!string.IsNullOrEmpty(carrierinfodata.Rows[0]["PARTNO"].ToString())?carrierinfodata.Rows[0]["PARTNO"].ToString():SAA_Database.SaaCommon.NA:SAA_Database.SaaCommon.NA},
                                         { "ORIGIN",order},
                                         { "DESTINATION",destination},
-                                        { "REJECT_CODE", "RS0004"},
-                                        { "REJECT_MESSAGE","Residual_substrate"}
+                                        { "REJECT_CODE", reject_code},
+                                        { "REJECT_MESSAGE",reject_message}
                                     };
                                 string commandcontent = JsonConvert.SerializeObject(CarrierReject);
                                 SAA_Database.SetSaaDirective(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, "M004", commandcontent, ReportSource.LCS);
@@ -1795,6 +1797,18 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                     commandcontent = JsonConvert.SerializeObject(CarrierGoTo);
                                     SAA_Database.SetSaaDirective(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, "S002", commandcontent, ReportSource.LCS);
                                     #endregion
+                                }
+
+                                var data = SAA_Database.SaaSql.GetEquipmentCarrierInfo(equipmentcarrierinfo);
+                                if (data.Rows.Count != 0)
+                                {
+                                    SAA_Database.SaaSql.UpdEquipmentCarrierInfoReject(equipmentcarrierinfo);
+                                    SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【空框檢知】卡匣ID:{equipmentcarrierinfo.CARRIERID}，REJECT_CODE:{equipmentcarrierinfo.REJECT_CODE}，REJECT_MESSAGE:{equipmentcarrierinfo.REJECT_CODE}，更新完成");
+                                }
+                                else
+                                {
+                                    SAA_Database.SaaSql.SetScEquipmentCarrierInfoReject(equipmentcarrierinfo);
+                                    SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【空框檢知】卡匣ID:{equipmentcarrierinfo.CARRIERID}，REJECT_CODE:{equipmentcarrierinfo.REJECT_CODE}，REJECT_MESSAGE:{equipmentcarrierinfo.REJECT_CODE}，新增完成");
                                 }
                             }
                             else if (equipmentreportt.REPORE_DATATRACK == "105")

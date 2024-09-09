@@ -325,8 +325,15 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                                 ScTransportrEquirement.REPORTID = $"{ScTransportrEquirement.REPORT_STATION}_{ScTransportrEquirement.REPORT_TIME}";
                                                 if (SAA_Database.SaaSql.GetScTransportrEquirementMaterialCarrierId(ScTransportrEquirement.CARRIERID).Rows.Count == 0)
                                                 {
-                                                    SAA_Database.SaaSql.SetScTransportrEquirementMaterial(ScTransportrEquirement);
-                                                    SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增資料】【天車】新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                    if (autoreject == 0)
+                                                    {
+                                                        SAA_Database.SaaSql.SetScTransportrEquirementMaterial(ScTransportrEquirement);
+                                                        SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增資料】【天車】新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                    }
+                                                    else
+                                                    {
+                                                        SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增資料】【天車】機台開啟強制退盒無法新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                    }
                                                 }
                                                 else
                                                 {
@@ -410,8 +417,15 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                             ScTransportrEquirement.REPORTID = $"{ScTransportrEquirement.REPORT_STATION}_{ScTransportrEquirement.REPORT_TIME}";
                                             if (SAA_Database.SaaSql.GetScTransportrEquirementMaterialCarrierId(ScTransportrEquirement.CARRIERID).Rows.Count == 0)
                                             {
-                                                SAA_Database.SaaSql.SetScTransportrEquirementMaterial(ScTransportrEquirement);
-                                                SAA_Database.LogMessage($"【{EsReportTransport.STATION}】【新增資料】【天車】新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                if (autoreject == 0)
+                                                {
+                                                    SAA_Database.SaaSql.SetScTransportrEquirementMaterial(ScTransportrEquirement);
+                                                    SAA_Database.LogMessage($"【{EsReportTransport.STATION}】【新增資料】【天車】新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                }
+                                                else
+                                                {
+                                                    SAA_Database.LogMessage($"【{EsReportTransport.STATION}】【新增資料】【天車】機台開啟強制退盒無法新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                }
                                             }
                                             else
                                             {

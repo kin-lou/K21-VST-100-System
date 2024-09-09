@@ -552,6 +552,11 @@ namespace SAA_CommunicationSystem_Lib
             /// 機台狀態
             /// </summary>
             DEVICESTATUS,
+
+            /// <summary>
+            /// PLC自動退REJECT
+            /// </summary>
+            AUTOREJECT,
         }
 
         public enum SC_LOCATIONSETTING

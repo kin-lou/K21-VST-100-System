@@ -168,7 +168,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                         SOURCE = dr[SC_DIRECTIVE.SOURCE.ToString()].ToString(),
                         SENDFLAG = dr[SC_DIRECTIVE.SENDFLAG.ToString()].ToString(),
                     };
-                    SAA_Database.LogMessage($"【接收】iLIS指令:{SaaDirective.COMMANDTEXT}");
+                    SAA_Database.LogMessage($"【{SaaDirective.STATION_NAME}】【接收】iLIS指令:{SaaDirective.COMMANDTEXT}");
                     Dictionary<string, string> dicdata = SAA_Database.ContentToDictionary(SaaDirective.COMMANDTEXT);
                     foreach (var data in dicdata)
                     {
@@ -241,6 +241,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                     if (reportcommand != null)
                     {
                         var scdevicedata = SAA_Database.SaaSql.GetScDevice(int.Parse(SaaDirective.SETNO), SaaDirective.STATION_NAME);
+                        int autoreject = scdevicedata.Rows.Count != 0 ? int.Parse(scdevicedata.Rows[0][SC_DEVICE.AUTOREJECT.ToString()].ToString()) : 0;
                         SaaEquipmentCarrierInfo equipmentcarrierinfo = new SaaEquipmentCarrierInfo
                         {
                             SETNO = int.Parse(SaaDirective.SETNO),
@@ -257,8 +258,8 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                             DESTINATION = reportcommand.DESTINATION,
                             QTIME = reportcommand.QTIME,
                             CYCLETIME = reportcommand.CYCLETIME,
-                            REJECT_CODE = reportcommand.REJECT_CODE,
-                            REJECT_MESSAGE = reportcommand.REJECT_MESSAGE,
+                            REJECT_CODE = autoreject == 0 ? reportcommand.REJECT_CODE : "RS0001",
+                            REJECT_MESSAGE = autoreject == 0 ? reportcommand.REJECT_MESSAGE : "SAA_reject",
                             CARRIERSTATE = (reportcommand.SCHEDULE != SAA_Database.SaaCommon.NA.ToString() || !string.IsNullOrEmpty(reportcommand.SCHEDULE)) ? CarrierState.Material.ToString() : CarrierState.Empty.ToString(),
                             DESTINATIONTYPE = reportcommand.DESTINATION.Contains("WIP-ZIP_INWIP") || reportcommand.DESTINATION.Contains("EQPBUFF") ? DestinationType.Buffer.ToString() : reportcommand.DESTINATION.Contains("REJECT") ? DestinationType.Reject.ToString() : DestinationType.EQP.ToString(),
                         };
@@ -275,7 +276,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                 case LcsReceive.M501:
                                     if (equipmentcarrierinfo.STATIOM_NAME.Contains(SAA_Database.configattributes.Station6SideLD) || equipmentcarrierinfo.STATIOM_NAME.Contains(SAA_Database.configattributes.Station6SideUD))
                                     {
-                                        var sendReply = SaaSendReply.Y.ToString();
+                                        var sendReply = autoreject == 0 ? SaaSendReply.Y.ToString() : SaaSendReply.N.ToString();
                                         var fulldata = SAA_Database.SaaSql.GetScScLocationsettingFull(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.MODEL_NAME, equipmentcarrierinfo.STATIOM_NAME);
                                         if (fulldata.Rows.Count == 0)
                                         {
@@ -289,14 +290,14 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                             var liftcarrierinfodata = SAA_Database.SaaSql.GetLiftCarrierInfo(liftCarrierInfo);
                                             string infodata = liftcarrierinfodata.Rows.Count != 0 ? liftcarrierinfodata.Rows[0]["REMOTE"].ToString() : string.Empty;
                                             SAA_Database.LogMessage($"【{liftCarrierInfo.STATION_NAME}】【查詢來源站點】來源站點:{infodata}，卡匣ID:{liftCarrierInfo.CARRIERID}");
-                                            if (infodata=="PGV-IN")
+                                            if (infodata == "PGV-IN")
                                             {
                                                 sendReply = SaaSendReply.N.ToString();
                                                 SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】儲格已滿，退至 reject，機台編號:{equipmentcarrierinfo.SETNO} 站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}");
                                             }
                                             else
                                             {
-                                                sendReply = SaaSendReply.Y.ToString();
+                                                sendReply = autoreject == 0 ? SaaSendReply.Y.ToString() : SaaSendReply.N.ToString();
 
                                                 carrierinfodata = SAA_Database.SaaSql.GetEquipmentCarrierInfo(equipmentcarrierinfo);
                                                 SaaEsReportTransportRequirement EsReportTransport = new SaaEsReportTransportRequirement
@@ -325,11 +326,11 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                                 if (SAA_Database.SaaSql.GetScTransportrEquirementMaterialCarrierId(ScTransportrEquirement.CARRIERID).Rows.Count == 0)
                                                 {
                                                     SAA_Database.SaaSql.SetScTransportrEquirementMaterial(ScTransportrEquirement);
-                                                    SAA_Database.LogMessage($"【新增資料】【天車】新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                    SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增資料】【天車】新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
                                                 }
                                                 else
                                                 {
-                                                    SAA_Database.LogMessage($"【新增資料】【天車】已有需求無法新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                    SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增資料】【天車】已有需求無法新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
                                                 }
                                             }
                                         }
@@ -338,7 +339,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                         SAA_Database.SaaSql.UpdScEquipmentCarrierInfoSendFlag(equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, sendReply);
                                         SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】更新資料回覆資料 機台編號:{equipmentcarrierinfo.SETNO} 站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}，更新為:{sendReply}(Y:進盒，N:REJECT)");
                                         #region [===正常搬運上報===]
-                                        if (equipmentcarrierinfo.STATIOM_NAME.Contains(SAA_Database.configattributes.Station6SideLD)|| equipmentcarrierinfo.STATIOM_NAME.Contains(SAA_Database.configattributes.Station6SideUD))
+                                        if (equipmentcarrierinfo.STATIOM_NAME.Contains(SAA_Database.configattributes.Station6SideLD) || equipmentcarrierinfo.STATIOM_NAME.Contains(SAA_Database.configattributes.Station6SideUD))
                                         {
                                             if (reportcommand.ORIGIN.Contains("ROBOT") || reportcommand.ORIGIN.Contains("READER"))
                                             {
@@ -357,24 +358,23 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                                 string shuttleid = shuttledata.Rows.Count != 0 ? shuttledata.Rows[0]["SHUTTLEID"].ToString() : "0";
                                                 var liftcarrierinfoErrdata = SAA_Database.SaaSql.GetLiftCarrierInfo(liftCarrierInfErr);
                                                 string infoerrdata = liftcarrierinfoErrdata.Rows.Count != 0 ? liftcarrierinfoErrdata.Rows[0]["REMOTE"].ToString() : string.Empty;
-                                                SAA_Database.LogMessage($"【查詢來源站點】來源站點:{infoerrdata}");
+                                                SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【查詢來源站點】來源站點:{infoerrdata}");
                                                 var ReportStargData = SAA_Database.SaaSql.GetReportStargName(liftCarrierInfErr.STATION_NAME, infoerrdata);
                                                 if (ReportStargData.Rows.Count != 0)
                                                     order = ReportStargData.Rows[0]["HOSTID"].ToString();
                                                 else
                                                     order = hostidremote.Rows.Count != 0 ? hostidremote.Rows[0]["HOSTID"].ToString() : "查無資料";
-                                                SAA_Database.LogMessage($"【查詢起點】查詢起點名稱:{order}");
-
+                                                SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【查詢起點】查詢起點名稱:{order}");
 
                                                 Dictionary<string, string> CarrierGoTo = new Dictionary<string, string>
-                                           {
-                                               { "CMD_NO", "S002" },
-                                               { "CMD_NAME", "CARRIER_INTO_MECHANISM" },
-                                               { "CARRIER", equipmentcarrierinfo.CARRIERID.Contains(SAA_Database.SaaCommon.ReaderError)?"ERROR": equipmentcarrierinfo.CARRIERID},
-                                               { "SCHEDULE", reportcommand.SCHEDULE},
-                                               { "ORIGIN",order},
-                                               { "DESTINATION",hostidlocal.Rows.Count!=0?hostidlocal.Rows[0]["HOSTID"].ToString().Contains("RGV")?$"{hostidlocal.Rows[0]["HOSTID"]}{shuttleid.PadLeft(3, '0')}":hostidlocal.Rows[0]["HOSTID"].ToString():"查無資料"},
-                                           };
+                                               {
+                                                   { "CMD_NO", "S002" },
+                                                   { "CMD_NAME", "CARRIER_INTO_MECHANISM" },
+                                                   { "CARRIER", equipmentcarrierinfo.CARRIERID.Contains(SAA_Database.SaaCommon.ReaderError)?"ERROR": equipmentcarrierinfo.CARRIERID},
+                                                   { "SCHEDULE", reportcommand.SCHEDULE},
+                                                   { "ORIGIN",order},
+                                                   { "DESTINATION",hostidlocal.Rows.Count!=0?hostidlocal.Rows[0]["HOSTID"].ToString().Contains("RGV")?$"{hostidlocal.Rows[0]["HOSTID"]}{shuttleid.PadLeft(3, '0')}":hostidlocal.Rows[0]["HOSTID"].ToString():"查無資料"},
+                                               };
                                                 string commandcontent = JsonConvert.SerializeObject(CarrierGoTo);
                                                 SAA_Database.SetSaaDirective(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, "S002", commandcontent, ReportSource.LCS);
                                                 #endregion
@@ -411,19 +411,20 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                             if (SAA_Database.SaaSql.GetScTransportrEquirementMaterialCarrierId(ScTransportrEquirement.CARRIERID).Rows.Count == 0)
                                             {
                                                 SAA_Database.SaaSql.SetScTransportrEquirementMaterial(ScTransportrEquirement);
-                                                SAA_Database.LogMessage($"【新增資料】【天車】新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                SAA_Database.LogMessage($"【{EsReportTransport.STATION}】【新增資料】【天車】新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
                                             }
                                             else
                                             {
-                                                SAA_Database.LogMessage($"【新增資料】【天車】已有需求無法新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                SAA_Database.LogMessage($"【{EsReportTransport.STATION}】【新增資料】【天車】已有需求無法新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        SAA_Database.SaaSql.UpdScScPurchase(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, SaaSendReply.Y.ToString());
-                                        SAA_Database.SaaSql.UpdScEquipmentCarrierInfoSendFlag(equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, SaaSendReply.Y.ToString());
-                                        SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】更新資料回覆資料 機台編號:{equipmentcarrierinfo.SETNO} 站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}，更新為:{SaaSendReply.Y}(Y:進盒，N:REJECT)");
+                                        string sendReply = autoreject == 0 ? SaaSendReply.Y.ToString() : SaaSendReply.N.ToString();
+                                        SAA_Database.SaaSql.UpdScScPurchase(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, sendReply);
+                                        SAA_Database.SaaSql.UpdScEquipmentCarrierInfoSendFlag(equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, sendReply);
+                                        SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】更新資料回覆資料 機台編號:{equipmentcarrierinfo.SETNO} 站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}，更新為:{sendReply}(Y:進盒，N:REJECT)");
                                         if (reportcommand.ORIGIN.Contains("BUFF") || reportcommand.DESTINATION.Contains("BUFF"))
                                         {
                                             var fulldata = SAA_Database.SaaSql.GetScScLocationsettingFull(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.MODEL_NAME, equipmentcarrierinfo.STATIOM_NAME);
@@ -522,7 +523,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                                                 if (!equipmentcarrierinfo.CARRIERID.Contains(SAA_Database.configattributes.PARTICLE))
                                                                 {
                                                                     SAA_Database.SaaSql.SetScLiftCarrierInfoEmpty(LiftCarrierInfoEmpty);
-                                                                    SAA_Database.LogMessage($"【新增空盒卡匣】新增ScLiftCarrierInfoEmpty(資料表完成，站點:{LiftCarrierInfoEmpty.STATION_NAME}，卡匣ID:{LiftCarrierInfoEmpty.CARRIERID}");
+                                                                    SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增空盒卡匣】新增ScLiftCarrierInfoEmpty(資料表完成，站點:{LiftCarrierInfoEmpty.STATION_NAME}，卡匣ID:{LiftCarrierInfoEmpty.CARRIERID}");
                                                                 }
                                                             }
                                                         }
@@ -542,7 +543,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                                                     CYCLETIME = equipmentcarrierinfo.CYCLETIME,
                                                                 };
                                                                 SAA_Database.SaaSql.SetScLiftCarrierInfoMaterial(LiftCarrierInfoMaterial);
-                                                                SAA_Database.LogMessage($"【新增實盒卡匣】新增ScLiftCarrierInfoMaterial資料表完成，站點:{LiftCarrierInfoMaterial.STATION_NAME}，卡匣ID:{LiftCarrierInfoMaterial.CARRIERID}");
+                                                                SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增實盒卡匣】新增ScLiftCarrierInfoMaterial資料表完成，站點:{LiftCarrierInfoMaterial.STATION_NAME}，卡匣ID:{LiftCarrierInfoMaterial.CARRIERID}");
                                                             }
                                                         }
                                                     }
@@ -578,11 +579,11 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                                         if (SAA_Database.SaaSql.GetScTransportrEquirementMaterialCarrierId(ScTransportrEquirement.CARRIERID).Rows.Count == 0)
                                                         {
                                                             SAA_Database.SaaSql.SetScTransportrEquirementMaterial(ScTransportrEquirement);
-                                                            SAA_Database.LogMessage($"【新增資料】【天車】新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                            SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增資料】【天車】新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
                                                         }
                                                         else
                                                         {
-                                                            SAA_Database.LogMessage($"【新增資料】【天車】已有需求無法新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
+                                                            SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增資料】【天車】已有需求無法新增料盒搬運需求:站點:{EsReportTransport.STATION}、起點{EsReportTransport.BEGINSTATION}、終點:{EsReportTransport.ENDSTATION}、卡匣ID:{EsReportTransport.CARRIERID}");
                                                         }
                                                     }
                                                 }
@@ -672,9 +673,10 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                         {
                                             //if (lcsreceivedata.Rows[0][SC_DEVICE.DEVICETYPE.ToString()].ToString() == "2")
                                             //{
-                                            SAA_Database.SaaSql.UpdScScPurchase(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, SaaSendReply.Y.ToString());
-                                            SAA_Database.SaaSql.UpdScEquipmentCarrierInfoSendFlag(equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, SaaSendReply.Y.ToString());
-                                            SAA_Database.LogMessage($"更新資料回覆資料 機台編號:{equipmentcarrierinfo.SETNO} 站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}，更新為:Y(Y:進盒，N:REJECT)");
+                                            string sendReply = autoreject == 0 ? SaaSendReply.Y.ToString() : SaaSendReply.N.ToString();
+                                            SAA_Database.SaaSql.UpdScScPurchase(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, sendReply);
+                                            SAA_Database.SaaSql.UpdScEquipmentCarrierInfoSendFlag(equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, sendReply);
+                                            SAA_Database.LogMessage($"更新資料回覆資料 機台編號:{equipmentcarrierinfo.SETNO} 站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}，更新為:{sendReply}(Y:進盒，N:REJECT)");
                                             if (!equipmentcarrierinfo.DESTINATION.Contains(equipmentcarrierinfo.STATIOM_NAME))
                                             {
                                                 SaaScTransportrEquirementMaterial ScTransportrEquirement = new SaaScTransportrEquirementMaterial
@@ -704,7 +706,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                     }
                                     if (equipmentcarrierinfo.STATIOM_NAME.Contains(SAA_Database.configattributes.Station6SideLD) || equipmentcarrierinfo.STATIOM_NAME.Contains(SAA_Database.configattributes.Station6SideUD))
                                     {
-                                        if (reportcommand.ORIGIN.Contains("ROBOT")|| reportcommand.ORIGIN.Contains("READER"))
+                                        if (reportcommand.ORIGIN.Contains("ROBOT") || reportcommand.ORIGIN.Contains("READER"))
                                         {
                                             string order = string.Empty;
                                             SaaScLiftCarrierInfo liftCarrierInfErr = new SaaScLiftCarrierInfo()
@@ -1878,7 +1880,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                     destination = "K21-8F_ASEF1-2493-A01_UDREJECT";
                                 else
                                     destination = hostidlocal.Rows.Count != 0 ? hostidlocal.Rows[0]["HOSTID"].ToString() : "查無資料";
-                                if(!string.IsNullOrEmpty(equipmentreportt.REPORE_SEND))
+                                if (!string.IsNullOrEmpty(equipmentreportt.REPORE_SEND))
                                 {
                                     Dictionary<string, string> CarrierReject = new Dictionary<string, string>
                                     {
@@ -2584,7 +2586,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                     { ES_Report_EquipmentHardwareInfo.ListCarrierInfo.ToString(), requicarrierinfo }
                 };
                 string commandcontent = JsonConvert.SerializeObject(dicstatusb);
-                SAA_Database.LogMessage($"【LCS->iLIS】【{SendWebApi.ES_Report_EquipmentHardwareInfo}】【通訊傳送】站點:{StationID}，時間:{Time}，傳送編號:{TEID}傳送內容:{commandcontent}");
+                SAA_Database.LogMessage($"【{StationID}】【LCS->iLIS】【{SendWebApi.ES_Report_EquipmentHardwareInfo}】【通訊傳送】站點:{StationID}，時間:{Time}，傳送編號:{TEID}傳送內容:{commandcontent}");
                 string returnresult = SAA_Database.SaaSendCommandiLis(commandcontent, SendWebApi.ES_Report_EquipmentHardwareInfo.ToString());
                 SaaReportResult saareportresult = WebApiReportResult(returnresult);
                 SAA_Database.LogMessage($"【{StationID}】【LCS->iLIS】【{SendWebApi.ES_Report_EquipmentHardwareInfo}】【iLIS接收】StationID:{saareportresult.StationID}，Time:{saareportresult.Time}，TEID:{saareportresult.TEID}，ReturnCode:{saareportresult.ReturnCode}，ReturnMessage:{saareportresult.ReturnMessage}，(結果:{saareportresult.ReturnCode})");
@@ -2606,7 +2608,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                     { ES_Request_TransportRequirementInfo.TEID.ToString(), TEID },
                 };
                 string commandcontent = JsonConvert.SerializeObject(dicstatusb);
-                SAA_Database.LogMessage($"【LCS->iLIS】【{SendWebApi.ES_Request_TransportRequirementInfo}】【通訊傳送】站點:{StationID}，時間:{Time}，傳送編號:{TEID}傳送內容:{commandcontent}");
+                SAA_Database.LogMessage($"【{StationID}】【LCS->iLIS】【{SendWebApi.ES_Request_TransportRequirementInfo}】【通訊傳送】站點:{StationID}，時間:{Time}，傳送編號:{TEID}傳送內容:{commandcontent}");
                 return SAA_Database.SaaSendCommandiLis(commandcontent, SendWebApi.ES_Request_TransportRequirementInfo.ToString());
             }
             catch (Exception ex)

@@ -29,6 +29,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
         private string returnresult = string.Empty;
         private string lcsreturnresult = string.Empty;
         private bool device = true;
+        private string sendReply = string.Empty;
         private DateTime dtStart = DateTime.Now;
         private int plcreturncode = 0;
         private List<string> devicelist = new List<string>();
@@ -274,22 +275,25 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                             {
                                 case LcsReceive.M001:
                                 case LcsReceive.M501:
+                                    SaaScLiftCarrierInfo liftCarrierInfo = new SaaScLiftCarrierInfo()
+                                    {
+                                        SETNO = equipmentcarrierinfo.SETNO,
+                                        MODEL_NAME = equipmentcarrierinfo.MODEL_NAME,
+                                        STATION_NAME = equipmentcarrierinfo.STATIOM_NAME,
+                                        CARRIERID = equipmentcarrierinfo.CARRIERID,
+                                    };
+                                    var liftcarrierinfodata = SAA_Database.SaaSql.GetLiftCarrierInfo(liftCarrierInfo);
+                                    string infodata = liftcarrierinfodata.Rows.Count != 0 ? liftcarrierinfodata.Rows[0]["REMOTE"].ToString() : string.Empty;
+                                    SAA_Database.LogMessage($"【{liftCarrierInfo.STATION_NAME}】【查詢來源站點】來源站點:{infodata}，卡匣ID:{liftCarrierInfo.CARRIERID}");
                                     if (equipmentcarrierinfo.STATIOM_NAME.Contains(SAA_Database.configattributes.Station6SideLD) || equipmentcarrierinfo.STATIOM_NAME.Contains(SAA_Database.configattributes.Station6SideUD))
                                     {
-                                        var sendReply = autoreject == 0 ? SaaSendReply.Y.ToString() : SaaSendReply.N.ToString();
+                                        if (infodata == "PGV-IN")
+                                            sendReply = SaaSendReply.Y.ToString();
+                                        else
+                                            sendReply = autoreject == 0 ? SaaSendReply.Y.ToString() : SaaSendReply.N.ToString();
                                         var fulldata = SAA_Database.SaaSql.GetScScLocationsettingFull(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.MODEL_NAME, equipmentcarrierinfo.STATIOM_NAME);
                                         if (fulldata.Rows.Count == 0)
                                         {
-                                            SaaScLiftCarrierInfo liftCarrierInfo = new SaaScLiftCarrierInfo()
-                                            {
-                                                SETNO = equipmentcarrierinfo.SETNO,
-                                                MODEL_NAME = equipmentcarrierinfo.MODEL_NAME,
-                                                STATION_NAME = equipmentcarrierinfo.STATIOM_NAME,
-                                                CARRIERID = equipmentcarrierinfo.CARRIERID,
-                                            };
-                                            var liftcarrierinfodata = SAA_Database.SaaSql.GetLiftCarrierInfo(liftCarrierInfo);
-                                            string infodata = liftcarrierinfodata.Rows.Count != 0 ? liftcarrierinfodata.Rows[0]["REMOTE"].ToString() : string.Empty;
-                                            SAA_Database.LogMessage($"【{liftCarrierInfo.STATION_NAME}】【查詢來源站點】來源站點:{infodata}，卡匣ID:{liftCarrierInfo.CARRIERID}");
                                             if (infodata == "PGV-IN")
                                             {
                                                 sendReply = SaaSendReply.N.ToString();
@@ -297,8 +301,10 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                             }
                                             else
                                             {
-                                                sendReply = autoreject == 0 ? SaaSendReply.Y.ToString() : SaaSendReply.N.ToString();
-
+                                                if (infodata == "PGV-IN")
+                                                    sendReply = SaaSendReply.Y.ToString();
+                                                else
+                                                    sendReply = autoreject == 0 ? SaaSendReply.Y.ToString() : SaaSendReply.N.ToString();
                                                 carrierinfodata = SAA_Database.SaaSql.GetEquipmentCarrierInfo(equipmentcarrierinfo);
                                                 SaaEsReportTransportRequirement EsReportTransport = new SaaEsReportTransportRequirement
                                                 {
@@ -435,7 +441,10 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                     }
                                     else
                                     {
-                                        string sendReply = autoreject == 0 ? SaaSendReply.Y.ToString() : SaaSendReply.N.ToString();
+                                        if (infodata == "PGV-IN")
+                                            sendReply = SaaSendReply.Y.ToString();
+                                        else
+                                            sendReply = autoreject == 0 ? SaaSendReply.Y.ToString() : SaaSendReply.N.ToString();
                                         SAA_Database.SaaSql.UpdScScPurchase(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, sendReply);
                                         SAA_Database.SaaSql.UpdScEquipmentCarrierInfoSendFlag(equipmentcarrierinfo.STATIOM_NAME, equipmentcarrierinfo.CARRIERID, sendReply);
                                         SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】更新資料回覆資料 機台編號:{equipmentcarrierinfo.SETNO} 站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}，更新為:{sendReply}(Y:進盒，N:REJECT)");
@@ -475,16 +484,24 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                                 SaaReportResult saareportresult = WebApiReportResult(returnresult);
                                                 SAA_Database.LogMessage($"【LCS->iLIS】【iLIS接收】StationID:{saareportresult.StationID}，Time:{saareportresult.Time}，TEID:{saareportresult.TEID}，ReturnCode:{saareportresult.ReturnCode}，ReturnMessage:{saareportresult.ReturnMessage}，(結果:{saareportresult.ReturnCode})");
 
-                                                SaaScLiftCarrierInfo liftCarrierInfo = new SaaScLiftCarrierInfo()
-                                                {
-                                                    SETNO = equipmentcarrierinfo.SETNO,
-                                                    MODEL_NAME = equipmentcarrierinfo.MODEL_NAME,
-                                                    STATION_NAME = equipmentcarrierinfo.STATIOM_NAME,
-                                                    CARRIERID = equipmentcarrierinfo.CARRIERID,
-                                                };
-                                                var liftcarrierinfodata = SAA_Database.SaaSql.GetLiftCarrierInfo(liftCarrierInfo);
-                                                string infodata = liftcarrierinfodata.Rows.Count != 0 ? liftcarrierinfodata.Rows[0]["REMOTE"].ToString() : string.Empty;
-                                                SAA_Database.LogMessage($"ORIGIN:{infodata}");
+                                                //SaaScLiftCarrierInfo liftCarrierInfo = new SaaScLiftCarrierInfo()
+                                                //{
+                                                //    SETNO = equipmentcarrierinfo.SETNO,
+                                                //    MODEL_NAME = equipmentcarrierinfo.MODEL_NAME,
+                                                //    STATION_NAME = equipmentcarrierinfo.STATIOM_NAME,
+                                                //    CARRIERID = equipmentcarrierinfo.CARRIERID,
+                                                //};
+                                                //var liftcarrierinfodata = SAA_Database.SaaSql.GetLiftCarrierInfo(liftCarrierInfo);
+                                                //string infodata = liftcarrierinfodata.Rows.Count != 0 ? liftcarrierinfodata.Rows[0]["REMOTE"].ToString() : string.Empty;
+                                                string order= string.Empty;
+                                                var ReportStargData = SAA_Database.SaaSql.GetReportStargName(equipmentcarrierinfo.STATIOM_NAME, infodata);
+                                                var hostidremote = SAA_Database.SaaSql.GetScLocationSetting(equipmentcarrierinfo.SETNO, equipmentcarrierinfo.MODEL_NAME, equipmentcarrierinfo.STATIOM_NAME, infodata);
+                                                if (ReportStargData.Rows.Count != 0)
+                                                    order = ReportStargData.Rows[0]["HOSTID"].ToString();
+                                                else
+                                                    order = hostidremote.Rows.Count != 0 ? hostidremote.Rows[0]["HOSTID"].ToString() : "查無資料";
+                                                SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【查詢起點】查詢起點名稱:{order}");
+
                                                 CommandReportM001 commandreportm001 = new CommandReportM001
                                                 {
                                                     CMD_NO = AseCommandNo.M001.ToString(),
@@ -493,7 +510,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                                     SCHEDULE = carrierinfodata.Rows.Count != 0 ? !string.IsNullOrEmpty(carrierinfodata.Rows[0]["PARTNO"].ToString()) ? carrierinfodata.Rows[0]["PARTNO"].ToString() : SAA_Database.SaaCommon.NA : SAA_Database.SaaCommon.NA,
                                                     OPER = carrierinfodata.Rows.Count != 0 ? !string.IsNullOrEmpty(carrierinfodata.Rows[0]["OPER"].ToString()) ? carrierinfodata.Rows[0]["OPER"].ToString() : SAA_Database.SaaCommon.NA : SAA_Database.SaaCommon.NA,
                                                     RECIPE = carrierinfodata.Rows.Count != 0 ? !string.IsNullOrEmpty(carrierinfodata.Rows[0]["RECIPE"].ToString()) ? carrierinfodata.Rows[0]["RECIPE"].ToString() : SAA_Database.SaaCommon.NA : SAA_Database.SaaCommon.NA,
-                                                    ORIGIN = infodata,
+                                                    ORIGIN = order,
                                                     DESTINATION = endstation,
                                                     QTIME = carrierinfodata.Rows.Count != 0 ? !string.IsNullOrEmpty(carrierinfodata.Rows[0]["QTIME"].ToString()) ? carrierinfodata.Rows[0]["QTIME"].ToString() : SAA_Database.SaaCommon.NA : SAA_Database.SaaCommon.NA,
                                                     CYCLETIME = carrierinfodata.Rows.Count != 0 ? !string.IsNullOrEmpty(carrierinfodata.Rows[0]["CYCLETIME"].ToString()) ? carrierinfodata.Rows[0]["CYCLETIME"].ToString() : SAA_Database.SaaCommon.NA : SAA_Database.SaaCommon.NA,
@@ -509,15 +526,15 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                                     if (data.Rows.Count != 0)
                                                     {
                                                         string devicetype = data.Rows[0][SC_DEVICE.DEVICETYPE.ToString()].ToString();
-                                                        SaaScLiftCarrierInfo liftCarrierInfo = new SaaScLiftCarrierInfo()
-                                                        {
-                                                            SETNO = equipmentcarrierinfo.SETNO,
-                                                            MODEL_NAME = equipmentcarrierinfo.MODEL_NAME,
-                                                            STATION_NAME = equipmentcarrierinfo.STATIOM_NAME,
-                                                            CARRIERID = equipmentcarrierinfo.CARRIERID,
-                                                        };
-                                                        var liftcarrierinfodata = SAA_Database.SaaSql.GetLiftCarrierInfo(liftCarrierInfo);
-                                                        string infodata = liftcarrierinfodata.Rows.Count != 0 ? liftcarrierinfodata.Rows[0]["REMOTE"].ToString() : string.Empty;
+                                                        //SaaScLiftCarrierInfo liftCarrierInfo = new SaaScLiftCarrierInfo()
+                                                        //{
+                                                        //    SETNO = equipmentcarrierinfo.SETNO,
+                                                        //    MODEL_NAME = equipmentcarrierinfo.MODEL_NAME,
+                                                        //    STATION_NAME = equipmentcarrierinfo.STATIOM_NAME,
+                                                        //    CARRIERID = equipmentcarrierinfo.CARRIERID,
+                                                        //};
+                                                        //var liftcarrierinfodata = SAA_Database.SaaSql.GetLiftCarrierInfo(liftCarrierInfo);
+                                                        //infodata = liftcarrierinfodata.Rows.Count != 0 ? liftcarrierinfodata.Rows[0]["REMOTE"].ToString() : string.Empty;
                                                         SAA_Database.LogMessage($"【{liftCarrierInfo.STATION_NAME}】【查詢來源站點】來源站點:{infodata}，卡匣ID:{liftCarrierInfo.CARRIERID}");
                                                         if (devicetype == SAA_Database.SaaCommon.DeivertTypeUD.ToString())
                                                         {

@@ -3,6 +3,7 @@ using SAA_CommunicationSystem_Lib.HandshakeAttributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -508,6 +509,26 @@ namespace SAA_CommunicationSystem_Lib
             /// 多少秒詢問一次iLis天車任務
             /// </summary>
             AskShuttleTaskTime,
+
+
+            /// <summary>
+            /// LD空框檢知
+            /// </summary>
+            DetectionLD,
+
+            /// <summary>
+            /// UD空框檢知
+            /// </summary>
+            DetectionUD,
+
+            /// <summary>
+            /// CycleTime掃描時序
+            /// </summary>
+            CycleTimeTask,
+
+            BoxRequirements,
+
+            EmptyBoxTime,
         }
         #endregion
 
@@ -557,6 +578,8 @@ namespace SAA_CommunicationSystem_Lib
             /// PLC自動退REJECT
             /// </summary>
             AUTOREJECT,
+
+            OPER,
         }
 
         public enum SC_LOCATIONSETTING
@@ -743,6 +766,8 @@ namespace SAA_CommunicationSystem_Lib
             Port,
 
             Shelf,
+
+            Shelf_Global,
         }
 
         public enum UsingFlag
@@ -759,6 +784,11 @@ namespace SAA_CommunicationSystem_Lib
             Normal,
 
             Report,
+
+            /// <summary>
+            /// 環境監控盒
+            /// </summary>
+            Monitor,
         }
 
         public enum DestinationType
@@ -1145,9 +1175,35 @@ namespace SAA_CommunicationSystem_Lib
 
         public enum CarrierState
         {
+            /// <summary>
+            /// 未知
+            /// </summary>
             Unknow,
+
+            /// <summary>
+            /// 空盒
+            /// </summary>
             Empty,
+
+            /// <summary>
+            /// 料盒
+            /// </summary>
             Material,
+
+            /// <summary>
+            /// 產品料盒
+            /// </summary>
+            Product,
+
+            /// <summary>
+            /// 一般板空盒
+            /// </summary>
+            Boat,
+
+            /// <summary>
+            /// 磁鐵板空盒
+            /// </summary>
+            Jig
         }
 
         public enum SendWebApi
@@ -1244,12 +1300,24 @@ namespace SAA_CommunicationSystem_Lib
         {
             M001,
 
+            M004,
+
             Q001,
+
+            S002,
+
+            S004,
+
+            S003,
         }
 
         public enum AseCommandName
         {
             CARRIER_TO_MECHANISM,
+
+            CARRIER_INTO_MECHANISM,
+
+            CARRIER_REJECT,
         }
 
         public enum CommandQ001
@@ -1261,6 +1329,21 @@ namespace SAA_CommunicationSystem_Lib
             CARRIER,
 
             STATION,
+        }
+
+        public enum CommandS002
+        {
+            CMD_NO,
+
+            CMD_NAME,
+
+            CARRIER,
+
+            SCHEDULE,
+
+            ORIGIN,
+
+            DESTINATION
         }
 
         public enum EqpStatus
@@ -1380,7 +1463,7 @@ namespace SAA_CommunicationSystem_Lib
             VS_1,
         }
 
-        public enum SendLiftE84Plc
+        public enum SC_LIFT_E84PC_STATSUS
         {
             TASKDATETIME,
             STATION_NAME,
@@ -1405,6 +1488,91 @@ namespace SAA_CommunicationSystem_Lib
             SELECT,
             RESULT,
             ES
+        }
+
+        public enum SC_EQUIPMENT_CARRIER_INFO
+        {
+            SETNO,
+            MODEL_NAME,
+            STATIOM_NAME,
+            CARRIERID,
+            PARTNO,
+            REMOTE,
+            CARRIERTYOE,
+            ROTFLAG,
+            FLIPFLAG,
+            OPER,
+            RECIPE,
+            ORIGIN,
+            DESTINATION,
+            CARRIERSTATE,
+            DESTINATIONTYPE,
+            QTIME,
+            CYCLETIME,
+            REJECT_CODE,
+            REJECT_MESSAGE,
+            CARRIERFLAG,
+        }
+
+        public enum SC_LIFT_CARRIER_INFO
+        {
+            SETNO,
+            MODEL_NAME,
+            STATION_NAME,
+            CARRIERID,
+            PARTNO,
+            CARRIERTYPE,
+            CALL_SHUTTLE,
+            CARRIERID_UPDATE,
+            REMOTE,
+            READPLC,
+        }
+
+        public enum JUMPDIE
+        {
+            StationName,
+
+            CarrierID,
+
+            PartNo,
+
+            ReportTrack,
+
+            TimeStamp
+        }
+
+
+        public enum SC_EQUIPMNET_HARDWARE_INFO
+        {
+            SETNO,
+            MODEL_NAME,
+            STATION_NAME,
+            EQUIPMNET_TIME,
+            EQUIPMNET_TEID,
+            SENDFLAG,
+        }
+
+        public enum SC_REPORT_STARG_NAME
+        {
+            SETNO,
+            MODEL_NAME,
+            STATION_NAME,
+            LOCATIONID,
+            HOSTID,
+            COMMAND_NAME,
+        }
+
+        public enum SC_LIFT_CARRIER_INFO_REJECT
+        {
+            TASKDATETIME,
+            SETNO,
+            MODEL_NAME,
+            STATION_NAME,
+            CARRIERID,
+            DEVICETYPE,
+            QTIME,
+            CYCLETIME,
+            SENDFLAG,
         }
     }
 }

@@ -50,6 +50,16 @@ namespace SAA_CommunicationSystem_Lib
                         Station6SideLD = ConfigFile.AppSettings.Settings[ConfigName.Station6SideLD.ToString()].Value.ToString(),
                         Station6SideUD = ConfigFile.AppSettings.Settings[ConfigName.Station6SideUD.ToString()].Value.ToString(),
                         JumpDieApiServerIP = ConfigFile.AppSettings.Settings[ConfigName.JumpDieApiServerIP.ToString()].Value.ToString(),
+                        SaaEquipmentRGV = ConfigFile.AppSettings.Settings[ConfigName.SaaEquipmentRGV.ToString()].Value.ToString(),
+                        SaaEquipmentCRANE = ConfigFile.AppSettings.Settings[ConfigName.SaaEquipmentCRANE.ToString()].Value.ToString(),
+                        SaaEquipmentDKIN = ConfigFile.AppSettings.Settings[ConfigName.SaaEquipmentDKIN.ToString()].Value.ToString(),
+                        SaaEquipmentDKOUT = ConfigFile.AppSettings.Settings[ConfigName.SaaEquipmentDKOUT.ToString()].Value.ToString(),
+                        SaaEquipmentPGVIN = ConfigFile.AppSettings.Settings[ConfigName.SaaEquipmentPGVIN.ToString()].Value.ToString(),
+                        SaaEquipmentPGVOUT = ConfigFile.AppSettings.Settings[ConfigName.SaaEquipmentPGVOUT.ToString()].Value.ToString(),
+                        SaaEquipmentSTAGE = ConfigFile.AppSettings.Settings[ConfigName.SaaEquipmentSTAGE.ToString()].Value.ToString(),
+                        Station6SideLDRejectName = ConfigFile.AppSettings.Settings[ConfigName.Station6SideLDRejectName.ToString()].Value.ToString(),
+                        Station6SideUDRejectName = ConfigFile.AppSettings.Settings[ConfigName.Station6SideUDRejectName.ToString()].Value.ToString(),
+                        OperEmpty = ConfigFile.AppSettings.Settings[ConfigName.OperEmpty.ToString()].Value.ToString(),
                     };
                 }
             }
@@ -155,6 +165,26 @@ namespace SAA_CommunicationSystem_Lib
             /// JumpDie Server Host
             /// </summary>
             JumpDieApiServerIP,
+
+            SaaEquipmentRGV,
+
+            SaaEquipmentCRANE,
+
+            SaaEquipmentDKIN,
+
+            SaaEquipmentDKOUT,
+
+            SaaEquipmentPGVIN,
+
+            SaaEquipmentPGVOUT,
+
+            SaaEquipmentSTAGE,
+
+            Station6SideLDRejectName,
+
+            Station6SideUDRejectName,
+
+            OperEmpty,
         }
     }
 }

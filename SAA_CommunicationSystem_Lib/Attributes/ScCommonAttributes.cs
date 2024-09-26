@@ -246,12 +246,12 @@ namespace SAA_CommunicationSystem_Lib.Attributes
         /// <summary>
         /// 卡匣屬性為空值時顯示文字
         /// </summary>
-        public string CarrierType { get; set; }
+        public string CarrierType { get; set; } = string.Empty;
 
         /// <summary>
         /// UD管控空盒數量
         /// </summary>
-        public int LiftCarrierInfoEmptyCount { get; set; }
+        public int LiftCarrierInfoEmptyCount { get; set; } = 0;
 
         /// <summary>
         /// LIFT LD代號
@@ -266,11 +266,33 @@ namespace SAA_CommunicationSystem_Lib.Attributes
         /// <summary>
         /// LIFT卡匣回倉儲編號
         /// </summary>
-        public string SaaZipStationName { get; set; }
+        public string SaaZipStationName { get; set; } = string.Empty;
 
         /// <summary>
         /// 多少秒詢問一次iLis天車任務
         /// </summary>
-        public int AskShuttleTaskTime { get; set; }
+        public int AskShuttleTaskTime { get; set; } = 0;
+
+        /// <summary>
+        /// LD空框檢知
+        /// </summary>
+        public string DetectionLD { get; set; } = string.Empty;
+
+        /// <summary>
+        /// UD空框檢知
+        /// </summary>
+        public string DetectionUD { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Cycle_Time
+        /// </summary>
+        public int CycleTimeTask { get; set; } = 600;
+
+        /// <summary>
+        /// UD水位要盒時間
+        /// </summary>
+        public int BoxRequirements { get; set; } = 60;
+
+        public int EmptyBoxTime { get; set; } = 60;
     }
 }

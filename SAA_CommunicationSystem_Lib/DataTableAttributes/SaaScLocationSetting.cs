@@ -18,6 +18,8 @@ namespace SAA_CommunicationSystem_Lib.DataTableAttributes
         /// </summary>
         public string MODEL_NAME { get; set; }
 
+        public string STATIOM_NAME { get; set; }
+
         /// <summary>
         /// 位置編號
         /// </summary>

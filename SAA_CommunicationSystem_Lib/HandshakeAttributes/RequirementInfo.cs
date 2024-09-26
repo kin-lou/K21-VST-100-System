@@ -28,5 +28,10 @@ namespace SAA_CommunicationSystem_Lib.HandshakeAttributes
         /// 終點站名
         /// </summary>
         public string EndStation { get; set; }
+
+        /// <summary>
+        /// 製程線別
+        /// </summary>
+        public string Oper { get; set; }
     }
 }

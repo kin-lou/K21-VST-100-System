@@ -380,13 +380,13 @@ namespace SAA_CommunicationSystem_Lib
                 if (reportInadx.REPORT_INDEX > reportInadx.REPORT_MAX)
                 {
                     reportInadx.REPORT_INDEX = 1;
-                    LogMessage($"【更新資料】Index大於最大值:{reportInadx.REPORT_MAX}更新為:{reportInadx.REPORT_INDEX}");
+                    LogMessage($"【{reportInadx.STATION_NAME}】【更新資料】Index大於最大值:{reportInadx.REPORT_MAX}更新為:{reportInadx.REPORT_INDEX}");
                 }
-                LogMessage($"【回傳資料】回傳Index值:{reportInadx.REPORT_INDEX}");
+                LogMessage($"【{reportInadx.STATION_NAME}】【回傳資料】回傳Index值:{reportInadx.REPORT_INDEX}");
                 SaaSql.UpdScReportIndex(reportInadx);
                 return reportInadx.REPORT_INDEX;
             }
-            LogMessage("【無此資料】查無此Index資料回傳時間數直為Index", LogType.Error);
+            LogMessage($"【{reportInadx.STATION_NAME}】【無此資料】查無此Index資料回傳時間數直為Index", LogType.Error);
             return int.Parse($"{DateTime.Now:ssfff}");
         }
         #endregion
@@ -441,7 +441,6 @@ namespace SAA_CommunicationSystem_Lib
         {
             try
             {
-                Console.WriteLine($"{configattributes.JumpDieApiServerIP}/" + reportevent, commanddata);
                 return webapisendcommand.Post($"{configattributes.JumpDieApiServerIP}/" + reportevent, commanddata);
             }
             catch (Exception ex)
@@ -463,8 +462,6 @@ namespace SAA_CommunicationSystem_Lib
             string commandcontent = JsonConvert.SerializeObject(CarrierGoTo);
             int saaequipmentno = commondb.Rows.Count != 0 ? int.Parse(commondb.Rows[0]["SETNO"].ToString()) : 0;
             string stationid = commondb.Rows.Count != 0 ? commondb.Rows[0]["STATION_NAME"].ToString() : string.Empty;
-            string teid = $"{stationid}_{ReadTeid()}";
-
             SetSaaDirective(saaequipmentno, stationid, string.Empty, autpmation.CMD_NO, commandcontent, SAA_DatabaseEnum.ReportSource.LCS);
         }
 
@@ -501,12 +498,12 @@ namespace SAA_CommunicationSystem_Lib
                     SOURCE = reportsource.ToString(),
                 };
                 SaaSql.SetScDirective(directive);
-                LogMessage($"【新增指令】新增資料至SC_DIRECTIVE=>Command_ON:{directive.COMMANDON} Command_ID:{directive.COMMANDID} Command_Text:{directive.COMMANDTEXT}。");
-                LogMessage($"【新增指令】新增Directive表，指令新增完成");
+                LogMessage($"【{commandstation}】【新增指令】新增資料至SC_DIRECTIVE=>Command_ON:{directive.COMMANDON} Command_ID:{directive.COMMANDID} Command_Text:{directive.COMMANDTEXT}。");
+                LogMessage($"【{commandstation}】【新增指令】新增Directive表，指令新增完成");
             }
             else
             {
-                LogMessage($"【指令相同】已有相同指令無法新增。", LogType.Error);
+                LogMessage($"【{commandstation}】【指令相同】已有相同指令無法新增。", LogType.Error);
             }
         }
         #endregion

@@ -203,6 +203,21 @@ namespace SAA_CommunicationSystem_Lib
                             case SAA_DatabaseEnum.SC_COMMON_ITEM_NAME.AskShuttleTaskTime:
                                 SAA_Database.SaaCommon.AskShuttleTaskTime = int.Parse(itemvalue);
                                 break;
+                            case SAA_DatabaseEnum.SC_COMMON_ITEM_NAME.DetectionLD:
+                                SAA_Database.SaaCommon.DetectionLD = itemvalue;
+                                break;
+                            case SAA_DatabaseEnum.SC_COMMON_ITEM_NAME.DetectionUD:
+                                SAA_Database.SaaCommon.DetectionUD = itemvalue;
+                                break;
+                            case SAA_DatabaseEnum.SC_COMMON_ITEM_NAME.CycleTimeTask:
+                                SAA_Database.SaaCommon.CycleTimeTask = int.Parse(itemvalue);
+                                break;
+                            case SAA_DatabaseEnum.SC_COMMON_ITEM_NAME.BoxRequirements:
+                                SAA_Database.SaaCommon.BoxRequirements = int.Parse(itemvalue);
+                                break;
+                            case SAA_DatabaseEnum.SC_COMMON_ITEM_NAME.EmptyBoxTime:
+                                SAA_Database.SaaCommon.EmptyBoxTime = int.Parse(itemvalue);
+                                break;
                             default:
                                 break;
                         }

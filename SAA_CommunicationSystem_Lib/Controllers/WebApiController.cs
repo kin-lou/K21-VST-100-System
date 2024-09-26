@@ -38,7 +38,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
             {
                 if (data != null)
                 {
-                    SAA_Database.LogMessage($"【接收】LIFT上報站點:{data.Statiom_Name}指令名稱:{data.CommandName}");
+                    SAA_Database.LogMessage($"【{data.Statiom_Name}】【接收】LIFT上報站點:{data.Statiom_Name}指令名稱:{data.CommandName}");
                     if (data.CommandName != string.Empty)
                     {
                         if (Enum.IsDefined(typeof(SAA_DatabaseEnum.LiftCommandName), data.CommandName))
@@ -60,12 +60,12 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                     {
                                         if (hardwareinfodata.Rows.Count != 0)
                                         {
-                                            string StationID = hardwareinfodata.Rows[0]["STATION_NAME"].ToString();
-                                            string Time = hardwareinfodata.Rows[0]["EQUIPMNET_TIME"].ToString();
-                                            string TEID = hardwareinfodata.Rows[0]["EQUIPMNET_TEID"].ToString();
+                                            string StationID = hardwareinfodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMNET_HARDWARE_INFO.STATION_NAME.ToString()].ToString();
+                                            string Time = hardwareinfodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMNET_HARDWARE_INFO.EQUIPMNET_TIME.ToString()].ToString();
+                                            string TEID = hardwareinfodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMNET_HARDWARE_INFO.EQUIPMNET_TEID.ToString()].ToString();
                                             List<HardwareInfo> requirementinfo = new List<HardwareInfo>();
                                             List<CarrierInfo> CarrierInfolist = new List<CarrierInfo>();
-                                            var settinginfodata = SAA_Database.SaaSql.GetScLocationSettingInfo(int.Parse(SAA_Database.configattributes.SaaEquipmentNo), SAA_Database.configattributes.SaaEquipmentName, StationID);
+                                            var settinginfodata = SAA_Database.SaaSql.GetScLocationSettingInfoiLIS(int.Parse(SAA_Database.configattributes.SaaEquipmentNo), SAA_Database.configattributes.SaaEquipmentName, StationID);
                                             foreach (DataRow dr in settinginfodata.Rows)
                                             {
                                                 SaaEquipmentCarrierInfo EquipmentCarrierInfo = new SaaEquipmentCarrierInfo()
@@ -73,33 +73,33 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                                     SETNO = int.Parse(SAA_Database.configattributes.SaaEquipmentNo.ToString()),
                                                     MODEL_NAME = SAA_Database.configattributes.SaaEquipmentName.ToString(),
                                                     STATIOM_NAME = StationID,
-                                                    CARRIERID = dr["CARRIERID"].ToString(),
+                                                    CARRIERID = dr[SAA_DatabaseEnum.SC_LOCATIONSETTING.CARRIERID.ToString()].ToString(),
                                                 };
-                                                var infodata = SAA_Database.SaaSql.GetEquipmentCarrierInfo(EquipmentCarrierInfo);
                                                 HardwareInfo info = new HardwareInfo
                                                 {
-                                                    HardwareID = dr["HOSTID"].ToString(),
-                                                    CarrierID = dr["CARRIERID"].ToString(),
-                                                    HardwareType = dr["LOCATIONTYPE"].ToString(),
+                                                    HardwareID = dr[SAA_DatabaseEnum.SC_LOCATIONSETTING.HOSTID.ToString()].ToString(),
+                                                    CarrierID = dr[SAA_DatabaseEnum.SC_LOCATIONSETTING.CARRIERID.ToString()].ToString(),
+                                                    HardwareType = dr[SAA_DatabaseEnum.SC_LOCATIONSETTING.LOCATIONTYPE.ToString()].ToString(),
                                                     UsingFlag = "True"
                                                 };
                                                 requirementinfo.Add(info);
 
+                                                var infodata = SAA_Database.SaaSql.GetEquipmentCarrierInfo(EquipmentCarrierInfo);
                                                 CarrierInfo carrierinfo = new CarrierInfo
                                                 {
-                                                    CarrierID = dr["CARRIERID"].ToString(),
+                                                    CarrierID = dr[SAA_DatabaseEnum.SC_LOCATIONSETTING.CARRIERID.ToString()].ToString(),
                                                     CarrierType = "Normal",
-                                                    Schedule = dr["PARTNO"].ToString(),
+                                                    Schedule = dr[SAA_DatabaseEnum.SC_LOCATIONSETTING.PARTNO.ToString()].ToString(),
                                                     Rotation = "0",
                                                     Flip = "0",
-                                                    CarrierState = infodata.Rows.Count != 0 ? string.IsNullOrEmpty(infodata.Rows[0]["CARRIERSTATE"].ToString()) ? SAA_DatabaseEnum.CarrierState.Unknow.ToString() : infodata.Rows[0]["CARRIERSTATE"].ToString() : SAA_DatabaseEnum.CarrierState.Unknow.ToString(),
-                                                    DestinationType = infodata.Rows.Count != 0 ? string.IsNullOrEmpty(infodata.Rows[0]["DESTINATIONTYPE"].ToString()) ? SAA_DatabaseEnum.DestinationType.Buffer.ToString() : infodata.Rows[0]["DESTINATIONTYPE"].ToString() : SAA_DatabaseEnum.DestinationType.Buffer.ToString(),
-                                                    Qtime = infodata.Rows.Count != 0 ? infodata.Rows[0]["QTIME"].ToString() : string.Empty,
-                                                    Cycletime = infodata.Rows.Count != 0 ? infodata.Rows[0]["CYCLETIME"].ToString() : string.Empty,//CARRIERSTATE DESTINATIONTYPE
-                                                    Oper = infodata.Rows.Count != 0 ? infodata.Rows[0]["OPER"].ToString() : string.Empty,
-                                                    Recipe = infodata.Rows.Count != 0 ? infodata.Rows[0]["RECIPE"].ToString() : string.Empty,
-                                                    RejectCode = infodata.Rows.Count != 0 ? infodata.Rows[0]["REJECT_CODE"].ToString() : string.Empty,
-                                                    RejectMessage = infodata.Rows.Count != 0 ? infodata.Rows[0]["REJECT_MESSAGE"].ToString() : string.Empty,
+                                                    CarrierState = infodata.Rows.Count != 0 ? string.IsNullOrEmpty(infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.CARRIERSTATE.ToString()].ToString()) ? SAA_DatabaseEnum.CarrierState.Unknow.ToString() : infodata.Rows[0]["CARRIERSTATE"].ToString() : SAA_DatabaseEnum.CarrierState.Unknow.ToString(),
+                                                    DestinationType = infodata.Rows.Count != 0 ? string.IsNullOrEmpty(infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.DESTINATIONTYPE.ToString()].ToString()) ? SAA_DatabaseEnum.DestinationType.Buffer.ToString() : infodata.Rows[0]["DESTINATIONTYPE"].ToString() : SAA_DatabaseEnum.DestinationType.Buffer.ToString(),
+                                                    Qtime = infodata.Rows.Count != 0 ? infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.QTIME.ToString()].ToString() : string.Empty,
+                                                    Cycletime = infodata.Rows.Count != 0 ? infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.CYCLETIME.ToString()].ToString() : string.Empty,//CARRIERSTATE DESTINATIONTYPE
+                                                    Oper = infodata.Rows.Count != 0 ? infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.OPER.ToString()].ToString() : string.Empty,
+                                                    Recipe = infodata.Rows.Count != 0 ? infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.RECIPE.ToString()].ToString() : string.Empty,
+                                                    RejectCode = infodata.Rows.Count != 0 ? infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.REJECT_CODE.ToString()].ToString() : string.Empty,
+                                                    RejectMessage = infodata.Rows.Count != 0 ? infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.REJECT_MESSAGE.ToString()].ToString() : string.Empty,
                                                 };
                                                 CarrierInfolist.Add(carrierinfo);
                                             }
@@ -153,29 +153,29 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                             };
                                             Dictionary<string, object> lifte84dic = new Dictionary<string, object>
                                        {
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.TASKDATETIME.ToString(), LiftE84Plc.TASKDATETIME},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.STATION_NAME.ToString(), LiftE84Plc.STATION_NAME},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.SHUTTLEID.ToString(), LiftE84Plc.SHUTTLEID},
-                                            { SAA_DatabaseEnum.SendLiftE84Plc.CARRIERID.ToString(), LiftE84Plc.CARRIERID},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.COMMANDID.ToString(), LiftE84Plc.COMMANDID},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.CS_0.ToString(), LiftE84Plc.CS_0},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.AM_AVBL.ToString(), LiftE84Plc.AM_AVBL},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.TR_REQ.ToString(), LiftE84Plc.TR_REQ},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.BUSY.ToString(), LiftE84Plc.BUSY},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.COMPT.ToString(), LiftE84Plc.COMPT},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.CONT.ToString(), LiftE84Plc.CONT},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.CS_1.ToString(), LiftE84Plc.CS_1},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.READY.ToString(), LiftE84Plc.READY},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.VALID.ToString(), LiftE84Plc.VALID},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.ES.ToString(), LiftE84Plc.ES},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.HOA_VBL.ToString(), LiftE84Plc.HOA_VBL},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.L_REQ.ToString(), LiftE84Plc.L_REQ},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.Mode.ToString(), LiftE84Plc.Mode},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.U_REQ.ToString(), LiftE84Plc.U_REQ},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.VS_0.ToString(), LiftE84Plc.VS_0},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.VS_1.ToString(), LiftE84Plc.VS_1},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.SELECT.ToString(), LiftE84Plc.SELECT},
-                                           { SAA_DatabaseEnum.SendLiftE84Plc.RESULT.ToString(), LiftE84Plc.RESULT},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.TASKDATETIME.ToString(), LiftE84Plc.TASKDATETIME},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.STATION_NAME.ToString(), LiftE84Plc.STATION_NAME},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.SHUTTLEID.ToString(), LiftE84Plc.SHUTTLEID},
+                                            { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.CARRIERID.ToString(), LiftE84Plc.CARRIERID},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.COMMANDID.ToString(), LiftE84Plc.COMMANDID},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.CS_0.ToString(), LiftE84Plc.CS_0},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.AM_AVBL.ToString(), LiftE84Plc.AM_AVBL},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.TR_REQ.ToString(), LiftE84Plc.TR_REQ},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.BUSY.ToString(), LiftE84Plc.BUSY},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.COMPT.ToString(), LiftE84Plc.COMPT},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.CONT.ToString(), LiftE84Plc.CONT},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.CS_1.ToString(), LiftE84Plc.CS_1},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.READY.ToString(), LiftE84Plc.READY},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.VALID.ToString(), LiftE84Plc.VALID},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.ES.ToString(), LiftE84Plc.ES},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.HOA_VBL.ToString(), LiftE84Plc.HOA_VBL},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.L_REQ.ToString(), LiftE84Plc.L_REQ},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.Mode.ToString(), LiftE84Plc.Mode},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.U_REQ.ToString(), LiftE84Plc.U_REQ},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.VS_0.ToString(), LiftE84Plc.VS_0},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.VS_1.ToString(), LiftE84Plc.VS_1},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.SELECT.ToString(), LiftE84Plc.SELECT},
+                                           { SAA_DatabaseEnum.SC_LIFT_E84PC_STATSUS.RESULT.ToString(), LiftE84Plc.RESULT},
                                        };
                                             string lifte84commandcontent = JsonConvert.SerializeObject(lifte84dic);
                                             while (true)
@@ -183,14 +183,10 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                                 SAA_Database.LogMessage($"【{data.Statiom_Name}】【{SAA_DatabaseEnum.SendWebApiCommandName.SaaEquipmentMonitorE84PlcRendStart}】【傳送E84訊號】傳送E84訊號至LIFT，內容:{lifte84commandcontent}");
                                                 string result = SAA_Database.SaaSendCommandLift(lifte84commandcontent, SAA_DatabaseEnum.SendWebApiCommandName.SaaEquipmentMonitorE84PlcRendStart.ToString());
                                                 SAA_Database.LogMessage($"【{data.Statiom_Name}】LIFT回傳結果:{result}");
-                                                if (result == "OK")
-                                                {
+                                                if (result == SAA_Database.configattributes.WebApiResultOK)
                                                     break;
-                                                }
                                                 else
-                                                {
                                                     SAA_Database.LogMessage("LIFT回傳結果不為OK，重新傳送");
-                                                }
                                                 Thread.Sleep(100);
                                             }
 
@@ -283,12 +279,12 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                                     {SAA_DatabaseEnum.ES_Handshake_CarrierTransport.CarrierInfo.ToString(), ReportHandshakeCarrierTransport.CarrierInfo }
                                                 };
                                                     string commandcontent = JsonConvert.SerializeObject(dicstatusb);
-                                                    SAA_Database.LogMessage($"【LCS->iLIS】【詢問回覆E84訊號】【通訊傳送】站點:{ReportHandshakeCarrierTransport.StationID}，時間:{ReportHandshakeCarrierTransport.Time}，傳送編號:{ReportHandshakeCarrierTransport.TEID}傳送內容:{commandcontent}");
+                                                    SAA_Database.LogMessage($"【{ReportHandshakeCarrierTransport.StationID}】【LCS->iLIS】【詢問回覆E84訊號】【通訊傳送】站點:{ReportHandshakeCarrierTransport.StationID}，時間:{ReportHandshakeCarrierTransport.Time}，傳送編號:{ReportHandshakeCarrierTransport.TEID}傳送內容:{commandcontent}");
                                                     string returnresult = SAA_Database.SaaSendCommandiLis(commandcontent, SAA_DatabaseEnum.SendWebApi.ES_Handshake_CarrierTransport.ToString());//ES_Handshake_CarrierTransport
                                                     SaaReportResult saareportresult = WebApiReportResult(returnresult);
                                                     if (saareportresult != null)
                                                     {
-                                                        SAA_Database.LogMessage($"【LCS->iLIS】【詢問回覆E84訊號】【iLIS接收】StationID:{saareportresult.StationID}，Time:{saareportresult.Time}，TEID:{saareportresult.TEID}，ReturnCode:{saareportresult.ReturnCode}，ReturnMessage:{saareportresult.ReturnMessage}，(結果:{saareportresult.ReturnCode})");
+                                                        SAA_Database.LogMessage($"【{ReportHandshakeCarrierTransport.StationID}】【LCS->iLIS】【詢問回覆E84訊號】【iLIS接收】StationID:{saareportresult.StationID}，Time:{saareportresult.Time}，TEID:{saareportresult.TEID}，ReturnCode:{saareportresult.ReturnCode}，ReturnMessage:{saareportresult.ReturnMessage}，(結果:{saareportresult.ReturnCode})");
                                                         if (saareportresult.ReturnCode == SAA_Database.SaaCommon.Success)
                                                         {
                                                             SaaScLiftE84PlcHandshakeInfo e84plchandshakeinfo = new SaaScLiftE84PlcHandshakeInfo
@@ -384,7 +380,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                                 }
                                                 else
                                                 {
-                                                    SAA_Database.LogMessage($"Alarm站點為空無法上報");
+                                                    SAA_Database.LogMessage($"【{dr["STATION_NAME"]}】Alarm站點為空無法上報");
                                                 }
                                             }
                                             else
@@ -462,7 +458,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                 var infodata = SAA_Database.SaaSql.GetEquipmentCarrierInfo(EquipmentCarrierInfo);
                 if (infodata.Rows.Count != 0)
                 {
-                    EquipmentCarrierInfo.PARTNO = infodata.Rows[0]["PARTNO"].ToString() != string.Empty ? infodata.Rows[0]["PARTNO"].ToString() : SAA_Database.SaaCommon.NA;
+                    EquipmentCarrierInfo.PARTNO = infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.PARTNO.ToString()].ToString() != string.Empty ? infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.PARTNO.ToString()].ToString() : SAA_Database.SaaCommon.NA;
                 }
                 else
                 {
@@ -476,14 +472,14 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                     Schedule = EquipmentCarrierInfo.PARTNO,
                     Flip = "0",
                     Rotation = "0",
-                    CarrierState = infodata.Rows.Count != 0 ? string.IsNullOrEmpty(infodata.Rows[0]["CARRIERSTATE"].ToString()) ? SAA_DatabaseEnum.CarrierState.Unknow.ToString() : infodata.Rows[0]["CARRIERSTATE"].ToString() : SAA_DatabaseEnum.CarrierState.Unknow.ToString(),
-                    DestinationType = infodata.Rows.Count != 0 ? string.IsNullOrEmpty(infodata.Rows[0]["DESTINATIONTYPE"].ToString()) ? SAA_DatabaseEnum.DestinationType.Unknow.ToString() : infodata.Rows[0]["DESTINATIONTYPE"].ToString() : SAA_DatabaseEnum.DestinationType.Unknow.ToString(),
-                    Qtime = infodata.Rows.Count != 0 ? infodata.Rows[0]["QTIME"].ToString() : string.Empty,
-                    Cycletime = infodata.Rows.Count != 0 ? infodata.Rows[0]["CYCLETIME"].ToString() : string.Empty,//CARRIERSTATE DESTINATIONTYPE
-                    Oper = infodata.Rows.Count != 0 ? infodata.Rows[0]["OPER"].ToString() : string.Empty,
-                    Recipe = infodata.Rows.Count != 0 ? infodata.Rows[0]["RECIPE"].ToString() : string.Empty,
-                    RejectCode = infodata.Rows.Count != 0 ? infodata.Rows[0]["REJECT_CODE"].ToString() : string.Empty,
-                    RejectMessage = infodata.Rows.Count != 0 ? infodata.Rows[0]["REJECT_MESSAGE"].ToString() : string.Empty,
+                    CarrierState = infodata.Rows.Count != 0 ? string.IsNullOrEmpty(infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.CARRIERSTATE.ToString()].ToString()) ? SAA_DatabaseEnum.CarrierState.Unknow.ToString() : infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.CARRIERSTATE.ToString()].ToString() : SAA_DatabaseEnum.CarrierState.Unknow.ToString(),
+                    DestinationType = infodata.Rows.Count != 0 ? string.IsNullOrEmpty(infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.DESTINATIONTYPE.ToString()].ToString()) ? SAA_DatabaseEnum.DestinationType.Unknow.ToString() : infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.DESTINATIONTYPE.ToString()].ToString() : SAA_DatabaseEnum.DestinationType.Unknow.ToString(),
+                    Qtime = infodata.Rows.Count != 0 ? infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.QTIME.ToString()].ToString() : string.Empty,
+                    Cycletime = infodata.Rows.Count != 0 ? infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.CYCLETIME.ToString()].ToString() : string.Empty,//CARRIERSTATE DESTINATIONTYPE
+                    Oper = infodata.Rows.Count != 0 ? infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.OPER.ToString()].ToString() : string.Empty,
+                    Recipe = infodata.Rows.Count != 0 ? infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.RECIPE.ToString()].ToString() : string.Empty,
+                    RejectCode = infodata.Rows.Count != 0 ? infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.REJECT_CODE.ToString()].ToString() : string.Empty,
+                    RejectMessage = infodata.Rows.Count != 0 ? infodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.REJECT_MESSAGE.ToString()].ToString() : string.Empty,
                 };
 
                 SaaReportHandshakeCarrierTransport ReportHandshakeCarrierTransport = new SaaReportHandshakeCarrierTransport
@@ -509,18 +505,14 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                     { SAA_DatabaseEnum.ES_Handshake_CarrierTransport.CarrierInfo.ToString(), ReportHandshakeCarrierTransport.CarrierInfo }
                 };
                 string commandcontent = JsonConvert.SerializeObject(dicstatusb);
-                SAA_Database.LogMessage($"【LCS->iLIS】【{SAA_DatabaseEnum.SendWebApi.ES_Handshake_CarrierTransport}】【通訊傳送】站點:{ReportHandshakeCarrierTransport.StationID}，時間:{ReportHandshakeCarrierTransport.Time}，傳送編號:{ReportHandshakeCarrierTransport.TEID}傳送內容:{commandcontent}");
+                SAA_Database.LogMessage($"【{data.STATION_NAME}】【LCS->iLIS】【{SAA_DatabaseEnum.SendWebApi.ES_Handshake_CarrierTransport}】【通訊傳送】站點:{ReportHandshakeCarrierTransport.StationID}，時間:{ReportHandshakeCarrierTransport.Time}，傳送編號:{ReportHandshakeCarrierTransport.TEID}傳送內容:{commandcontent}");
                 string returnresult = SAA_Database.SaaSendCommandiLis(commandcontent, SAA_DatabaseEnum.SendWebApi.ES_Handshake_CarrierTransport.ToString());//ES_Handshake_CarrierTransport
                 SaaReportResult saareportresult = WebApiReportResult(returnresult);
-                SAA_Database.LogMessage($"【LCS->iLIS】【{SAA_DatabaseEnum.SendWebApi.ES_Handshake_CarrierTransport}】【iLIS接收】StationID:{saareportresult.StationID}，Time:{saareportresult.Time}，TEID:{saareportresult.TEID}，ReturnCode:{saareportresult.ReturnCode}，ReturnMessage:{saareportresult.ReturnMessage}，(結果:{saareportresult.ReturnCode})");
+                SAA_Database.LogMessage($"【{data.STATION_NAME}】【LCS->iLIS】【{SAA_DatabaseEnum.SendWebApi.ES_Handshake_CarrierTransport}】【iLIS接收】StationID:{saareportresult.StationID}，Time:{saareportresult.Time}，TEID:{saareportresult.TEID}，ReturnCode:{saareportresult.ReturnCode}，ReturnMessage:{saareportresult.ReturnMessage}，(結果:{saareportresult.ReturnCode})");
                 if (saareportresult != null)
-                {
                     return SAA_Database.configattributes.WebApiResultOK;
-                }
                 else
-                {
                     return SAA_Database.configattributes.WebApiResultFAIL;
-                }
             }
             catch (Exception ex)
             {
@@ -563,7 +555,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
             {
                 if (requestdatatransport != null)
                 {
-                    SAA_Database.LogMessage($"【接收iLIS】轉拋指令資料:{requestdatatransport.Content}，站點:{requestdatatransport.StationID}");
+                    SAA_Database.LogMessage($"【{requestdatatransport.StationID}】【接收iLIS】轉拋指令資料:{requestdatatransport.Content}，站點:{requestdatatransport.StationID}");
                     if (IsJsonFormat(requestdatatransport.Content))
                     {
                         if (requestdatatransport.Content != string.Empty)
@@ -608,19 +600,19 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                         else
                         {
                             saareportresult = ReadReportResult(requestdatatransport.StationID, requestdatatransport.TEID, requestdatatransport.Time, SAA_Database.SaaCommon.Fail, "轉拋指令資料為空值不可接收");
-                            SAA_Database.LogMessage($"【接收iLIS】轉拋指令資料為空值不可接收", SAA_Database.LogType.Error);
+                            SAA_Database.LogMessage($"【{requestdatatransport.StationID}】【接收iLIS】轉拋指令資料為空值不可接收", SAA_Database.LogType.Error);
                         }
                     }
                     else
                     {
                         saareportresult = ReadReportResult(requestdatatransport.StationID, requestdatatransport.TEID, requestdatatransport.Time, SAA_Database.SaaCommon.Fail, "轉拋指令資料判斷非Json格式，不可接收");
-                        SAA_Database.LogMessage($"【接收iLIS】轉拋指令資料判斷非Json格式，不可接收", SAA_Database.LogType.Error);
+                        SAA_Database.LogMessage($"【{requestdatatransport.StationID}】【接收iLIS】轉拋指令資料判斷非Json格式，不可接收", SAA_Database.LogType.Error);
                     }
                 }
                 else
                 {
                     saareportresult = ReadReportResult(requestdatatransport.StationID, requestdatatransport.TEID, requestdatatransport.Time, SAA_Database.SaaCommon.Fail, "轉拋指令資料為Null不可接收");
-                    SAA_Database.LogMessage($"【接收iLIS】轉拋指令資料為Null不可接收", SAA_Database.LogType.Error);
+                    SAA_Database.LogMessage($"【{requestdatatransport.StationID}】【接收iLIS】轉拋指令資料為Null不可接收", SAA_Database.LogType.Error);
                 }
                 return saareportresult;
             }
@@ -642,13 +634,13 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                 if (equipmentstatus != null)
                 {
                     saareportresult = ReadReportResult(equipmentstatus.StationID, equipmentstatus.TEID, equipmentstatus.Time, SAA_Database.SaaCommon.Success, string.Empty);
-                    SAA_Database.LogMessage($"【接收iLIS】詢問設備狀態->站點{saareportresult.StationID} 時間:{saareportresult.Time} 指令編號:{saareportresult.TEID}");
+                    SAA_Database.LogMessage($"【{equipmentstatus.StationID}】【接收iLIS】詢問設備狀態->站點{saareportresult.StationID} 時間:{saareportresult.Time} 指令編號:{saareportresult.TEID}");
                     SendWebApiEquipmentStatusiLIS(equipmentstatus);
                 }
                 else
                 {
                     saareportresult = ReadReportResult(equipmentstatus.StationID, equipmentstatus.TEID, equipmentstatus.Time, SAA_Database.SaaCommon.Fail, "詢問設備狀態資料為Null不可接收");
-                    SAA_Database.LogMessage($"【接收iLIS】詢問設備狀態資料為Null不可接收", SAA_Database.LogType.Error);
+                    SAA_Database.LogMessage($"【{equipmentstatus.StationID}】【接收iLIS】詢問設備狀態資料為Null不可接收", SAA_Database.LogType.Error);
                 }
                 return saareportresult;
             }
@@ -675,8 +667,8 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                     {
                         SaaScEquipmnetHardwareInfo HardwareInfo = new SaaScEquipmnetHardwareInfo
                         {
-                            SETNO = int.Parse(devicedata.Rows[0]["SETNO"].ToString()),
-                            MODEL_NAME = devicedata.Rows[0]["MODEL_NAME"].ToString(),
+                            SETNO = int.Parse(devicedata.Rows[0][SAA_DatabaseEnum.SC_DEVICE.SETNO.ToString()].ToString()),
+                            MODEL_NAME = devicedata.Rows[0][SAA_DatabaseEnum.SC_DEVICE.MODEL_NAME.ToString()].ToString(),
                             STATION_NAME = requestequipmenthardwareinfo.StationID,
                             EQUIPMNET_TIME = requestequipmenthardwareinfo.Time,
                             EQUIPMNET_TEID = requestequipmenthardwareinfo.TEID,
@@ -696,7 +688,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                         };
                         string commandcontent = JsonConvert.SerializeObject(saaLift);
                         string ReportMessage = SAA_Database.SaaSendCommandSystems(commandcontent, SAA_DatabaseEnum.SendWebApiCommandName.GetLiftMessage.ToString());
-                        SAA_Database.LogMessage($"【{saaLift.Statiom_Name}】【傳送設備】【轉譯程式】自行接收結果:{ReportMessage}");
+                        SAA_Database.LogMessage($"【{requestequipmenthardwareinfo.StationID}】【傳送設備】【轉譯程式】自行接收結果:{ReportMessage}");
                     }
                     else
                     {
@@ -720,7 +712,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
         {
             try
             {
-                SAA_Database.LogMessage($"【接收iLIS】新增天車卡匣搬運->站點{equipmenttransport.StationID} 時間:{equipmenttransport.Time} 卡匣ID:{equipmenttransport.CarrierID}");
+                SAA_Database.LogMessage($"【{equipmenttransport.StationID}】【接收iLIS】新增天車卡匣搬運->站點{equipmenttransport.StationID} 時間:{equipmenttransport.Time} 卡匣ID:{equipmenttransport.CarrierID}");
                 saareportresult = ReadReportResult(equipmenttransport.StationID, equipmenttransport.TEID, equipmenttransport.Time, SAA_Database.SaaCommon.Success, string.Empty);
                 return saareportresult;
             }
@@ -739,7 +731,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
         {
             try
             {
-                SAA_Database.LogMessage($"【接收iLIST】詢問E84資訊站點:{requesthandshakecarriertransport.StationID}");
+                SAA_Database.LogMessage($"【{requesthandshakecarriertransport.StationID}】【接收iLIST】詢問E84資訊站點:{requesthandshakecarriertransport.StationID}");
                 var devicedata = SAA_Database.SaaSql.GetScDevice(requesthandshakecarriertransport.StationID);
                 if (devicedata != null)
                 {
@@ -747,8 +739,8 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                     {
                         SaaScLiftE84PlcHandshakeInfo PlcHandshakeInfo = new SaaScLiftE84PlcHandshakeInfo
                         {
-                            SETNO = int.Parse(devicedata.Rows[0]["SETNO"].ToString()),
-                            MODEL_NAME = devicedata.Rows[0]["MODEL_NAME"].ToString(),
+                            SETNO = int.Parse(devicedata.Rows[0][SAA_DatabaseEnum.SC_DEVICE.SETNO.ToString()].ToString()),
+                            MODEL_NAME = devicedata.Rows[0][SAA_DatabaseEnum.SC_DEVICE.MODEL_NAME.ToString()].ToString(),
                             STATION_NAME = requesthandshakecarriertransport.StationID,
                             EQUIPMNET_TIME = requesthandshakecarriertransport.Time,
                             EQUIPMNET_TEID = requesthandshakecarriertransport.TEID,
@@ -772,7 +764,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                     }
                     else
                     {
-                        SAA_Database.LogMessage($"站點{requesthandshakecarriertransport.StationID}資料為空", SAA_Database.LogType.Error);
+                        SAA_Database.LogMessage($"【{requesthandshakecarriertransport.StationID}】站點{requesthandshakecarriertransport.StationID}資料為空", SAA_Database.LogType.Error);
                     }
                 }
                 return saareportresult;
@@ -848,7 +840,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                         SAA_Database.LogMessage($"【{reporthandshake.StationID}】【新增資料】新增設備資訊完成");
                                     }
 
-                                    string devicetype = data.Rows[0]["DEVICETYPE"].ToString();
+                                    string devicetype = data.Rows[0][SAA_DatabaseEnum.SC_DEVICE.DEVICETYPE.ToString()].ToString();
                                     if (devicetype == "1")
                                     {
                                         SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增實盒卡匣】站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}，載體狀態:{equipmentcarrierinfo.DESTINATIONTYPE}，載體資訊:{equipmentcarrierinfo.CARRIERSTATE}");
@@ -868,15 +860,15 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                             var carrierinfomaterialdata = SAA_Database.SaaSql.GetLiftCarrierInfoMaterial(LiftCarrierInfoMaterial);
                                             if (carrierinfomaterialdata.Rows.Count == 0)
                                             {
-                                                if(!equipmentcarrierinfo.CARRIERID.Contains(SAA_Database.configattributes.PARTICLE))
+                                                if (!equipmentcarrierinfo.CARRIERID.Contains(SAA_Database.configattributes.PARTICLE))
                                                 {
                                                     SAA_Database.SaaSql.SetScLiftCarrierInfoMaterial(LiftCarrierInfoMaterial);
-                                                    SAA_Database.LogMessage($"【新增實盒卡匣】新增ScLiftCarrierInfoMaterial資料表完成，站點:{LiftCarrierInfoMaterial.STATION_NAME}，卡匣ID:{LiftCarrierInfoMaterial.CARRIERID}");
+                                                    SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增實盒卡匣】新增ScLiftCarrierInfoMaterial資料表完成，站點:{LiftCarrierInfoMaterial.STATION_NAME}，卡匣ID:{LiftCarrierInfoMaterial.CARRIERID}");
                                                 }
                                             }
                                             else
                                             {
-                                                SAA_Database.LogMessage($"【新增實盒卡匣】新增ScLiftCarrierInfoMaterial資料，站點:{LiftCarrierInfoMaterial.STATION_NAME}，卡匣ID:{LiftCarrierInfoMaterial.CARRIERID}，已有相同卡匣ID不可新增");
+                                                SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增實盒卡匣】新增ScLiftCarrierInfoMaterial資料，站點:{LiftCarrierInfoMaterial.STATION_NAME}，卡匣ID:{LiftCarrierInfoMaterial.CARRIERID}，已有相同卡匣ID不可新增");
                                             }
                                         }
                                         else if (equipmentcarrierinfo.DESTINATIONTYPE == SAA_DatabaseEnum.DestinationType.Buffer.ToString() && equipmentcarrierinfo.CARRIERSTATE == SAA_DatabaseEnum.CarrierState.Empty.ToString())
@@ -899,7 +891,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                 }
                                 else
                                 {
-                                    SAA_Database.LogMessage($"【新增實盒卡匣】查無此站點，站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}");
+                                    SAA_Database.LogMessage($"【{equipmentcarrierinfo.STATIOM_NAME}】【新增實盒卡匣】查無此站點，站點:{equipmentcarrierinfo.STATIOM_NAME}，卡匣ID:{equipmentcarrierinfo.CARRIERID}");
                                 }
                             }
                         }
@@ -909,9 +901,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                     SAA_Database.SaaSql.UpdateScLiftE84PcStatus(reporthandshake.Time, reporthandshake.StationID, reporthandshake.ShuttleID, reporthandshake.MissionID, reporthandshake.CarrierInfo.CarrierID, reporthandshake.Handshake);
                     reporthandshake.CarrierInfo.CarrierID = reporthandshake.CarrierInfo.CarrierID;
                     SAA_Database.LogMessage($"【{reporthandshake.StationID}】【轉譯程式】【載體資訊】變更記憶體ID:{reporthandshake.CarrierInfo.CarrierID}，卡匣ID:{reporthandshake.CarrierInfo.CarrierID}");
-
-
-
+                    
                     SaaScLiftE84iLisPc LiftE84Pc = new SaaScLiftE84iLisPc
                     {
                         TASKDATETIME = reporthandshake.Time,
@@ -968,14 +958,14 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                         SAA_Database.LogMessage($"【{reporthandshake.StationID}】【{SAA_DatabaseEnum.SendWebApiCommandName.SaaEquipmentMonitorE84PcSendStart}】【傳送E84訊號】傳送E84訊號至LIFT，內容:{commandcontent}");
                         string result = SAA_Database.SaaSendCommandLift(commandcontent, SAA_DatabaseEnum.SendWebApiCommandName.SaaEquipmentMonitorE84PcSendStart.ToString());
                         SAA_Database.LogMessage($"【{reporthandshake.StationID}】LIFT回傳結果:{result}");
-                        if (result == "OK")
+                        if (result == SAA_Database.configattributes.WebApiResultOK)
                         {
                             saareportresult = ReadReportResult(reporthandshake.StationID, reporthandshake.TEID, handshakecarriertransport.Time, SAA_Database.SaaCommon.Success, string.Empty);
                             break;
                         }
                         else
                         {
-                            SAA_Database.LogMessage("LIFT回傳結果不為OK，重新傳送");
+                            SAA_Database.LogMessage($"【{reporthandshake.StationID}】LIFT回傳結果不為OK，重新傳送");
                         }
                         Thread.Sleep(100);
                     }
@@ -1004,7 +994,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
         {
             try
             {
-                SAA_Database.LogMessage($"【接收iLIST】接收回覆需求搬運資訊，Time:{reporttransportrequirementinfo.Time}，Command ID:{reporttransportrequirementinfo.TEID}，站點:{reporttransportrequirementinfo.StationID})，數量:{reporttransportrequirementinfo.ListRequirementInfo.Count}", SAA_Database.LogType.Normal, SAA_Database.LogSystmes.iLIs);
+                SAA_Database.LogMessage($"【{reporttransportrequirementinfo.StationID}】【接收iLIST】接收回覆需求搬運資訊，Time:{reporttransportrequirementinfo.Time}，Command ID:{reporttransportrequirementinfo.TEID}，站點:{reporttransportrequirementinfo.StationID})，數量:{reporttransportrequirementinfo.ListRequirementInfo.Count}", SAA_Database.LogType.Normal, SAA_Database.LogSystmes.iLIs);
                 for (int i = 0; i < reporttransportrequirementinfo.ListRequirementInfo.Count; i++)
                 {
                     RequirementInfo requirementinfo = new RequirementInfo
@@ -1013,6 +1003,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                         RequirementType = reporttransportrequirementinfo.ListRequirementInfo[i].RequirementType,
                         BeginStation = reporttransportrequirementinfo.ListRequirementInfo[i].BeginStation,
                         EndStation = reporttransportrequirementinfo.ListRequirementInfo[i].EndStation,
+                        Oper = reporttransportrequirementinfo.ListRequirementInfo[i].Oper,
                     };
 
                     if (Enum.IsDefined(typeof(SAA_DatabaseEnum.RequirementType), requirementinfo.RequirementType))
@@ -1043,7 +1034,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                         if (devicetype == SAA_Database.SaaCommon.DeivertTypeUD.ToString())
                         {
                             SAA_Database.SaaSql.DelScLiftAmount(reporttransportrequirementinfo.StationID);
-                            SAA_Database.LogMessage($"【接收iLIST】接收回覆需求搬運資訊，需求類型:空盒需求，終點站名:{reporttransportrequirementinfo.StationID}，iLIS已無空盒需求，LiftAmount刪除需求站點:{reporttransportrequirementinfo.StationID}", SAA_Database.LogType.Normal, SAA_Database.LogSystmes.iLIs);
+                            SAA_Database.LogMessage($"【{reporttransportrequirementinfo.StationID}】【接收iLIST】接收回覆需求搬運資訊，需求類型:空盒需求，終點站名:{reporttransportrequirementinfo.StationID}，iLIS已無空盒需求，LiftAmount刪除需求站點:{reporttransportrequirementinfo.StationID}", SAA_Database.LogType.Normal, SAA_Database.LogSystmes.iLIs);
 
                             var equirementmaterialdata = SAA_Database.SaaSql.GetScTransportrEquirementMaterial(reporttransportrequirementinfo.StationID);
                             if (equirementmaterialdata.Rows.Count != 0)
@@ -1075,11 +1066,11 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                     if (SAA_Database.SaaSql.GetScTransportrEquirementMaterialCarrierId(ScTransportrEquirement.CARRIERID).Rows.Count == 0)
                                     {
                                         SAA_Database.SaaSql.SetScTransportrEquirementMaterial(ScTransportrEquirement);
-                                        SAA_Database.LogMessage($"【新增資料】新增料盒搬運需求:站點:{ScTransportrEquirement.STATION_NAME}、起點{ScTransportrEquirement.BEGIN_STATION}、終點:{ScTransportrEquirement.END_STATION}、卡匣ID:{ScTransportrEquirement.CARRIERID}");
+                                        SAA_Database.LogMessage($"【{reporttransportrequirementinfo.StationID}】【新增資料】新增料盒搬運需求:站點:{ScTransportrEquirement.STATION_NAME}、起點{ScTransportrEquirement.BEGIN_STATION}、終點:{ScTransportrEquirement.END_STATION}、卡匣ID:{ScTransportrEquirement.CARRIERID}");
                                     }
                                     else
                                     {
-                                        SAA_Database.LogMessage($"【新增資料】已有需求無法新增料盒搬運需求:站點:{ScTransportrEquirement.STATION_NAME}、起點{ScTransportrEquirement.BEGIN_STATION}、終點:{ScTransportrEquirement.END_STATION}、卡匣ID:{ScTransportrEquirement.CARRIERID}");
+                                        SAA_Database.LogMessage($"【{reporttransportrequirementinfo.StationID}】【新增資料】已有需求無法新增料盒搬運需求:站點:{ScTransportrEquirement.STATION_NAME}、起點{ScTransportrEquirement.BEGIN_STATION}、終點:{ScTransportrEquirement.END_STATION}、卡匣ID:{ScTransportrEquirement.CARRIERID}");
                                     }
                                     WebApiSendEsReportTransportRequirement(EsReportTransport);
                                 }
@@ -1130,11 +1121,11 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                             if (SAA_Database.SaaSql.GetScTransportrEquirementMaterialCarrierId(ScTransportrEquirement.CARRIERID).Rows.Count == 0)
                             {
                                 SAA_Database.SaaSql.SetScTransportrEquirementMaterial(ScTransportrEquirement);
-                                SAA_Database.LogMessage($"【新增資料】新增料盒搬運需求:站點:{ScTransportrEquirement.STATION_NAME}、起點{ScTransportrEquirement.BEGIN_STATION}、終點:{ScTransportrEquirement.END_STATION}、卡匣ID:{ScTransportrEquirement.CARRIERID}");
+                                SAA_Database.LogMessage($"【{reporttransportrequirementinfo.StationID}】【新增資料】新增料盒搬運需求:站點:{ScTransportrEquirement.STATION_NAME}、起點{ScTransportrEquirement.BEGIN_STATION}、終點:{ScTransportrEquirement.END_STATION}、卡匣ID:{ScTransportrEquirement.CARRIERID}");
                             }
                             else
                             {
-                                SAA_Database.LogMessage($"【新增資料】已有需求無法新增料盒搬運需求:站點:{ScTransportrEquirement.STATION_NAME}、起點{ScTransportrEquirement.BEGIN_STATION}、終點:{ScTransportrEquirement.END_STATION}、卡匣ID:{ScTransportrEquirement.CARRIERID}");
+                                SAA_Database.LogMessage($"【{reporttransportrequirementinfo.StationID}】【新增資料】已有需求無法新增料盒搬運需求:站點:{ScTransportrEquirement.STATION_NAME}、起點{ScTransportrEquirement.BEGIN_STATION}、終點:{ScTransportrEquirement.END_STATION}、卡匣ID:{ScTransportrEquirement.CARRIERID}");
                             }
                             WebApiSendEsReportTransportRequirement(EsReportTransport);
                         }
@@ -1286,7 +1277,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                     ReturnCode = returncode,
                     ReturnMessage = returnmessage,
                 };
-                SAA_Database.LogMessage($"【接收iLIS】回傳接收完成，StationID:{saareport.StationID}，TEID:{saareport.TEID}，Time:{saareport.Time}，ReturnCode:{saareport.ReturnCode}，ReturnMessage:{saareport.ReturnMessage}");
+                SAA_Database.LogMessage($"【{saareport.StationID}】【接收iLIS】回傳接收完成，StationID:{saareport.StationID}，TEID:{saareport.TEID}，Time:{saareport.Time}，ReturnCode:{saareport.ReturnCode}，ReturnMessage:{saareport.ReturnMessage}");
                 return saareport;
             }
             catch (Exception ex)
@@ -1309,7 +1300,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                     { SAA_DatabaseEnum.ES_Report_EquipmentHardwareInfo.ListCarrierInfo.ToString(), requicarrierinfo }
                 };
                 string commandcontent = JsonConvert.SerializeObject(dicstatusb);
-                SAA_Database.LogMessage($"【LCS->iLIS】【{SAA_DatabaseEnum.SendWebApi.ES_Report_EquipmentHardwareInfo}】【通訊傳送】站點:{StationID}，時間:{Time}，傳送編號:{TEID}傳送內容:{commandcontent}");
+                SAA_Database.LogMessage($"【{StationID}】【LCS->iLIS】【{SAA_DatabaseEnum.SendWebApi.ES_Report_EquipmentHardwareInfo}】【通訊傳送】站點:{StationID}，時間:{Time}，傳送編號:{TEID}傳送內容:{commandcontent}");
                 string returnresult = SAA_Database.SaaSendCommandiLis(commandcontent, SAA_DatabaseEnum.SendWebApi.ES_Report_EquipmentHardwareInfo.ToString());
                 SaaReportResult saareportresult = WebApiReportResult(returnresult);
                 SAA_Database.LogMessage($"【{StationID}】【LCS->iLIS】【{SAA_DatabaseEnum.SendWebApi.ES_Report_EquipmentHardwareInfo}】【iLIS接收】StationID:{saareportresult.StationID}，Time:{saareportresult.Time}，TEID:{saareportresult.TEID}，ReturnCode:{saareportresult.ReturnCode}，ReturnMessage:{saareportresult.ReturnMessage}，(結果:{saareportresult.ReturnCode})");
@@ -1384,6 +1375,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
         /// <param name="ReportTransportRequirement"></param>
         public void WebApiSendEsReportTransportRequirement(SaaEsReportTransportRequirement ReportTransportRequirement)
         {
+            var carrierinfodata = SAA_Database.SaaSql.GetEquipmentCarrierInfo(ReportTransportRequirement.CARRIERID);
             List<RequirementInfo> requirementinfo = new List<RequirementInfo>();
             RequirementInfo info = new RequirementInfo
             {
@@ -1391,6 +1383,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                 CarrierID = ReportTransportRequirement.CARRIERID,
                 BeginStation = ReportTransportRequirement.BEGINSTATION,
                 EndStation = ReportTransportRequirement.ENDSTATION,
+                Oper = carrierinfodata.Rows.Count != 0 ? carrierinfodata.Rows[0][SAA_DatabaseEnum.SC_EQUIPMENT_CARRIER_INFO.OPER.ToString()].ToString() : string.Empty,
             };
             requirementinfo.Add(info);
             Dictionary<string, object> dicstatusb = new Dictionary<string, object>
@@ -1401,13 +1394,13 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                 { SAA_DatabaseEnum.ES_Report_TransportRequirement.ListRequirementInfo.ToString(), requirementinfo },
             };
             string commandcontent = JsonConvert.SerializeObject(dicstatusb);
-            SAA_Database.LogMessage($"【LCS->iLIS】【ES_Report_TransportRequirement】【通訊傳送】站點:{ReportTransportRequirement.STATION}，時間:{ReportTransportRequirement.DATATIME}，傳送編號:{ReportTransportRequirement.TEID}傳送內容:{commandcontent}");
+            SAA_Database.LogMessage($"【{ReportTransportRequirement.STATION}】【LCS->iLIS】【ES_Report_TransportRequirement】【通訊傳送】站點:{ReportTransportRequirement.STATION}，時間:{ReportTransportRequirement.DATATIME}，傳送編號:{ReportTransportRequirement.TEID}傳送內容:{commandcontent}");
             string returnresult = SAA_Database.SaaSendCommandiLis(commandcontent, SAA_DatabaseEnum.SendWebApi.ES_Report_TransportRequirement.ToString());
             SaaReportResult saareportresult = WebApiReportResult(returnresult);
-            SAA_Database.LogMessage($"【LCS->iLIS】【ES_Report_TransportRequirement】【iLIS接收】StationID:{saareportresult.StationID}，Time:{saareportresult.Time}，TEID:{saareportresult.TEID}，ReturnCode:{saareportresult.ReturnCode}，ReturnMessage:{saareportresult.ReturnMessage}，(結果:{saareportresult.ReturnCode})");
+            SAA_Database.LogMessage($"【{ReportTransportRequirement.STATION}】【LCS->iLIS】【ES_Report_TransportRequirement】【iLIS接收】StationID:{saareportresult.StationID}，Time:{saareportresult.Time}，TEID:{saareportresult.TEID}，ReturnCode:{saareportresult.ReturnCode}，ReturnMessage:{saareportresult.ReturnMessage}，(結果:{saareportresult.ReturnCode})");
             if (saareportresult.ReturnCode == SAA_Database.SaaCommon.Success)
             {
-                SAA_Database.LogMessage($"重新傳送料盒搬運需求:站點:{ReportTransportRequirement.STATION}、起點{ReportTransportRequirement.BEGINSTATION}、終點:{ReportTransportRequirement.ENDSTATION}、卡匣ID:{ReportTransportRequirement.CARRIERID}");
+                SAA_Database.LogMessage($"【{ReportTransportRequirement.STATION}】【LCS->iLIS】【ES_Report_TransportRequirement】重新傳送料盒搬運需求:站點:{ReportTransportRequirement.STATION}、起點{ReportTransportRequirement.BEGINSTATION}、終點:{ReportTransportRequirement.ENDSTATION}、卡匣ID:{ReportTransportRequirement.CARRIERID}");
             }
         }
         #endregion

@@ -99,5 +99,25 @@ namespace SAA_CommunicationSystem_Lib.Attributes
         /// JumpDie Server Host
         /// </summary>
         public string JumpDieApiServerIP { get; set; }
+
+        public string SaaEquipmentRGV { get; set; }
+
+        public string SaaEquipmentCRANE { get; set; }
+
+        public string SaaEquipmentDKIN { get; set; }
+
+        public string SaaEquipmentDKOUT { get; set; }
+
+        public string SaaEquipmentPGVIN { get; set; }
+
+        public string SaaEquipmentPGVOUT { get; set; }
+
+        public string SaaEquipmentSTAGE { get; set; }
+
+        public string Station6SideLDRejectName { get; set; }
+
+        public string Station6SideUDRejectName { get; set; }
+
+        public string OperEmpty { get; set; }
     }
 }

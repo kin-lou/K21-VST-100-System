@@ -923,6 +923,11 @@ namespace SAA_CommunicationSystem_Lib.SqlData
             return SaaSql.QuerySqlByAutoOpen("Select * From SC_LOCATIONSETTING Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "' And STATIOM_NAME = '" + statiomname + "' And LOCATIONTYPE IS NOT NULL").Tables[0];
         }
 
+        public DataTable GetScLocationSettingInfoiLIS(int setno, string modelname, string statiomname)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_LOCATIONSETTING_iLIS Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "' And STATIOM_NAME = '" + statiomname + "' And LOCATIONTYPE IS NOT NULL").Tables[0];
+        }
+
         public DataTable GetScLocationSettingInfo(int setno, string modelname, string statiomname, string carrierid)
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From SC_LOCATIONSETTING Where SETNO = '" + setno + "' And MODEL_NAME = '" + modelname + "' And STATIOM_NAME = '" + statiomname + "' And CARRIERID  = '" + carrierid + "'").Tables[0];
@@ -956,6 +961,11 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public DataTable GetEquipmentCarrierInfo(SaaEquipmentCarrierInfo equipmentcarrierinfo)
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From SC_EQUIPMENT_CARRIER_INFO Where SETNO = '" + equipmentcarrierinfo.SETNO + "' And MODEL_NAME = '" + equipmentcarrierinfo.MODEL_NAME + "' And STATIOM_NAME = '" + equipmentcarrierinfo.STATIOM_NAME + "' And CARRIERID = '" + equipmentcarrierinfo.CARRIERID + "'").Tables[0];
+        }
+
+        public DataTable GetEquipmentCarrierInfo(string carrierid)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_EQUIPMENT_CARRIER_INFO Where CARRIERID = '" + carrierid + "'").Tables[0];
         }
 
         public DataTable GetLiftCarrierInfo(SaaScLiftCarrierInfo LiftCarrierInfo)
@@ -1116,6 +1126,16 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         public DataTable GetScLiftCarrierInfoReject(string carrierid)
         {
             return SaaSql.QuerySqlByAutoOpen("Select * From SC_LIFT_CARRIER_INFO_REJECT Where  CARRIERID = '" + carrierid + "'").Tables[0];
+        }
+
+        public DataTable GetScLocationsettingLocationidShelf(string statiom_name, string locationid)
+        {
+            return SaaSql.QuerySqlByAutoOpen("SELECT * FROM SC_LOCATIONSETTING Where STATIOM_NAME = '" + statiom_name + "' And LOCATIONID = '" + locationid + "'").Tables[0];
+        }
+
+        public DataTable GetScLocationsettingLocationidShelfiLIS(string statiom_name, string locationid)
+        {
+            return SaaSql.QuerySqlByAutoOpen("SELECT * FROM SC_LOCATIONSETTING_iLIS Where STATIOM_NAME = '" + statiom_name + "' And LOCATIONID = '" + locationid + "'").Tables[0];
         }
     }
 }

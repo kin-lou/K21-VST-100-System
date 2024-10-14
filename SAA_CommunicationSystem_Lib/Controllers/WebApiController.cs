@@ -326,31 +326,36 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                                 }
                                                 var stationdata = SAA_Database.SaaSql.GetScDevice(dr["STATION_NAME"].ToString());
                                                 string station = stationdata.Rows.Count != 0 ? stationdata.Rows[0]["HOSTDEVICEID"].ToString() : string.Empty;
+                                                string devicestatus = stationdata.Rows.Count != 0 ? stationdata.Rows[0]["DEVICESTATUS"].ToString() : string.Empty;//新增判斷設備自動才上報 Michael.Lin新增
                                                 if (station != string.Empty)
                                                 {
-                                                    Dictionary<string, string> Alarmlist = new Dictionary<string, string>
-                                                   {
-                                                       { "CMD_NO", cmd_no },
-                                                       { "CMD_NAME", cmd_name },
-                                                       { "STATION", station},
-                                                       { "ALARM_CODE", $"{alarmlistdata.Rows[0]["MODEL_NAME"]}{dr["ALARM_CODE"]}"},//MODEL_NAME
-                                                       { "ALARM_MESSAGE",alarmlistdata.Rows[0]["ALARM_MSG"].ToString()},
-                                                   };
-                                                    string commandcontent = JsonConvert.SerializeObject(Alarmlist);
-                                                    SaaScDirective directive = new SaaScDirective()
+                                                    if (devicestatus == SAA_DatabaseEnum.DEVICESTATUS.Y.ToString())//新增判斷設備自動才上報 Michael.Lin新增
                                                     {
-                                                        TASKDATETIME = SAA_Database.ReadTime(),
-                                                        SETNO = dr["SETNO"].ToString(),
-                                                        COMMANDON = $"{DateTime.Now:ssfff}",
-                                                        STATION_NAME = dr["STATION_NAME"].ToString(),
-                                                        CARRIERID = string.Empty,
-                                                        COMMANDID = cmd_no,
-                                                        COMMANDTEXT = commandcontent,
-                                                        SOURCE = SAA_DatabaseEnum.ReportSource.LCS.ToString(),
-                                                    };
-                                                    SAA_Database.SaaSql.SetScDirective(directive);
-                                                    SAA_Database.LogMessage($"【新增指令】新增資料至SC_DIRECTIVE=>Command_ON:{directive.COMMANDON} Command_Id:{directive.COMMANDID} Command_Text:{directive.COMMANDTEXT}。");
-                                                    SAA_Database.LogMessage($"【新增指令】新增Directive表，指令新增完成");
+                                                        Dictionary<string, string> Alarmlist = new Dictionary<string, string>
+                                                       {
+                                                           { "CMD_NO", cmd_no },
+                                                           { "CMD_NAME", cmd_name },
+                                                           { "STATION", station},
+                                                           { "ALARM_CODE", $"{alarmlistdata.Rows[0]["MODEL_NAME"]}{dr["ALARM_CODE"]}"},//MODEL_NAME
+                                                           { "ALARM_MESSAGE",alarmlistdata.Rows[0]["ALARM_MSG"].ToString()},
+                                                       };
+                                                        string commandcontent = JsonConvert.SerializeObject(Alarmlist);
+                                                        SaaScDirective directive = new SaaScDirective()
+                                                        {
+                                                            TASKDATETIME = SAA_Database.ReadTime(),
+                                                            SETNO = dr["SETNO"].ToString(),
+                                                            COMMANDON = $"{DateTime.Now:ssfff}",
+                                                            STATION_NAME = dr["STATION_NAME"].ToString(),
+                                                            CARRIERID = string.Empty,
+                                                            COMMANDID = cmd_no,
+                                                            COMMANDTEXT = commandcontent,
+                                                            SOURCE = SAA_DatabaseEnum.ReportSource.LCS.ToString(),
+                                                        };
+                                                        SAA_Database.SaaSql.SetScDirective(directive);
+                                                        SAA_Database.LogMessage($"【新增指令】新增資料至SC_DIRECTIVE=>Command_ON:{directive.COMMANDON} Command_Id:{directive.COMMANDID} Command_Text:{directive.COMMANDTEXT}。");
+                                                        SAA_Database.LogMessage($"【新增指令】新增Directive表，指令新增完成");
+                                                    }
+
                                                     SaaScAlarmCurrent scalarmcurrent = new SaaScAlarmCurrent
                                                     {
                                                         REPORT_STATUS = SAA_DatabaseEnum.SendFlag.Y.ToString(),
@@ -360,7 +365,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                                                     SAA_Database.SaaSql.UpdScAlarmCurrent(scalarmcurrent);
                                                     SaaScAlarmHistory alarmHistory = new SaaScAlarmHistory
                                                     {
-                                                        SETNO = directive.SETNO,
+                                                        SETNO = dr["SETNO"].ToString(),
                                                         TRN_TIME = SAA_Database.ReadTime(),
                                                         MODEL_NAME = dr["MODEL_NAME"].ToString(),
                                                         STATION_NAME = scalarmcurrent.STATION_NAME,
@@ -901,7 +906,7 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                     SAA_Database.SaaSql.UpdateScLiftE84PcStatus(reporthandshake.Time, reporthandshake.StationID, reporthandshake.ShuttleID, reporthandshake.MissionID, reporthandshake.CarrierInfo.CarrierID, reporthandshake.Handshake);
                     reporthandshake.CarrierInfo.CarrierID = reporthandshake.CarrierInfo.CarrierID;
                     SAA_Database.LogMessage($"【{reporthandshake.StationID}】【轉譯程式】【載體資訊】變更記憶體ID:{reporthandshake.CarrierInfo.CarrierID}，卡匣ID:{reporthandshake.CarrierInfo.CarrierID}");
-                    
+
                     SaaScLiftE84iLisPc LiftE84Pc = new SaaScLiftE84iLisPc
                     {
                         TASKDATETIME = reporthandshake.Time,
@@ -928,30 +933,30 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                         VS_1 = reporthandshake.Handshake.VS_1,
                     };
                     Dictionary<string, object> dicstatusb = new Dictionary<string, object>
-                   {
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.TASKDATETIME.ToString(), LiftE84Pc.TASKDATETIME},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.STATION_NAME.ToString(), LiftE84Pc.STATION_NAME},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.SHUTTLEID.ToString(), LiftE84Pc.SHUTTLEID},
-                        { SAA_DatabaseEnum.SendLiftE84iLisPc.CARRIERID.ToString(), LiftE84Pc.CARRIERID},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.COMMANDID.ToString(), LiftE84Pc.COMMANDID},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.Mode.ToString(), LiftE84Pc.Mode},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.VALID.ToString(), LiftE84Pc.VALID},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.CS_0.ToString(), LiftE84Pc.CS_0},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.CS_1.ToString(), LiftE84Pc.CS_1},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.TR_REQ.ToString(), LiftE84Pc.TR_REQ},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.L_REQ.ToString(), LiftE84Pc.L_REQ},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.U_REQ.ToString(), LiftE84Pc.U_REQ},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.READY.ToString(), LiftE84Pc.READY},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.BUSY.ToString(), LiftE84Pc.BUSY},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.COMPT.ToString(), LiftE84Pc.COMPT},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.CONT.ToString(), LiftE84Pc.CONT},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.HOA_VBL.ToString(), LiftE84Pc.HOA_VBL},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.ES.ToString(), LiftE84Pc.ES},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.VA.ToString(), LiftE84Pc.VA},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.AM_AVBL.ToString(), LiftE84Pc.AM_AVBL},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.VS_0.ToString(), LiftE84Pc.VS_0},
-                       { SAA_DatabaseEnum.SendLiftE84iLisPc.VS_1.ToString(), LiftE84Pc.VS_1},
-                   };
+                     {
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.TASKDATETIME.ToString(), LiftE84Pc.TASKDATETIME},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.STATION_NAME.ToString(), LiftE84Pc.STATION_NAME},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.SHUTTLEID.ToString(), LiftE84Pc.SHUTTLEID},
+                          { SAA_DatabaseEnum.SendLiftE84iLisPc.CARRIERID.ToString(), LiftE84Pc.CARRIERID},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.COMMANDID.ToString(), LiftE84Pc.COMMANDID},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.Mode.ToString(), LiftE84Pc.Mode},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.VALID.ToString(), LiftE84Pc.VALID},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.CS_0.ToString(), LiftE84Pc.CS_0},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.CS_1.ToString(), LiftE84Pc.CS_1},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.TR_REQ.ToString(), LiftE84Pc.TR_REQ},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.L_REQ.ToString(), LiftE84Pc.L_REQ},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.U_REQ.ToString(), LiftE84Pc.U_REQ},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.READY.ToString(), LiftE84Pc.READY},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.BUSY.ToString(), LiftE84Pc.BUSY},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.COMPT.ToString(), LiftE84Pc.COMPT},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.CONT.ToString(), LiftE84Pc.CONT},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.HOA_VBL.ToString(), LiftE84Pc.HOA_VBL},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.ES.ToString(), LiftE84Pc.ES},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.VA.ToString(), LiftE84Pc.VA},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.AM_AVBL.ToString(), LiftE84Pc.AM_AVBL},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.VS_0.ToString(), LiftE84Pc.VS_0},
+                         { SAA_DatabaseEnum.SendLiftE84iLisPc.VS_1.ToString(), LiftE84Pc.VS_1},
+                     };
                     string commandcontent = JsonConvert.SerializeObject(dicstatusb);
                     while (true)
                     {
@@ -969,9 +974,6 @@ namespace SAA_CommunicationSystem_Lib.Controllers
                         }
                         Thread.Sleep(100);
                     }
-
-                    //SAA_Database.SaaSql.SetScLiftE84Pc_History(reporthandshake.Time, reporthandshake.StationID, reporthandshake.ShuttleID, reporthandshake.MissionID, reporthandshake.CarrierInfo.CarrierID, reporthandshake.Handshake);
-                    //SAA_Database.LogMessage($"【{reporthandshake.StationID}】【新增資料】已新增E84 PC交握歷史紀錄資料完成，【車號:{reporthandshake.ShuttleID}】【命令編號:{reporthandshake.MissionID}】【卡匣ID:{reporthandshake.CarrierInfo.CarrierID}】");
                 }
                 else
                 {

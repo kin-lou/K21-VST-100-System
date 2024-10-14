@@ -1137,5 +1137,10 @@ namespace SAA_CommunicationSystem_Lib.SqlData
         {
             return SaaSql.QuerySqlByAutoOpen("SELECT * FROM SC_LOCATIONSETTING_iLIS Where STATIOM_NAME = '" + statiom_name + "' And LOCATIONID = '" + locationid + "'").Tables[0];
         }
+
+        public DataTable GetScLocationsettingLocationidShelfiLISType(string statiom_name, string locationtype)
+        {
+            return SaaSql.QuerySqlByAutoOpen("Select * From SC_LOCATIONSETTING_iLIS Where STATIOM_NAME ='" + statiom_name + "' And LOCATIONTYPE = '" + locationtype + "' And CARRIERID = ''").Tables[0];
+        }
     }
 }

@@ -1574,5 +1574,12 @@ namespace SAA_CommunicationSystem_Lib
             CYCLETIME,
             SENDFLAG,
         }
+
+        public enum LOCATIONTYPE
+        {
+            Shelf,
+
+            Shelf_Global,
+        }
     }
 }

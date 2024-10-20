@@ -1284,23 +1284,27 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                                         CYCLETIME = carrierdata.Rows.Count != 0 ? carrierdata.Rows[0]["CYCLETIME"].ToString() : string.Empty,
                                                         QTIME = carrierdata.Rows.Count != 0 ? carrierdata.Rows[0]["QTIME"].ToString() : string.Empty,
                                                     };
-                                                    var emptycarriedata = SAA_Database.SaaSql.GetLiftCarrierInfoEmptyCarrier(CarrierInfoEmpty);
-                                                    if (emptycarriedata.Rows.Count != 0)
-                                                    {
-                                                        SAA_Database.SaaSql.DelLiftCarrierInfoEmptyCarrier(CarrierInfoEmpty);
-                                                        SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【空盒卡匣】有相同卡匣資料，刪除空盒卡匣資料，站點:{CarrierInfoEmpty.STATION_NAME}，卡匣ID:{CarrierInfoEmpty.CARRIERID}");
-                                                    }
                                                     string carrierstate = carrierdata.Rows.Count != 0 ? carrierdata.Rows[0]["CARRIERSTATE"].ToString() : string.Empty;
                                                     string destinationtype = carrierdata.Rows.Count != 0 ? carrierdata.Rows[0]["DESTINATIONTYPE"].ToString() : string.Empty;
-                                                    SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【空盒卡匣】空盒卡匣ID:{equipmentreportt.CARRIERID}，CarrierState:{carrierstate}");
-                                                    if (!equipmentreportt.CARRIERID.Contains(SAA_Database.configattributes.PARTICLE))
+                                                    if (carrierstate == CarrierState.Empty.ToString())
                                                     {
-                                                        SAA_Database.SaaSql.SetScLiftCarrierInfoEmpty(CarrierInfoEmpty);
-                                                        SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【空盒卡匣】新增卡匣資料，站點:{CarrierInfoEmpty.STATION_NAME}，卡匣ID:{CarrierInfoEmpty.CARRIERID}，CYCLETIME:{CarrierInfoEmpty.CYCLETIME}，QTIME:{CarrierInfoEmpty.QTIME}");
-                                                    }
-                                                    else
-                                                    {
-                                                        SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【空盒卡匣】空盒卡匣ID:{equipmentreportt.CARRIERID}，CarrierState:{carrierstate}不為Empty無法新增空盒卡匣資料，或卡匣ID有:{SAA_Database.configattributes.PARTICLE}字串，不可新增空盒卡匣(卡匣ID:{equipmentreportt.CARRIERID})");
+                                                        var emptycarriedata = SAA_Database.SaaSql.GetLiftCarrierInfoEmptyCarrier(CarrierInfoEmpty);
+                                                        if (emptycarriedata.Rows.Count != 0)
+                                                        {
+                                                            SAA_Database.SaaSql.DelLiftCarrierInfoEmptyCarrier(CarrierInfoEmpty);
+                                                            SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【空盒卡匣】有相同卡匣資料，刪除空盒卡匣資料，站點:{CarrierInfoEmpty.STATION_NAME}，卡匣ID:{CarrierInfoEmpty.CARRIERID}");
+                                                        }
+
+                                                        SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【空盒卡匣】空盒卡匣ID:{equipmentreportt.CARRIERID}，CarrierState:{carrierstate}，DestinationType:{destinationtype}");
+                                                        if (!equipmentreportt.CARRIERID.Contains(SAA_Database.configattributes.PARTICLE))
+                                                        {
+                                                            SAA_Database.SaaSql.SetScLiftCarrierInfoEmpty(CarrierInfoEmpty);
+                                                            SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【空盒卡匣】新增卡匣資料，站點:{CarrierInfoEmpty.STATION_NAME}，卡匣ID:{CarrierInfoEmpty.CARRIERID}，CYCLETIME:{CarrierInfoEmpty.CYCLETIME}，QTIME:{CarrierInfoEmpty.QTIME}");
+                                                        }
+                                                        else
+                                                        {
+                                                            SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【空盒卡匣】空盒卡匣ID:{equipmentreportt.CARRIERID}，CarrierState:{carrierstate}不為Empty無法新增空盒卡匣資料，或卡匣ID有:{SAA_Database.configattributes.PARTICLE}字串，不可新增空盒卡匣(卡匣ID:{equipmentreportt.CARRIERID})");
+                                                        }
                                                     }
                                                 }
                                             }

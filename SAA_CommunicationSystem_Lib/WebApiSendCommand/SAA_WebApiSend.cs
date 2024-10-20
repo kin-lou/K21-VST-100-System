@@ -166,6 +166,9 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                     };
                     SAA_Database.LogMessage($"【{SaaDirective.STATION_NAME}】【接收】iLIS指令:{SaaDirective.COMMANDTEXT}");
                     Dictionary<string, string> dicdata = SAA_Database.ContentToDictionary(SaaDirective.COMMANDTEXT);
+
+                    reportcommand.Clear();
+
                     foreach (var data in dicdata)
                     {
                         var datakey = data.Key;
@@ -231,6 +234,9 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                 case ReceivCommand.CARRIERTYOE:
                                     reportcommand.CARRIERTYOE = datavalue;
                                     break;
+                                case ReceivCommand.CONTENT_TYPE:
+                                    reportcommand.CONTENT_TYPE = datavalue;
+                                    break;
                             }
                         }
                     }
@@ -256,7 +262,8 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                             CYCLETIME = reportcommand.CYCLETIME,
                             REJECT_CODE = autoreject == 0 ? reportcommand.REJECT_CODE : "RS0001",
                             REJECT_MESSAGE = autoreject == 0 ? reportcommand.REJECT_MESSAGE : "SAA_reject",
-                            CARRIERSTATE = (reportcommand.SCHEDULE != SAA_Database.SaaCommon.NA.ToString() || !string.IsNullOrEmpty(reportcommand.SCHEDULE)) ? CarrierState.Material.ToString() : CarrierState.Empty.ToString(),
+                            //CARRIERSTATE = (reportcommand.SCHEDULE != SAA_Database.SaaCommon.NA.ToString() || !string.IsNullOrEmpty(reportcommand.SCHEDULE)) ? CarrierState.Material.ToString() : CarrierState.Empty.ToString(),
+                            CARRIERSTATE = reportcommand.CONTENT_TYPE == "JIG" ? CarrierState.Jig.ToString() : (reportcommand.SCHEDULE != SAA_Database.SaaCommon.NA.ToString() && !string.IsNullOrEmpty(reportcommand.SCHEDULE)) ? CarrierState.Material.ToString() : CarrierState.Empty.ToString(),
                             DESTINATIONTYPE = reportcommand.DESTINATION.Contains("WIP-ZIP_INWIP") || reportcommand.DESTINATION.Contains("EQPBUFF") ? DestinationType.Buffer.ToString() : reportcommand.DESTINATION.Contains("REJECT") ? DestinationType.Reject.ToString() : DestinationType.EQP.ToString(),
                         };
                         var carrierinfodata = SAA_Database.SaaSql.GetEquipmentCarrierInfo(equipmentcarrierinfo);
@@ -270,6 +277,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                             {
                                 case LcsReceive.M001:
                                 case LcsReceive.M501:
+                                case LcsReceive.M545:
                                     SaaScLiftCarrierInfo liftCarrierInfo = new SaaScLiftCarrierInfo()
                                     {
                                         SETNO = equipmentcarrierinfo.SETNO,

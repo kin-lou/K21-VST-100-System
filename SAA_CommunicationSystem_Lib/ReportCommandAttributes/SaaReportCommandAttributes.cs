@@ -102,5 +102,34 @@ namespace SAA_CommunicationSystem_Lib.ReportCommandAttributes
         /// 卡匣屬性
         /// </summary>
         public string CARRIERTYOE { get; set; }
+
+        /// <summary>
+        /// 盒內容物
+        /// </summary>
+        public string CONTENT_TYPE { get; set; }
+
+        public void Clear()
+        {
+            CMD_NO = "";
+            CMD_NAME = "";
+            STATION = "";
+            SCHEDULE = "";
+            WARENUMBER = "";
+            ORIGIN = "";
+            DESTINATION = "";
+            ROTFLAG = "";
+            FLIPFLAG = "";
+            CARRIER = "";
+            FROM = "";
+            TO = "";
+            QTIME = "";
+            OPER = "";
+            CYCLETIME = "";
+            RECIPE = "";
+            REJECT_CODE = "";
+            REJECT_MESSAGE = "";
+            CARRIERTYOE = "";
+            CONTENT_TYPE = "";
+        }
     }
 }

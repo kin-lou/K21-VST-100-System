@@ -928,6 +928,11 @@ namespace SAA_CommunicationSystem_Lib
             /// 卡匣屬性
             /// </summary>
             CARRIERTYOE,
+
+            /// <summary>
+            /// 盒內容物
+            /// </summary>
+            CONTENT_TYPE,
         }
         #endregion
 
@@ -965,6 +970,11 @@ namespace SAA_CommunicationSystem_Lib
             /// 入庫或出庫
             /// </summary>
             M501,
+
+            /// <summary>
+            /// 出庫
+            /// </summary>
+            M545,
 
             /// <summary>
             /// 退REJECT

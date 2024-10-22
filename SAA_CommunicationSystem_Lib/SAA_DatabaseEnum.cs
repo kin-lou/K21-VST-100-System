@@ -930,7 +930,7 @@ namespace SAA_CommunicationSystem_Lib
             CARRIERTYOE,
 
             /// <summary>
-            /// 盒內容物
+            /// 
             /// </summary>
             CONTENT_TYPE,
         }

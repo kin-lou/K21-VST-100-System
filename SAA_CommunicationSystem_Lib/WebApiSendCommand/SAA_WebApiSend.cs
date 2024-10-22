@@ -166,9 +166,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                     };
                     SAA_Database.LogMessage($"【{SaaDirective.STATION_NAME}】【接收】iLIS指令:{SaaDirective.COMMANDTEXT}");
                     Dictionary<string, string> dicdata = SAA_Database.ContentToDictionary(SaaDirective.COMMANDTEXT);
-
                     reportcommand.Clear();
-
                     foreach (var data in dicdata)
                     {
                         var datakey = data.Key;
@@ -886,7 +884,28 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                     {
                                         SAA_Database.LogMessage($"【{station}】【LCS->iLIS】【iLIS接收】StationID:{saareportresult.StationID}，Time:{saareportresult.Time}，TEID:{saareportresult.TEID}，ReturnCode:{saareportresult.ReturnCode}，ReturnMessage:{saareportresult.ReturnMessage}，(結果:{saareportresult.ReturnCode})");
                                         SAA_Database.SaaSql.UpdScTransportrEquirement(info.CarrierID, SendFlag.Y.ToString());
-                                    }
+										SaaEquipmentCarrierInfo equipmentcarrierinfo = new SaaEquipmentCarrierInfo {
+											SETNO = int.Parse(SAA_Database.configattributes.SaaEquipmentNo),
+											MODEL_NAME = SAA_Database.configattributes.SaaEquipmentName,
+											STATIOM_NAME = station,
+											CARRIERID = dr["CARRIERID"].ToString(),
+											PARTNO = "NA",
+											CARRIERTYPE = "Normal",
+											ROTFLAG = "",
+											FLIPFLAG = "",
+											DESTINATIONTYPE = "EQP",
+											CARRIERSTATE = "Empty",
+											QTIME = "",
+											CYCLETIME = "",
+											OPER = "2880",
+											RECIPE = "",
+											REJECT_CODE = "",
+											REJECT_MESSAGE = "",
+										};
+
+										SAA_Database.SaaSql.SetScEquipmentCarrierInfo(equipmentcarrierinfo);
+										SAA_Database.LogMessage($"【{station}】【新增空盒卡匣】空盒卡匣ID:equipmentcarrierinfo.CARRIERID");
+									}
                                 }
                             }
                         }
@@ -1294,7 +1313,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                                     };
                                                     string carrierstate = carrierdata.Rows.Count != 0 ? carrierdata.Rows[0]["CARRIERSTATE"].ToString() : string.Empty;
                                                     string destinationtype = carrierdata.Rows.Count != 0 ? carrierdata.Rows[0]["DESTINATIONTYPE"].ToString() : string.Empty;
-                                                    if (carrierstate == CarrierState.Empty.ToString())
+                                                    if (carrierstate==CarrierState.Empty.ToString())
                                                     {
                                                         var emptycarriedata = SAA_Database.SaaSql.GetLiftCarrierInfoEmptyCarrier(CarrierInfoEmpty);
                                                         if (emptycarriedata.Rows.Count != 0)
@@ -1303,7 +1322,7 @@ namespace SAA_CommunicationSystem_Lib.WebApiSendCommand
                                                             SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【空盒卡匣】有相同卡匣資料，刪除空盒卡匣資料，站點:{CarrierInfoEmpty.STATION_NAME}，卡匣ID:{CarrierInfoEmpty.CARRIERID}");
                                                         }
 
-                                                        SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【空盒卡匣】空盒卡匣ID:{equipmentreportt.CARRIERID}，CarrierState:{carrierstate}，DestinationType:{destinationtype}");
+                                                        SAA_Database.LogMessage($"【{equipmentreportt.STATION_NAME}】【空盒卡匣】空盒卡匣ID:{equipmentreportt.CARRIERID}，CarrierState:{carrierstate}，DestinationType");
                                                         if (!equipmentreportt.CARRIERID.Contains(SAA_Database.configattributes.PARTICLE))
                                                         {
                                                             SAA_Database.SaaSql.SetScLiftCarrierInfoEmpty(CarrierInfoEmpty);
